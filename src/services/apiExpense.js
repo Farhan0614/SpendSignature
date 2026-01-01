@@ -72,27 +72,3 @@ export async function createExpense(expense) {
 
 //   return data;
 // }
-
-export async function getMonthlyExpense(user_id, month, year) {
-  // Ensure month has leading zero (e.g., 09)
-  const formattedMonth = String(month).padStart(2, "0");
-
-  // Dynamically calculate the last valid day of the month
-  const lastDay = new Date(year, month, 0).getDate();
-
-  const { data, error } = await supabase
-    .from("expenses")
-    .select("amount, categories(name,icon_name)")
-    .eq("user_id", user_id)
-    .gte("date", `${year}-${formattedMonth}-01`)
-    .lte("date", `${year}-${formattedMonth}-${lastDay}`);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Error loading monthly expenses");
-  }
-
-  // const total = data.reduce((sum, item) => sum + item.amount, 0);
-
-  return data;
-}

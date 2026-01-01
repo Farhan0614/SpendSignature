@@ -27,29 +27,3 @@ export async function getIncome(user_id) {
 
   return data;
 }
-
-export async function getTotalBalance(user_id) {
-  const { data, error } = await supabase
-    .from("wallet")
-    .select("income")
-    .eq("user_id", user_id);
-
-  if (error) throw new Error("Error loading total balance");
-
-  const total = data.reduce((sum, item) => sum + item.income, 0);
-  return total;
-}
-
-export async function getMonthlyBalance(user_id, month, year) {
-  const { data, error } = await supabase
-    .from("wallet")
-    .select("income")
-    .eq("user_id", user_id)
-    .eq("month", month)
-    .eq("year", year);
-
-  if (error) throw new Error("Error loading monthly balance");
-
-  const total = data.reduce((sum, item) => sum + item.income, 0);
-  return total;
-}

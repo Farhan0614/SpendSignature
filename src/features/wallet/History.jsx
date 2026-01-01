@@ -1,10 +1,7 @@
 import Loader from "../../ui/Loader";
 import IncHisItem from "./IncHisItem";
-import { useGetIncome } from "./useGetIncome";
 
-function History() {
-  const { incomes, isLoading } = useGetIncome();
-
+function History({ incomes, isLoading }) {
   return (
     <div className="flex w-full flex-col rounded-2xl bg-white p-6 shadow-md md:w-[500px]">
       <h2 className="mb-4 text-lg font-semibold">Income History</h2>

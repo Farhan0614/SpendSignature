@@ -6,7 +6,7 @@ export function useGetIncome() {
   const { user } = useUser();
 
   const { data: incomes, isLoading } = useQuery({
-    queryKey: ["income"],
+    queryKey: ["income", user?.id],
     queryFn: () => getIncome(user?.id),
   });
 
