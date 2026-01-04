@@ -27,21 +27,23 @@ function UpdateOptions() {
   return (
     <>
       <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
+        <h2 className="text-lg font-semibold text-slate-900">
+          Change Password
+        </h2>
         <form onSubmit={handlePasswordChange} className="space-y-3">
           <input
             type="password"
             placeholder="Old Password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
           />
           <input
             type="password"
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
           />
           <button
             type="submit"
@@ -54,14 +56,14 @@ function UpdateOptions() {
 
       {/* Change Country Section */}
       <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Change Country</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Change Country</h2>
         <CountrySelector />
         <button
           onClick={handleChangeCurrency}
           disabled={!isChanged || isLoading}
           className={`mt-7 flex w-full items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all duration-300 ${
             !isChanged || isLoading
-              ? "cursor-not-allowed bg-gray-300"
+              ? "cursor-not-allowed bg-slate-300"
               : "bg-indigo-600 hover:bg-indigo-700"
           }`}
         >

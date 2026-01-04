@@ -11,7 +11,7 @@ function ExpenseList({ expense }) {
   const { date, title, amount } = expense;
 
   return (
-    <div className="flex items-center justify-between border-b border-gray-300 p-2 font-sans text-sm">
+    <div className="flex items-center justify-between border-b border-slate-300 p-2 font-sans text-sm">
       <span className="font-semibold">{formattedFullDate(date)}</span>
       <span className="flex w-50 items-center gap-1 font-bold">
         <HiArrowDownCircle className="h-5 w-5" /> {formattedTitle(title)}

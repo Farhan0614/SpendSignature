@@ -12,8 +12,8 @@ function Expenses() {
 
   return (
     <div className="mt-4 space-y-6 px-18">
-      <header className="space-y-3 border-b border-gray-200 pb-2">
-        <div className="flex items-center gap-2 text-gray-900">
+      <header className="space-y-3 border-b border-slate-200 pb-2">
+        <div className="flex items-center gap-2 text-slate-900">
           <IoIosWallet className="h-7 w-7" />
           <Heading>Expenses</Heading>
         </div>

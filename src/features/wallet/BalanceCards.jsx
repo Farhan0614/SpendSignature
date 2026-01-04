@@ -9,8 +9,8 @@ function BalanceCards({ totalBalance, monthlyBalance, isLoading }) {
   return (
     <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {/* Total Balance Card */}
-      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-md">
-        <h2 className="text-lg font-semibold text-gray-700">Total Balance</h2>
+      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-700">Total Balance</h2>
 
         {isLoading ? (
           <div className="flex h-28 items-center justify-center">
@@ -24,8 +24,8 @@ function BalanceCards({ totalBalance, monthlyBalance, isLoading }) {
       </div>
 
       {/* Monthly Balance Card */}
-      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-md">
-        <h2 className="text-lg font-semibold text-gray-700">Monthly Income</h2>
+      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-700">Monthly Income</h2>
 
         {isLoading ? (
           <div className="flex h-28 items-center justify-center">
@@ -36,7 +36,7 @@ function BalanceCards({ totalBalance, monthlyBalance, isLoading }) {
             <p className="mt-2 font-sans text-4xl font-bold text-green-600">
               {formatCurrency(monthlyBalance, currency)}
             </p>
-            <span className="mt-1 text-sm text-gray-500">
+            <span className="mt-1 text-sm text-slate-500">
               Based on this month's income
             </span>
           </>

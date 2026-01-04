@@ -7,18 +7,18 @@ function CategoryTable({ categoryExpenses }) {
   return (
     <>
       <div>
-        <header className="border-b border-gray-200 pb-3 text-gray-500">
+        <header className="border-b border-slate-200 pb-3 text-slate-500">
           <div></div>
 
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 font-semibold">
-              <FaCalendar className="text-gray-400" /> Date
+              <FaCalendar className="text-slate-400" /> Date
             </span>
             <span className="flex items-center gap-2 font-semibold">
-              <FaAd className="text-gray-400" /> Name
+              <FaAd className="text-slate-400" /> Name
             </span>
             <span className="flex items-center gap-2 font-semibold">
-              <FaHashtag className="text-gray-400" /> Amount
+              <FaHashtag className="text-slate-400" /> Amount
             </span>
           </div>
         </header>
@@ -30,9 +30,9 @@ function CategoryTable({ categoryExpenses }) {
             ))}
           </div>
         ) : (
-          <p className="text-lg font-semibold text-gray-400">Empty</p>
+          <p className="text-lg font-semibold text-slate-400">Empty</p>
         )}
-        <footer className="font-space text-center text-sm text-gray-400">
+        <footer className="font-space text-center text-sm text-slate-400">
           COUNT {count}
         </footer>
       </div>

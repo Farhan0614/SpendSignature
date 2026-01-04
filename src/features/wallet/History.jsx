@@ -3,7 +3,7 @@ import IncHisItem from "./IncHisItem";
 
 function History({ incomes, isLoading }) {
   return (
-    <div className="flex w-full flex-col rounded-2xl bg-white p-6 shadow-md md:w-[500px]">
+    <div className="flex w-full flex-col rounded-2xl bg-white p-6 shadow-sm md:w-[500px]">
       <h2 className="mb-4 text-lg font-semibold">Income History</h2>
 
       {isLoading ? (
@@ -11,7 +11,7 @@ function History({ incomes, isLoading }) {
           <Loader />
         </div>
       ) : !incomes || incomes.length === 0 ? (
-        <p className="text-gray-500">No income records yet</p>
+        <p className="text-slate-500">No income records yet</p>
       ) : (
         <div className="max-h-64 overflow-y-auto pr-2">
           <ul className="divide-y">

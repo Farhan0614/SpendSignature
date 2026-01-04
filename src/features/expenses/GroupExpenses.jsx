@@ -13,18 +13,18 @@ function GroupExpense({ groupExpenses }) {
   }
 
   return (
-    <div className="mb-6 border-b border-gray-200">
+    <div className="mb-6 border-b border-slate-200">
       <div className="flex items-center gap-2 py-3">
         <button
           onClick={handleClick}
-          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-xs transition-all duration-300 hover:bg-gray-200 hover:text-gray-500"
+          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-xs transition-all duration-300 hover:bg-slate-200 hover:text-slate-500"
         >
           {showExpense ? <FaCaretDown /> : <FaCaretRight />}
         </button>
-        <span className="text-normal font-sans font-black text-gray-900">
+        <span className="text-normal font-sans font-black text-slate-900">
           {period}
         </span>
-        <span className="text-normal font-sans font-medium text-gray-400">
+        <span className="text-normal font-sans font-medium text-slate-400">
           {formatCurrency(total, currency)}
         </span>
       </div>

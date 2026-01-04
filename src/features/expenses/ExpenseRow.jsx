@@ -25,7 +25,7 @@ function ExpenseRow({ expense }) {
   return (
     <>
       <Modal.Open opens={`expense-${id}`}>
-        <div className="mb-1 flex cursor-default items-center justify-between transition-all duration-200 hover:bg-gray-100">
+        <div className="mb-1 flex cursor-pointer items-center justify-between transition-all duration-200 hover:bg-slate-100">
           <span className="flex items-center gap-1 font-sans font-semibold">
             <HiArrowDownCircle className="h-5 w-5" />
             <span>{formattedTitle(title)}</span>

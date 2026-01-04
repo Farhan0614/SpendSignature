@@ -12,13 +12,13 @@ function CategoryItem({ category }) {
   return (
     <Link
       to={`/category/${name}`}
-      className="flex h-20 w-55 cursor-pointer flex-col items-start justify-between rounded-lg bg-gray-50 px-4 py-2 shadow-sm transition-all duration-300 hover:bg-gray-100"
+      className="flex h-20 w-55 cursor-pointer flex-col items-start justify-between rounded-2xl border border-slate-200 bg-white px-4 py-2 shadow-sm transition-all duration-300 hover:bg-slate-50"
     >
-      <div className="flex items-center gap-1 text-gray-900">
+      <div className="flex items-center gap-1 text-slate-900">
         {Icon && <Icon size={20} />}
         <span className="font-bold tracking-tighter">{name}</span>
       </div>
-      <span className="font-sans text-sm font-semibold text-gray-500">
+      <span className="font-sans text-sm font-semibold text-slate-500">
         {formatCurrency(total, currency)}
       </span>
     </Link>

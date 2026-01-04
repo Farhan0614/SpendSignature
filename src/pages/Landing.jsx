@@ -32,10 +32,10 @@ function Landing() {
 
       {/* Hero Section */}
       <header className="px-4 py-20 text-center">
-        <h1 className="mb-6 text-5xl font-bold text-gray-900">
+        <h1 className="mb-6 text-5xl font-bold text-slate-900">
           Stop wondering where your money went.
         </h1>
-        <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-600">
+        <p className="mx-auto mb-8 max-w-2xl text-xl text-slate-600">
           SpendSignature tracks your income and expenses, but goes further. Our
           AI detects unusual spending patterns to keep you financially safe.
         </p>

@@ -28,23 +28,23 @@ function CategorySpending({ categoryExpenses }) {
 
   return (
     <>
-      <div className="mb-10 flex items-center gap-6 border-b border-gray-50 pb-4">
+      <div className="mb-10 flex items-center gap-6 border-b border-slate-50 pb-4">
         <div>
-          <div className="flex items-center gap-1 font-sans text-sm font-semibold text-gray-500">
-            <FaHashtag className="text-gray-400" />
+          <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
+            <FaHashtag className="text-slate-400" />
             <span>Spent This Month</span>
           </div>
-          <span className="font-sans text-sm font-bold text-gray-700">
+          <span className="font-sans text-sm font-bold text-slate-700">
             {formatCurrency(spentThisMonth, currency)}
           </span>
         </div>
 
         <div>
-          <div className="flex items-center gap-1 font-sans text-sm font-semibold text-gray-500">
-            <FaHashtag className="text-gray-400" />
+          <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
+            <FaHashtag className="text-slate-400" />
             <span>Total Spent</span>
           </div>
-          <span className="font-sans text-sm font-bold text-gray-700">
+          <span className="font-sans text-sm font-bold text-slate-700">
             {formatCurrency(totalSpent, currency)}
           </span>
         </div>

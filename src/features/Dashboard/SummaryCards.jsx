@@ -8,8 +8,8 @@ function SummaryCards({ totalBalance, monthlyBalance, monthlyExpense }) {
   return (
     <section className="flex flex-wrap justify-center gap-6">
       {/* === CARD 1 === */}
-      <div className="max-w-sm min-w-[200px] flex-1 rounded-lg bg-white shadow-md">
-        <div className="flex items-center justify-between rounded-t-lg bg-gradient-to-r from-teal-500 via-emerald-500 to-green-600 px-5 py-4 text-white">
+      <div className="max-w-sm min-w-[200px] flex-1 rounded-2xl bg-white shadow-sm">
+        <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-teal-500 via-emerald-500 to-green-600 px-5 py-4 text-white">
           <div>
             <h3 className="text-sm font-semibold">Current Balance</h3>
             <p className="text-2xl font-semibold">
@@ -28,8 +28,8 @@ function SummaryCards({ totalBalance, monthlyBalance, monthlyExpense }) {
       </div>
 
       {/* === CARD 2 === */}
-      <div className="max-w-sm min-w-[200px] flex-1 rounded-lg bg-white shadow-md">
-        <div className="flex items-center justify-between rounded-t-lg bg-gradient-to-r from-orange-500 via-rose-500 to-red-600 px-5 py-4 text-white">
+      <div className="max-w-sm min-w-[200px] flex-1 rounded-2xl bg-white shadow-sm">
+        <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-orange-500 via-rose-500 to-red-600 px-5 py-4 text-white">
           <div>
             <h3 className="text-sm font-semibold">Total Expenses</h3>
             <p className="text-2xl font-semibold">
@@ -40,7 +40,7 @@ function SummaryCards({ totalBalance, monthlyBalance, monthlyExpense }) {
         </div>
         <div className="flex items-center justify-between px-5 py-3">
           <p className="text-sm">
-            <span className="font-bold text-rose-500">Total Income</span>{" "}
+            <span className="font-bold text-rose-500">Total Expense</span>{" "}
             <span className="font-medium text-slate-400">(This Month)</span>
           </p>
           <HiTrendingUp className="h-7 w-7 text-red-600" />

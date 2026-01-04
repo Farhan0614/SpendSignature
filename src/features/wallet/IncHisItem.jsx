@@ -9,7 +9,7 @@ function IncHisItem({ amount, month, year }) {
       <span className="font-sans font-medium">
         {formatCurrency(amount, currency)}
       </span>
-      <span className="text-gray-500">
+      <span className="text-slate-500">
         {getMonthName(month)} {year}
       </span>
     </div>

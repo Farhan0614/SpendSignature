@@ -23,9 +23,9 @@ function AppLayout() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-800">
+    <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900">
       {/* 1. Sticky Header */}
-      <Header user={user} />
+      <Header />
 
       {/* 2. Main Content Area */}
       {/* flex-1 ensures it pushes the footer down if content is short */}

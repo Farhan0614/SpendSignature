@@ -39,25 +39,25 @@ function LoginForm({ mode }) {
 
       <form
         onSubmit={handleSubmit}
-        className="flex w-full flex-col gap-6 font-mono"
+        className="flex w-full flex-col gap-6 font-sans"
       >
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="focus:ring-opacity-50 rounded-full bg-gray-100 px-4 py-3 font-mono text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
+          className="focus:ring-opacity-50 rounded-lg border border-slate-300 bg-white px-4 py-3 font-sans text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
           type="email"
           placeholder="example@gmail.com"
         />
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="focus:ring-opacity-50 rounded-full bg-gray-100 px-4 py-3 font-mono text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
+          className="focus:ring-opacity-50 rounded-lg border border-slate-300 bg-white px-4 py-3 font-sans text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
           type="password"
           placeholder="Password"
         />
 
         <div className="mt-2 flex flex-col gap-3">
-          <button className="flex cursor-pointer items-center justify-center rounded-[8px] bg-indigo-600 px-6 py-3 font-mono font-bold text-white transition-all duration-300 hover:bg-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-offset-1 focus:outline-none">
+          <button className="flex cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 font-sans font-bold text-white transition-all duration-300 hover:bg-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-offset-1 focus:outline-none">
             {isLoading1 || isLoading2 ? (
               <LoaderMini />
             ) : mode === "login" ? (
@@ -69,12 +69,12 @@ function LoginForm({ mode }) {
 
           <button
             type="button"
-            className="rounded-[8px] border border-gray-300 bg-white px-6 py-3 font-mono font-bold text-gray-700 transition-all duration-300 hover:bg-gray-100"
+            className="rounded-[8px] border border-slate-300 bg-white px-6 py-3 font-sans font-bold text-slate-700 transition-all duration-300 hover:bg-slate-100"
           >
             Continue with Google
           </button>
 
-          <div className="text-center text-sm text-gray-600">
+          <div className="text-center text-sm text-slate-600">
             {mode === "login" ? (
               <p>
                 Need an account?

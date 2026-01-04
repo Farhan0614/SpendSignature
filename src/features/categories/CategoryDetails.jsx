@@ -31,7 +31,7 @@ function CategoryDetails() {
         <Icon className="h-15 w-15" />
       </span>
 
-      <h1 className="font-sans text-5xl font-black text-gray-900">
+      <h1 className="font-sans text-5xl font-black text-slate-900">
         {categoryName}
       </h1>
 

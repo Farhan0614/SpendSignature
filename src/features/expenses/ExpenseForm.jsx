@@ -3,12 +3,33 @@ import { useCreateExpense } from "./useCreateExpense";
 import { useUser } from "../authentication/useUser";
 import LoaderMini from "../../ui/LoaderMini";
 
+import toast from "react-hot-toast"; // Import Toast
+import { useGetIncome } from "../wallet/useGetIncome"; // Import Income
+import { useExpense } from "./useExpense"; // Import Expense
+
 function ExpenseForm({ categories, handleShowForm }) {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { createExpense, isCreating } = useCreateExpense();
   const { user } = useUser();
 
+  // 1. Get Current Balance Data
+  const { expenses } = useExpense();
+  const { incomes } = useGetIncome();
+
+  const totalIncome = incomes?.reduce((sum, item) => sum + item.income, 0) || 0;
+  const totalExpense =
+    expenses?.reduce((sum, item) => sum + item.amount, 0) || 0;
+  const currentBalance = totalIncome - totalExpense;
+
   function onSubmit(data) {
+    const expenseAmount = parseFloat(data.amount);
+
+    // 2. THE CHECK: Block if amount > balance
+    if (expenseAmount > currentBalance) {
+      toast.error(`Insufficient funds! You only have $${currentBalance} left.`);
+      return; // Stop the function
+    }
+
     createExpense({
       ...data,
       user_id: user.id,
@@ -28,7 +49,7 @@ function ExpenseForm({ categories, handleShowForm }) {
         id="date"
         required
         {...register("date")}
-        className="h-10 w-40 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 placeholder-gray-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
+        className="h-10 w-40 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
       />
 
       <input
@@ -37,7 +58,7 @@ function ExpenseForm({ categories, handleShowForm }) {
         required
         {...register("title")}
         placeholder="Enter expense title"
-        className="h-10 w-48 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-normal text-gray-900 placeholder-gray-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
+        className="h-10 w-48 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-slate-900 placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
       />
 
       <input
@@ -46,7 +67,7 @@ function ExpenseForm({ categories, handleShowForm }) {
         required
         {...register("amount")}
         placeholder="Enter amount"
-        className="h-10 w-32 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
+        className="h-10 w-32 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
       />
 
       <select
@@ -54,7 +75,7 @@ function ExpenseForm({ categories, handleShowForm }) {
         required
         defaultValue=""
         {...register("category_id")}
-        className="h-10 w-40 flex-1 cursor-pointer rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-medium placeholder-gray-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
+        className="h-10 w-40 flex-1 cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
       >
         <option value="" disabled>
           Select a category
@@ -71,7 +92,7 @@ function ExpenseForm({ categories, handleShowForm }) {
         id="notes"
         {...register("notes")}
         placeholder="Optional notes (e.g., Dinner with friends)"
-        className="h-10 w-64 flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm placeholder-gray-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
+        className="h-10 w-64 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
       />
 
       <button className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition-all duration-300 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none">

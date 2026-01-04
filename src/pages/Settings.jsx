@@ -9,8 +9,8 @@ function Settings() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-8 p-6">
-      <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-      <p className="text-gray-600">
+      <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
+      <p className="text-slate-600">
         Manage your password and country preference.
       </p>
       <UpdateOptions />

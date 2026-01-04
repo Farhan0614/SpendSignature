@@ -33,14 +33,14 @@ function Window({ children, name }) {
     <div className="fixed top-0 left-0 z-[1000] h-dvh w-full bg-black/50 backdrop-blur-sm transition-all duration-500">
       <div
         ref={ref}
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-gray-300 bg-gray-50 px-16 py-12 shadow-2xl transition-all duration-500"
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-slate-300 bg-slate-50 px-16 py-12 shadow-2xl transition-all duration-500"
       >
         <button
           onClick={close}
-          className="absolute top-5 right-8 translate-x-3 cursor-pointer rounded-md bg-transparent p-2 transition-all duration-200 hover:bg-gray-100"
+          className="absolute top-5 right-8 translate-x-3 cursor-pointer rounded-md bg-transparent p-2 transition-all duration-200 hover:bg-slate-100"
         >
           <HiXMark
-            className="h-6 w-6 text-gray-500"
+            className="h-6 w-6 text-slate-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

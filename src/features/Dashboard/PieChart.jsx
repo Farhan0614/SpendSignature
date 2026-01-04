@@ -6,6 +6,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { formatCurrency } from "../../utils/helpers"; // Optional: if you want formatted tooltips
+import { useCurrency } from "../../context/CurrencyContext"; // Optional: if you want currency in tooltip
 
 const CATEGORY_COLORS = {
   "Food & Drinks": "#10B981",
@@ -22,11 +24,14 @@ const CATEGORY_COLORS = {
 };
 
 function PieCharts({ monthlyExpense = [] }) {
+  // Optional: Get currency for better tooltips
+  // const { currency } = useCurrency();
+
   // Safely build data
   const data =
     monthlyExpense.length > 0
       ? monthlyExpense.reduce((acc, exp) => {
-          if (!exp?.categories?.name) return acc; // skip invalid items
+          if (!exp?.categories?.name) return acc;
           const existing = acc.find(
             (item) => item.name === exp.categories.name,
           );
@@ -36,29 +41,28 @@ function PieCharts({ monthlyExpense = [] }) {
         }, [])
       : [];
 
-  // ✅ If no valid data, show message
   if (data.length === 0) {
     return (
-      <div className="flex h-[350px] w-full flex-col items-center justify-center rounded-lg bg-slate-50 text-slate-500">
-        <p className="text-center text-sm font-medium">
-          No expense data available for this month.
-        </p>
+      <div className="flex h-full w-full flex-col items-center justify-center text-slate-400">
+        <p className="text-sm font-medium">No data yet</p>
       </div>
     );
   }
 
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
           data={data}
           cx="50%"
-          cy="45%"
-          innerRadius={50}
-          outerRadius={100}
+          cy="50%"
+          innerRadius={60} // Makes it a "Doughnut"
+          outerRadius={80} // Fits perfectly in 250px height
+          paddingAngle={5} // Adds premium whitespace
+          cornerRadius={5} // Rounded edges on slices
           dataKey="value"
           nameKey="name"
-          label
+          stroke="none" // Removes default ugly border
         >
           {data.map((entry) => (
             <Cell
@@ -67,13 +71,23 @@ function PieCharts({ monthlyExpense = [] }) {
             />
           ))}
         </Pie>
-        <Tooltip />
+
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            border: "none",
+            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+          }}
+          itemStyle={{ color: "#334155", fontSize: "12px", fontWeight: "600" }}
+        />
+
         <Legend
           verticalAlign="bottom"
           align="center"
-          layout="horizontal"
-          iconSize={12}
-          wrapperStyle={{ marginTop: "10px" }}
+          iconSize={10}
+          iconType="circle"
+          wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }}
         />
       </PieChart>
     </ResponsiveContainer>
