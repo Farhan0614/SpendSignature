@@ -3,18 +3,21 @@ import IncHisItem from "./IncHisItem";
 
 function History({ incomes, isLoading }) {
   return (
-    <div className="flex w-full flex-col rounded-2xl bg-white p-6 shadow-sm md:w-[500px]">
-      <h2 className="mb-4 text-lg font-semibold">Income History</h2>
+    // CHANGED: Removed w-[500px]. Added h-full and w-full.
+    <div className="flex h-full w-full flex-col rounded-2xl bg-white p-6 shadow-sm">
+      <h2 className="mb-4 text-lg font-bold text-slate-700">Income History</h2>
 
       {isLoading ? (
         <div className="flex h-40 items-center justify-center">
           <Loader />
         </div>
       ) : !incomes || incomes.length === 0 ? (
-        <p className="text-slate-500">No income records yet</p>
+        <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-100 py-10">
+          <p className="font-medium text-slate-400">No income records yet</p>
+        </div>
       ) : (
-        <div className="max-h-64 overflow-y-auto pr-2">
-          <ul className="divide-y">
+        <div className="custom-scrollbar flex-1 overflow-y-auto pr-2">
+          <ul className="flex flex-col gap-2">
             {incomes.map((income) => (
               <IncHisItem
                 key={income.id}
