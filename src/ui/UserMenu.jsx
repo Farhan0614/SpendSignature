@@ -6,25 +6,19 @@ import { useExpense } from "../features/expenses/useExpense"; // Fetch Expenses
 import { useGetIncome } from "../features/wallet/useGetIncome"; // Fetch Income
 import { formatCurrency } from "../utils/helpers";
 import { useCurrency } from "../context/CurrencyContext";
+import { useBalanceData } from "../features/wallet/useBalanceData";
 
 function UserMenu() {
   const { user } = useUser();
   const { logout, isLoading } = useLogout();
+  const { currentBalance } = useBalanceData();
+
   const navigate = useNavigate();
   const { currency } = useCurrency();
 
-  // 1. Fetch Data (React Query will cache this, so it doesn't double-fetch if Dashboard is open)
-  const { expenses } = useExpense();
-  const { incomes } = useGetIncome();
-
-  // 2. Calculate Global Balance (Net Worth)
-  const totalIncome = incomes?.reduce((sum, item) => sum + item.income, 0) || 0;
-  const totalExpense =
-    expenses?.reduce((sum, item) => sum + item.amount, 0) || 0;
-  const globalBalance = totalIncome - totalExpense;
-
   // Color logic: Red if 0 or negative
-  const balanceColor = globalBalance <= 0 ? "text-red-500" : "text-emerald-600";
+  const balanceColor =
+    currentBalance <= 0 ? "text-red-500" : "text-emerald-600";
 
   const handleLogout = () => {
     logout();
@@ -42,7 +36,7 @@ function UserMenu() {
 
             {/* REMAINING BALANCE (New Feature) */}
             <span className={`text-xs font-bold ${balanceColor}`}>
-              {formatCurrency(globalBalance, currency)} available
+              {formatCurrency(currentBalance, currency)} available
             </span>
           </div>
 

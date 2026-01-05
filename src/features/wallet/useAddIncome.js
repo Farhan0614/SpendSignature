@@ -9,11 +9,15 @@ export function useAddIncome() {
     mutationFn: addIncomeApi,
     onSuccess: () => {
       toast.success("Income added Successfully!");
-      queryClient.invalidateQueries({
-        queryKey: ["income"],
-      });
-      queryClient.invalidateQueries({ queryKey: ["monthlyBalance"] });
-      queryClient.invalidateQueries({ queryKey: ["totalBalance"] });
+      // 1. Refresh Wallet Page (The heavy list)
+      queryClient.invalidateQueries({ queryKey: ["income"] });
+
+      // 2. Refresh Dashboard Widgets
+      queryClient.invalidateQueries({ queryKey: ["recentIncomes"] });
+      queryClient.invalidateQueries({ queryKey: ["monthIncome"] });
+
+      // 3. Refresh Global Balance (The HUD in Navbar)
+      queryClient.invalidateQueries({ queryKey: ["incomeAmounts"] });
     },
     onError: () => {
       toast.error("There was an error adding income.");

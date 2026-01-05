@@ -4,29 +4,29 @@ import { useUser } from "../authentication/useUser";
 import LoaderMini from "../../ui/LoaderMini";
 
 import toast from "react-hot-toast"; // Import Toast
-import { useGetIncome } from "../wallet/useGetIncome"; // Import Income
-import { useExpense } from "./useExpense"; // Import Expense
+
+import { useBalanceData } from "../wallet/useBalanceData";
+import { useCurrency } from "../../context/CurrencyContext";
+import { formatCurrency } from "../../utils/helpers";
 
 function ExpenseForm({ categories, handleShowForm }) {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { createExpense, isCreating } = useCreateExpense();
   const { user } = useUser();
+  const { currency } = useCurrency();
 
   // 1. Get Current Balance Data
-  const { expenses } = useExpense();
-  const { incomes } = useGetIncome();
-
-  const totalIncome = incomes?.reduce((sum, item) => sum + item.income, 0) || 0;
-  const totalExpense =
-    expenses?.reduce((sum, item) => sum + item.amount, 0) || 0;
-  const currentBalance = totalIncome - totalExpense;
+  const { currentBalance } = useBalanceData();
 
   function onSubmit(data) {
     const expenseAmount = parseFloat(data.amount);
 
     // 2. THE CHECK: Block if amount > balance
     if (expenseAmount > currentBalance) {
-      toast.error(`Insufficient funds! You only have $${currentBalance} left.`);
+      toast.error(
+        `Insufficient funds! You only have ${formatCurrency(currentBalance, currency)} left.`,
+      );
+      reset();
       return; // Stop the function
     }
 

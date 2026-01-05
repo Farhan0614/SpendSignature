@@ -42,7 +42,7 @@ export async function getMonthAmount(startDate, endDate, user_id) {
     console.error(error);
     throw new Error("Error loading category expenses");
   }
-
+  console.log(data);
   return data;
 }
 
@@ -59,16 +59,3 @@ export async function createExpense(expense) {
 
   return data;
 }
-
-// export async function getMonthlyExpense(user_id, month, year) {
-//   const { data, error } = await supabase
-//     .from("expenses")
-//     .select("amount, categories(name,icon_name)")
-//     .eq("user_id", user_id)
-//     .gte("date", `${year}-${month}-01`)
-//     .lte("date", `${year}-${month}-31`);
-
-//   if (error) throw new Error("Error loading monthly balance");
-
-//   return data;
-// }

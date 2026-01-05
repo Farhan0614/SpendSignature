@@ -3,18 +3,21 @@ import { HiArrowDown, HiArrowUp } from "react-icons/hi";
 import { formatCurrency } from "../../utils/helpers";
 import { useCurrency } from "../../context/CurrencyContext";
 
-function RecentTransactions({ transactions }) {
+// Added 'title' prop so we can reuse this for both lists
+function RecentTransactions({ transactions, title = "Recent Activity" }) {
   const { currency } = useCurrency();
 
   return (
     <div className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-lg font-bold text-slate-700">Recent Activity</h2>
+      <h2 className="mb-4 text-lg font-bold text-slate-700">{title}</h2>
 
       <div className="flex flex-col gap-4 overflow-y-auto">
         {transactions.length === 0 ? (
-          <p className="py-4 text-center text-sm text-slate-500">
-            No recent transactions
-          </p>
+          <div className="flex h-32 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50">
+            <p className="text-sm font-medium text-slate-400">
+              No recent records
+            </p>
+          </div>
         ) : (
           transactions.map((trx, index) => {
             const isExpense = trx.type === "expense";
