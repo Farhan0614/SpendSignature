@@ -8,6 +8,7 @@ import { useUser } from "../authentication/useUser";
 function CategoriesList() {
   const { categories, isLoading } = useCategories();
   const { user } = useUser();
+
   const startDate = formatISO(startOfMonth(new Date()), {
     representation: "date",
   });
@@ -19,16 +20,16 @@ function CategoriesList() {
     user?.id,
   );
 
-  const totalsMap = monthAmount?.reduce((acc, exp) => {
-    acc[exp.category_id] = (acc[exp.category_id] || 0) + exp.amount;
-    return acc;
-  }, {});
+  const totalsMap =
+    monthAmount?.reduce((acc, exp) => {
+      acc[exp.category_id] = (acc[exp.category_id] || 0) + exp.amount;
+      return acc;
+    }, {}) || {};
 
   if (isLoading || isLoadingAmount) return <Loader />;
-  console.log(categories, monthAmount, totalsMap);
 
   return (
-    <div className="flex flex-wrap gap-5">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {categories.map((category) => {
         const total = totalsMap[category.id] || 0;
         return (

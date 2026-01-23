@@ -1,4 +1,3 @@
-import { HiArrowDownCircle } from "react-icons/hi2";
 import { useCurrency } from "../../context/CurrencyContext";
 import {
   formatCurrency,
@@ -11,12 +10,20 @@ function ExpenseList({ expense }) {
   const { date, title, amount } = expense;
 
   return (
-    <div className="flex items-center justify-between border-b border-slate-300 p-2 font-sans text-sm">
-      <span className="font-semibold">{formattedFullDate(date)}</span>
-      <span className="flex w-50 items-center gap-1 font-bold">
-        <HiArrowDownCircle className="h-5 w-5" /> {formattedTitle(title)}
+    <div className="grid grid-cols-3 items-center px-6 py-4 transition-colors hover:bg-slate-50">
+      {/* Col 1: Date */}
+      <span className="text-sm font-medium text-slate-500">
+        {formattedFullDate(date)}
       </span>
-      <span className="font-semibold">{formatCurrency(amount, currency)}</span>
+
+      {/* Col 2: Title */}
+      <span className="truncate pr-4 text-sm font-bold text-slate-700">
+        {formattedTitle(title)}
+      </span>
+
+      <span className="text-right text-sm font-bold text-slate-900">
+        {formatCurrency(amount, currency)}
+      </span>
     </div>
   );
 }
