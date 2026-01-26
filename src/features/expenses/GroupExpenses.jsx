@@ -28,6 +28,7 @@ function GroupExpense({ groupExpenses }) {
           {formatCurrency(total, currency)}
         </span>
       </div>
+
       <div className={`${showExpense ? "block" : "hidden"}`}>
         {expenses.map((expense, key) => (
           <ExpenseRow expense={expense} key={key} />
