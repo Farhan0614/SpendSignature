@@ -2,18 +2,8 @@ import { useMemo, useCallback } from "react";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import ReactCountryFlag from "react-country-flag";
-import { useCurrency } from "../../context/CurrencyContext";
-import countryToCurrency from "country-to-currency";
 
-function CountrySelector() {
-  const { country, setCountry, setCurrency } = useCurrency();
-
-  const handleChange = (selectedCountry) => {
-    setCountry(selectedCountry);
-    const newCurrency = countryToCurrency[selectedCountry.value];
-    setCurrency(newCurrency ?? "USD"); // fallback if undefined
-  };
-
+function CountrySelector({ value, onChange }) {
   const options = useMemo(() => countryList().getData(), []);
 
   const formatOptionLabel = useCallback(
@@ -76,8 +66,8 @@ function CountrySelector() {
     <div className="w-64">
       <Select
         options={options}
-        value={country}
-        onChange={handleChange}
+        value={value}
+        onChange={onChange}
         formatOptionLabel={formatOptionLabel}
         placeholder="Select country..."
         isSearchable

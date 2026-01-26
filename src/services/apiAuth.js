@@ -4,11 +4,6 @@ export async function signup({ email, password }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: {
-        currency: "",
-      },
-    },
   });
 
   if (error) throw new Error(error.message);
@@ -44,14 +39,12 @@ export async function logout() {
   if (error) throw new Error(error.message);
 }
 
-export async function updateUserCurrency(newCurrency) {
-  const { data: updatedUserCurrency, error } = await supabase.auth.updateUser({
-    data: {
-      currency: newCurrency,
-    },
+export async function updateCurrentUser({ password }) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: password,
   });
 
   if (error) throw new Error(error.message);
 
-  return updatedUserCurrency;
+  return data;
 }

@@ -3,24 +3,25 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useUser } from "../features/authentication/useUser";
 import Loader from "./Loader";
-import { useCurrency } from "../context/CurrencyContext";
+import { useProfile } from "../features/settings/useProfile";
 import { useEffect } from "react";
 import { findCountryByCurrency } from "../utils/helpers";
+import { useCurrency } from "../context/CurrencyContext";
 
 function AppLayout() {
   const { user, isLoading, isAuthenticated } = useUser();
-  const { setCurrency, setCountry } = useCurrency();
+  const { profile, isLoading: isLoadingProfile } = useProfile();
+  const { setCountry, setCurrency } = useCurrency();
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const userCurrency = user.user_metadata?.currency || "USD";
-      setCurrency(userCurrency);
-      const matchedCountry = findCountryByCurrency(userCurrency);
-      setCountry(matchedCountry);
+    if (profile?.currency) {
+      setCurrency(profile.currency);
+      const matchedCountry = findCountryByCurrency(profile.currency);
+      if (matchedCountry) setCountry(matchedCountry);
     }
-  }, [isAuthenticated, user, setCurrency, setCountry]);
+  }, [profile, setCountry, setCurrency]);
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isLoadingProfile) return <Loader />;
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900">

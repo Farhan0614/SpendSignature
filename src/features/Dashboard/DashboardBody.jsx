@@ -11,10 +11,12 @@ import RecentTransactions from "./RecentTransactions";
 // IMPORT OPTIMIZED HOOKS
 import { useDashboardData } from "./useDashboardData";
 import { useBalanceData } from "../wallet/useBalanceData";
+import { useProfile } from "../settings/useProfile";
 
 function DashboardBody() {
   const { user, isAuthenticated } = useUser();
   const navigate = useNavigate();
+  const { profile } = useProfile();
 
   // 1. DATA FETCHING
   const {
@@ -67,7 +69,9 @@ function DashboardBody() {
       <section className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
-            Welcome back, {user?.email?.split("@")[0]}!
+            Welcome back,{" "}
+            {profile.full_name ? profile.full_name : user?.email?.split("@")[0]}
+            !
           </h1>
           <p className="mt-1 text-slate-500">
             Here is your financial overview for{" "}
