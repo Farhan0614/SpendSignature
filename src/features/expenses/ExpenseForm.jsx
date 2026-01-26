@@ -2,102 +2,131 @@ import { useForm } from "react-hook-form";
 import { useCreateExpense } from "./useCreateExpense";
 import { useUser } from "../authentication/useUser";
 import LoaderMini from "../../ui/LoaderMini";
-
-import toast from "react-hot-toast"; // Import Toast
-
+import toast from "react-hot-toast";
 import { useBalanceData } from "../wallet/useBalanceData";
 import { useCurrency } from "../../context/CurrencyContext";
 import { formatCurrency } from "../../utils/helpers";
 
 function ExpenseForm({ categories, handleShowForm }) {
-  const { register, handleSubmit, reset, getValues, formState } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { createExpense, isCreating } = useCreateExpense();
   const { user } = useUser();
   const { currency } = useCurrency();
-
-  // 1. Get Current Balance Data
   const { currentBalance } = useBalanceData();
 
   function onSubmit(data) {
     const expenseAmount = parseFloat(data.amount);
 
-    // 2. THE CHECK: Block if amount > balance
     if (expenseAmount > currentBalance) {
       toast.error(
-        `Insufficient funds! You only have ${formatCurrency(currentBalance, currency)} left.`,
+        `Insufficient funds! Available: ${formatCurrency(currentBalance, currency)}`,
       );
-      reset();
-      return; // Stop the function
+      // Removed reset() here so user can correct the amount without typing everything again
+      return;
     }
 
-    createExpense({
-      ...data,
-      user_id: user.id,
-    });
-    console.log(data);
-    reset();
-    handleShowForm();
+    createExpense(
+      { ...data, user_id: user.id },
+      {
+        onSuccess: () => {
+          reset();
+          handleShowForm(); // Close form on success
+        },
+      },
+    );
   }
+
+  // Styles for inputs to keep code clean
+  const inputClass =
+    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none";
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-wrap items-center gap-3 p-3"
+      className="grid grid-cols-1 items-end gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-6"
     >
-      <input
-        type="date"
-        id="date"
-        required
-        {...register("date")}
-        className="h-10 w-40 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
-      />
+      {/* Date */}
+      <div className="lg:col-span-1">
+        <label className="mb-1 block text-xs font-semibold text-slate-500">
+          Date
+        </label>
+        <input
+          type="date"
+          required
+          {...register("date")}
+          className={inputClass}
+        />
+      </div>
 
-      <input
-        type="text"
-        id="title"
-        required
-        {...register("title")}
-        placeholder="Enter expense title"
-        className="h-10 w-48 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-slate-900 placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
-      />
+      {/* Title */}
+      <div className="lg:col-span-2">
+        <label className="mb-1 block text-xs font-semibold text-slate-500">
+          Title
+        </label>
+        <input
+          type="text"
+          required
+          placeholder="Expense Title"
+          {...register("title")}
+          className={inputClass}
+        />
+      </div>
 
-      <input
-        type="number"
-        id="amount"
-        required
-        {...register("amount")}
-        placeholder="Enter amount"
-        className="h-10 w-32 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
-      />
+      {/* Amount */}
+      <div className="lg:col-span-1">
+        <label className="mb-1 block text-xs font-semibold text-slate-500">
+          Amount
+        </label>
+        <input
+          type="number"
+          required
+          placeholder="0.00"
+          {...register("amount")}
+          className={inputClass}
+        />
+      </div>
 
-      <select
-        id="category_id"
-        required
-        defaultValue=""
-        {...register("category_id")}
-        className="h-10 w-40 flex-1 cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
-      >
-        <option value="" disabled>
-          Select a category
-        </option>
-        {categories.map((category, key) => (
-          <option key={key} value={category.id}>
-            {category.name}
+      {/* Category */}
+      <div className="lg:col-span-1">
+        <label className="mb-1 block text-xs font-semibold text-slate-500">
+          Category
+        </label>
+        <select
+          required
+          defaultValue=""
+          {...register("category_id")}
+          className={inputClass}
+        >
+          <option value="" disabled>
+            Select
           </option>
-        ))}
-      </select>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <input
-        type="text"
-        id="notes"
-        {...register("notes")}
-        placeholder="Optional notes (e.g., Dinner with friends)"
-        className="h-10 w-64 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm placeholder-slate-400 transition-all duration-200 focus:ring focus:ring-indigo-500 focus:ring-offset-1 focus:outline-none"
-      />
+      {/* Notes (Full width on mobile, spans 1 on desktop) */}
+      <div className="sm:col-span-2 lg:col-span-1">
+        <label className="mb-1 block text-xs font-semibold text-slate-500">
+          Notes
+        </label>
+        <input
+          type="text"
+          placeholder="Optional"
+          {...register("notes")}
+          className={inputClass}
+        />
+      </div>
 
-      <button className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition-all duration-300 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none">
-        {isCreating ? <LoaderMini /> : "Add"}
-      </button>
+      {/* Submit Button (Full width on mobile, spans full row) */}
+      <div className="mt-2 flex justify-end sm:col-span-2 lg:col-span-6">
+        <button className="flex w-full items-center justify-center rounded-lg bg-indigo-600 px-6 py-2.5 font-bold text-white transition-all hover:bg-indigo-700 hover:shadow-md disabled:bg-indigo-300 sm:w-auto">
+          {isCreating ? <LoaderMini /> : "Add Transaction"}
+        </button>
+      </div>
     </form>
   );
 }

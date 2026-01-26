@@ -6,8 +6,6 @@ import {
 } from "../../utils/helpers";
 import { FaCalendar, FaHashtag, FaTag } from "react-icons/fa";
 import { MdNotes } from "react-icons/md";
-
-import { HiArrowDownCircle } from "react-icons/hi2";
 import { useIcon } from "../../hooks/useIcon";
 
 function ExpenseDetails({ expense }) {
@@ -23,55 +21,55 @@ function ExpenseDetails({ expense }) {
   const Icon = useIcon(icon_name);
 
   return (
-    <div className="h-[70vh] w-[70vw] max-w-[700px] overflow-y-auto px-9 py-16">
-      <div className="font-sans text-slate-900">
-        <HiArrowDownCircle className="mb-5 ml-3 h-20 w-20" />
-        <h2 className="text-5xl font-black tracking-tight">
+    // CHANGED: Flexible width, sensible max-width, removed fixed height
+    <div className="w-full max-w-lg space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+          {Icon && <Icon size={40} />}
+        </div>
+        <h2 className="text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
           {formattedTitle(title)}
         </h2>
       </div>
 
-      <div className="mt-6 flex gap-5 border-b border-slate-200 pb-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-1 text-sm font-semibold text-slate-500">
-            <FaHashtag className="text-slate-400" />
-            <span>Amount</span>
-          </div>
-          <span className="text-sm font-bold text-slate-700">
+      {/* Grid Stats */}
+      <div className="grid grid-cols-3 divide-x divide-slate-100 border-y border-slate-100 py-6">
+        <div className="flex flex-col items-center gap-1 px-2 text-center">
+          <span className="flex items-center gap-1 text-xs font-bold text-slate-400 uppercase">
+            <FaHashtag /> Amount
+          </span>
+          <span className="font-bold text-slate-700">
             {formatCurrency(amount, currency)}
           </span>
         </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-1 text-sm font-semibold text-slate-500">
-            <FaCalendar className="text-slate-400" />
-            <span>Date</span>
-          </div>
-          <span className="text-sm font-bold text-slate-700">
+        <div className="flex flex-col items-center gap-1 px-2 text-center">
+          <span className="flex items-center gap-1 text-xs font-bold text-slate-400 uppercase">
+            <FaCalendar /> Date
+          </span>
+          <span className="font-bold text-slate-700">
             {formattedFullDate(date)}
           </span>
         </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-1 text-sm font-semibold text-slate-500">
-            <FaTag className="text-slate-400" />
-            <span>Category</span>
-          </div>
-          <span className="flex gap-1 text-sm font-bold text-slate-700">
-            {<Icon className="h-4 w-4" />}
-            <span>{category_name}</span>
+        <div className="flex flex-col items-center gap-1 px-2 text-center">
+          <span className="flex items-center gap-1 text-xs font-bold text-slate-400 uppercase">
+            <FaTag /> Category
           </span>
+          <span className="font-bold text-slate-700">{category_name}</span>
         </div>
       </div>
 
-      <div className="mt-9 max-w-100 space-y-2 rounded-md bg-slate-50 p-4">
-        <div className="flex items-center gap-2 text-slate-500">
+      {/* Notes Section */}
+      <div className="rounded-xl bg-slate-50 p-4">
+        <div className="mb-2 flex items-center gap-2 text-slate-500">
           <MdNotes className="h-5 w-5" />
-          <span className="text-sm font-semibold">Notes</span>
+          <span className="text-sm font-bold tracking-wide uppercase">
+            Notes
+          </span>
         </div>
-        <span className="text-sm text-slate-700">
-          {notes === "" ? "Empty" : notes}
-        </span>
+        <p className="text-sm text-slate-600 italic">
+          {notes || "No notes provided."}
+        </p>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import {
 
 function ExpenseNav() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentView = searchParams.get("view") || "daily";
 
   function handleClick(view) {
     if (view === "daily") {
@@ -19,10 +20,8 @@ function ExpenseNav() {
     }
   }
 
-  const currentView = searchParams.get("view") || "daily";
-
   return (
-    <ul className="flex items-center gap-2">
+    <ul className="flex items-center gap-2 p-1">
       <li>
         <ExpenseButton
           onClick={() => handleClick("daily")}
@@ -43,11 +42,11 @@ function ExpenseNav() {
       </li>
       <li>
         <ExpenseButton
-          onClick={() => handleClick("calender")}
-          isActive={currentView === "calender"}
+          onClick={() => handleClick("calendar")} // Fixed Typo
+          isActive={currentView === "calendar"}
         >
           <BsCalendar3 className="h-4 w-4" />
-          <span>Calender</span>
+          <span>Calendar</span>
         </ExpenseButton>
       </li>
       <li>
