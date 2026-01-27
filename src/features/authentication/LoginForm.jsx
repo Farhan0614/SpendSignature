@@ -47,6 +47,7 @@ function LoginForm({ mode }) {
           className="focus:ring-opacity-50 rounded-lg border border-slate-300 bg-white px-4 py-3 font-sans text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
           type="email"
           placeholder="example@gmail.com"
+          required
         />
         <input
           value={password}
@@ -54,6 +55,7 @@ function LoginForm({ mode }) {
           className="focus:ring-opacity-50 rounded-lg border border-slate-300 bg-white px-4 py-3 font-sans text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
           type="password"
           placeholder="Password"
+          required
         />
 
         <div className="mt-2 flex flex-col gap-3">

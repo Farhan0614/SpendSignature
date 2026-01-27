@@ -80,7 +80,7 @@ function DashboardBody() {
         </div>
         <button
           onClick={() => navigate("/expense")}
-          className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
+          className="cursor-pointer rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
         >
           + Add Transaction
         </button>

@@ -9,9 +9,11 @@ import { useProfile } from "../features/settings/useProfile";
 
 function UserMenu() {
   const { user } = useUser();
-  const { profile, isLoading: isLoadingProfile } = useProfile();
+  const { profile } = useProfile();
   const { logout, isLoading } = useLogout();
-  const { currentBalance } = useBalanceData();
+
+  // Renamed isLoading1 to isBalLoading for clarity
+  const { currentBalance, isLoading: isBalLoading } = useBalanceData();
 
   const navigate = useNavigate();
   const { currency } = useCurrency();
@@ -35,7 +37,7 @@ function UserMenu() {
         <>
           <div
             className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-all hover:bg-slate-100"
-            onClick={() => navigate("/settings")} // Redirect to settings on click
+            onClick={() => navigate("/settings")}
           >
             {/* Avatar Image */}
             <img
@@ -48,16 +50,23 @@ function UserMenu() {
               <span className="text-sm font-bold text-slate-700">
                 {displayName}
               </span>
-              <span className={`text-xs font-bold ${balanceColor}`}>
-                {formatCurrency(currentBalance, currency)}
-              </span>
+
+              {/* BALANCE LOGIC: Show Skeleton if loading, else show Value */}
+              {isBalLoading ? (
+                // The Skeleton Loader (Pulsing Gray Bar)
+                <div className="mt-1 h-3 w-16 animate-pulse rounded bg-slate-200" />
+              ) : (
+                <span className={`text-xs font-bold ${balanceColor}`}>
+                  {formatCurrency(currentBalance, currency)}
+                </span>
+              )}
             </div>
           </div>
 
           <button
             onClick={handleLogout}
             disabled={isLoading}
-            className="group flex items-center justify-center rounded-full bg-slate-100 p-2 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"
+            className="group flex cursor-pointer items-center justify-center rounded-full bg-slate-100 p-2 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"
             title="Logout"
           >
             <HiOutlineLogout className="h-5 w-5" />

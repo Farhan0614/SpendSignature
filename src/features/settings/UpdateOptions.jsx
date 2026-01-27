@@ -9,6 +9,8 @@ import { useUpdateUser } from "../authentication/useUpdateUser";
 import { useProfile } from "./useProfile";
 import { useCurrency } from "../../context/CurrencyContext";
 import { useUpdateProfile } from "./useUpdateProfile";
+import Logout from "./Logout";
+import toast from "react-hot-toast";
 
 function UpdateOptions() {
   const { user } = useUser();
@@ -100,7 +102,7 @@ function UpdateOptions() {
     e.preventDefault();
     if (!password) return;
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords needs to match");
       return;
     }
 
@@ -198,9 +200,9 @@ function UpdateOptions() {
       <button
         onClick={handleProfileUpdate}
         disabled={!isModified || isWorking}
-        className={`flex w-full items-center justify-center rounded-xl py-3.5 text-sm font-bold tracking-wide transition-all duration-300 ${
+        className={`flex w-full cursor-pointer items-center justify-center rounded-xl py-3.5 text-sm font-bold tracking-wide transition-all duration-300 ${
           !isModified || isWorking
-            ? "cursor-not-allowed bg-slate-200 text-slate-400"
+            ? "bg-slate-200 text-slate-400"
             : "cursor-pointer bg-indigo-600 text-white shadow-lg hover:bg-indigo-700"
         }`}
       >
@@ -226,6 +228,7 @@ function UpdateOptions() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none"
+              required
             />
           </div>
 
@@ -238,6 +241,7 @@ function UpdateOptions() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none"
+              required
             />
           </div>
         </div>
@@ -246,7 +250,7 @@ function UpdateOptions() {
           <button
             type="submit"
             disabled={!password || isWorking}
-            className={`rounded-lg px-6 py-2.5 text-sm font-bold transition-all ${
+            className={`cursor-pointer rounded-lg px-6 py-2.5 text-sm font-bold transition-all ${
               !password
                 ? "cursor-not-allowed bg-slate-100 text-slate-400"
                 : "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl active:scale-95"
@@ -256,6 +260,8 @@ function UpdateOptions() {
           </button>
         </div>
       </form>
+      {/*Logout*/}
+      <Logout />
     </div>
   );
 }

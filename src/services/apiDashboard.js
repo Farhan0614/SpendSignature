@@ -5,10 +5,11 @@ import { getToday } from "../utils/helpers"; // Assuming you have this, or use n
 export async function getRecentExpenses(user_id) {
   const { data, error } = await supabase
     .from("expenses")
-    .select("id, title, amount, date, categories(name)") // Fetch only needed columns
+    .select("id, title, amount, date, categories(name)")
     .eq("user_id", user_id)
-    .order("date", { ascending: false })
-    .limit(5); // <--- THE MAGIC: Only download 5 rows
+    .order("date", { ascending: false }) // Primary: Latest Day
+    .order("created_at", { ascending: false }) // Secondary: Latest Time inside that day <--- ADD THIS
+    .limit(5);
 
   if (error) throw new Error("Error loading recent expenses");
   return data;

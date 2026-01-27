@@ -5,7 +5,8 @@ export async function getExpense(user_id) {
     .from("expenses")
     .select("*, categories(name,icon_name)")
     .eq("user_id", user_id)
-    .order("date", { ascending: false });
+    .order("date", { ascending: false })
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new Error("error loading expense");

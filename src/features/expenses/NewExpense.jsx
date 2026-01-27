@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HiPlusSm } from "react-icons/hi";
+import { HiMinusSm, HiPlusSm } from "react-icons/hi";
 import ExpenseForm from "./ExpenseForm";
 
 function NewExpense({ categories }) {
@@ -14,7 +14,11 @@ function NewExpense({ categories }) {
         onClick={handleShowForm}
         className="flex cursor-pointer items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
       >
-        <HiPlusSm className="h-5 w-5" />
+        {showForm ? (
+          <HiMinusSm className="h-5 w-5" />
+        ) : (
+          <HiPlusSm className="h-5 w-5" />
+        )}
         <span>New</span>
       </button>
 
@@ -25,7 +29,11 @@ function NewExpense({ categories }) {
             : "max-h-0 scale-95 opacity-0"
         }`}
       >
-        <ExpenseForm categories={categories} handleShowForm={handleShowForm} />
+        <ExpenseForm
+          categories={categories}
+          handleShowForm={handleShowForm}
+          showForm={showForm}
+        />
       </div>
     </div>
   );
