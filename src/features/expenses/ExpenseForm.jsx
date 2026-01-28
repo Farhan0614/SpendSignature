@@ -3,9 +3,6 @@ import { useCreateExpense } from "./useCreateExpense";
 import { useUser } from "../authentication/useUser";
 import LoaderMini from "../../ui/LoaderMini";
 import toast from "react-hot-toast";
-import { useBalanceData } from "../wallet/useBalanceData";
-import { useCurrency } from "../../context/CurrencyContext";
-import { formatCurrency } from "../../utils/helpers";
 import { useEffect } from "react";
 
 function ExpenseForm({ categories, handleShowForm, showForm }) {
@@ -17,8 +14,8 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
   } = useForm();
   const { createExpense, isCreating } = useCreateExpense();
   const { user } = useUser();
-  const { currency } = useCurrency();
-  const { currentBalance } = useBalanceData();
+
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     if (!showForm) {
@@ -30,6 +27,9 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
     if (errors?.amount?.message) {
       toast.error(errors.amount.message);
     }
+    if (errors?.date?.message) {
+      toast.error(errors.date.message);
+    }
   }, [errors]);
 
   function onSubmit(data) {
@@ -40,26 +40,17 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
       return;
     }
 
-    if (expenseAmount > currentBalance) {
-      toast.error(
-        `Insufficient funds! Available: ${formatCurrency(currentBalance, currency)}`,
-      );
-      // Removed reset() here so user can correct the amount without typing everything again
-      return;
-    }
-
     createExpense(
       { ...data, user_id: user.id },
       {
         onSuccess: () => {
           reset();
-          handleShowForm(); // Close form on success
+          handleShowForm();
         },
       },
     );
   }
 
-  // Styles for inputs to keep code clean
   const inputClass =
     "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none";
 
@@ -68,7 +59,7 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-1 items-end gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-6"
     >
-      {/* Date */}
+      {/* Date Input */}
       <div className="lg:col-span-1">
         <label className="mb-1 block text-xs font-semibold text-slate-500">
           Date
@@ -76,7 +67,12 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
         <input
           type="date"
           required
-          {...register("date")}
+          max={today}
+          {...register("date", {
+            required: "Date is required",
+            validate: (value) =>
+              value <= today || "You cannot add future expenses",
+          })}
           className={inputClass}
         />
       </div>
@@ -96,7 +92,6 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
       </div>
 
       {/* Amount */}
-
       <div className="lg:col-span-1">
         <label className="mb-1 block text-xs font-semibold text-slate-500">
           Amount
@@ -139,7 +134,7 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
         </select>
       </div>
 
-      {/* Notes (Full width on mobile, spans 1 on desktop) */}
+      {/* Notes */}
       <div className="sm:col-span-2 lg:col-span-1">
         <label className="mb-1 block text-xs font-semibold text-slate-500">
           Notes
@@ -152,7 +147,7 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
         />
       </div>
 
-      {/* Submit Button (Full width on mobile, spans full row) */}
+      {/* Submit Button */}
       <div className="mt-2 flex justify-end sm:col-span-2 lg:col-span-6">
         <button className="flex w-full cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-2.5 font-bold text-white transition-all hover:bg-indigo-700 hover:shadow-md disabled:bg-indigo-300 sm:w-auto">
           {isCreating ? <LoaderMini /> : "Add Transaction"}

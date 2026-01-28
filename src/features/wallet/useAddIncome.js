@@ -9,15 +9,20 @@ export function useAddIncome() {
     mutationFn: addIncomeApi,
     onSuccess: () => {
       toast.success("Income added Successfully!");
-      // 1. Refresh Wallet Page (The heavy list)
-      queryClient.invalidateQueries({ queryKey: ["income"] });
 
-      // 2. Refresh Dashboard Widgets
+      queryClient.invalidateQueries({ queryKey: ["incomes"] });
+
+      // 2. Refresh Global Balance (User Menu & Top Cards)
+      // Also invalidate expenseAmounts just in case balance calculation relies on both syncing
+      queryClient.invalidateQueries({ queryKey: ["incomeAmounts"] });
+      queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });
+
+      //  Refresh Dashboard Widgets (Recent Activity)
       queryClient.invalidateQueries({ queryKey: ["recentIncomes"] });
       queryClient.invalidateQueries({ queryKey: ["monthIncome"] });
 
-      // 3. Refresh Global Balance (The HUD in Navbar)
-      queryClient.invalidateQueries({ queryKey: ["incomeAmounts"] });
+      // The chart uses a specific range query. We must force it to redraw.
+      queryClient.invalidateQueries({ queryKey: ["chartIncomes"] });
     },
     onError: () => {
       toast.error("There was an error adding income.");

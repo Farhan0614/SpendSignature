@@ -8,14 +8,15 @@ export function useCreateExpense() {
     mutationFn: createExpenseApi,
     onSuccess: () => {
       toast.success("Expense is created successfully.");
-      // 1. Refresh Expenses Page (The heavy list)
-      queryClient.invalidateQueries({ queryKey: ["expense"] });
+      // 1. Refresh Expenses Page (Wipes all views: monthly, yearly, etc.)
+      queryClient.invalidateQueries({ queryKey: ["expenses"] }); // CHANGED from "expense" to "expenses"
 
-      // 2. Refresh Dashboard Widgets (The light lists)
+      // 2. Refresh Dashboard
       queryClient.invalidateQueries({ queryKey: ["recentExpenses"] });
       queryClient.invalidateQueries({ queryKey: ["monthExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["chartExpenses"] }); // Added this for chart
 
-      // 3. Refresh Global Balance (The HUD in Navbar)
+      // 3. Refresh Global Balance
       queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });
 
       // 4. Refresh Category Details (If user is on that page)

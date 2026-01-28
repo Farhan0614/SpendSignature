@@ -1,20 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../authentication/useUser";
+import { format } from "date-fns";
 import SummaryCards from "./SummaryCards";
-import Redirect from "../../ui/Redirect";
 import Loader from "../../ui/Loader";
 import LineChart from "./LineChart";
 import PieCharts from "./PieChart";
 import ExpenseBarChart from "./ExpenseBarChart";
 import RecentTransactions from "./RecentTransactions";
+import DateNavigator from "../../ui/DateNavigator";
 
-// IMPORT OPTIMIZED HOOKS
 import { useDashboardData } from "./useDashboardData";
 import { useBalanceData } from "../wallet/useBalanceData";
 import { useProfile } from "../settings/useProfile";
 
 function DashboardBody() {
-  const { user, isAuthenticated } = useUser();
   const navigate = useNavigate();
   const { profile } = useProfile();
 
@@ -25,12 +23,11 @@ function DashboardBody() {
     monthExpenses,
     monthIncomes,
     isLoading,
+    currentMonth,
   } = useDashboardData();
 
   const { currentBalance, isLoading: loadingBalance } = useBalanceData();
 
-  if (user === null || !isAuthenticated)
-    return <Redirect pageName="dashboard" />;
   if (isLoading || loadingBalance) return <Loader />;
 
   // 2. MONTHLY TOTALS
@@ -43,8 +40,7 @@ function DashboardBody() {
     0,
   );
 
-  // 3. PREPARE SEPARATE LISTS
-  // We keep the mapping to add the 'type' flag (for color/icon logic)
+  // 3. PREPARE LISTS
   const formattedExpenses = recentExpenses.map((exp) => ({
     id: exp.id,
     type: "expense",
@@ -61,34 +57,44 @@ function DashboardBody() {
     date: inc.created_at ? new Date(inc.created_at) : new Date(),
   }));
 
-  // Note: We do NOT merge them anymore.
+  const displayMonth = currentMonth
+    ? format(new Date(`${currentMonth}-01`), "MMMM")
+    : format(new Date(), "MMMM");
 
   return (
     <div className="space-y-8">
-      {/* SECTION 1: WELCOME */}
-      <section className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+      {/* SECTION 1: WELCOME & CONTROLS */}
+      <section className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        {/* Left: Text */}
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
             Welcome back,{" "}
-            {profile.full_name ? profile.full_name : user?.email?.split("@")[0]}
-            !
+            {profile.full_name ? profile.full_name.split(" ")[0] : "User"}!
           </h1>
           <p className="mt-1 text-slate-500">
             Here is your financial overview for{" "}
-            {new Date().toLocaleString("default", { month: "long" })}.
+            <span className="font-bold text-slate-700">{displayMonth}</span>.
           </p>
         </div>
-        <button
-          onClick={() => navigate("/expense")}
-          className="cursor-pointer rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
-        >
-          + Add Transaction
-        </button>
+
+        {/* Right: Controls (Date Nav + Add Button) */}
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          {/* THE NEW NAVIGATOR */}
+          <DateNavigator />
+
+          <button
+            onClick={() => navigate("/expense")}
+            className="cursor-pointer rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
+          >
+            + Add Transaction
+          </button>
+        </div>
       </section>
 
       {/* SECTION 2: METRICS */}
       <section>
         <SummaryCards
+          displayMonth={displayMonth}
           totalBalance={currentBalance}
           monthlyBalance={monthlyBalance}
           monthlyExpense={totalMonthlyExpense}
@@ -106,13 +112,10 @@ function DashboardBody() {
 
           {/* SPLIT LISTS: EXPENSES vs INCOMES */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {/* List 1: Recent Expenses */}
             <RecentTransactions
               title="Recent Expenses"
               transactions={formattedExpenses}
             />
-
-            {/* List 2: Recent Incomes */}
             <RecentTransactions
               title="Recent Incomes"
               transactions={formattedIncomes}

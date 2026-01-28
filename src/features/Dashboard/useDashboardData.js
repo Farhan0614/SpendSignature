@@ -1,40 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { useUser } from "../authentication/useUser";
-import {
-  getRecentExpenses,
-  getRecentIncomes,
-  getCurrentMonthExpenses,
-  getCurrentMonthIncome,
-} from "../../services/apiDashboard";
+import { getExpenses } from "../../services/apiExpense";
+import { getIncomes } from "../../services/apiWallet";
 
 export function useDashboardData() {
   const { user } = useUser();
-  const userId = user?.id;
+  const [searchParams] = useSearchParams();
 
-  // 1. Recent Activity (Fetch 5 + 5)
+  const currentMonth =
+    searchParams.get("month") || new Date().toISOString().slice(0, 7);
+
+  // 1. Fetch Recent Activity (Limit 5, IGNORE MONTH filter)
   const { data: recentExp, isLoading: load1 } = useQuery({
-    queryKey: ["recentExpenses", userId],
-    queryFn: () => getRecentExpenses(userId),
-    enabled: !!userId,
+    queryKey: ["recentExpenses", user?.id],
+    queryFn: () => getExpenses({ user_id: user.id, limit: 5 }),
   });
 
   const { data: recentInc, isLoading: load2 } = useQuery({
-    queryKey: ["recentIncomes", userId],
-    queryFn: () => getRecentIncomes(userId),
-    enabled: !!userId,
+    queryKey: ["recentIncomes", user?.id],
+    queryFn: () => getIncomes({ user_id: user.id, limit: 5 }),
   });
 
-  // 2. Current Month Data (For Charts/Bars)
+  // 2. Fetch Selected Month Data (Filter by Month, NO LIMIT)
   const { data: monthExp, isLoading: load3 } = useQuery({
-    queryKey: ["monthExpenses", userId],
-    queryFn: () => getCurrentMonthExpenses(userId),
-    enabled: !!userId,
+    queryKey: ["monthExpenses", user?.id, currentMonth],
+    queryFn: () => getExpenses({ user_id: user.id, month: currentMonth }),
   });
 
   const { data: monthInc, isLoading: load4 } = useQuery({
-    queryKey: ["monthIncome", userId],
-    queryFn: () => getCurrentMonthIncome(userId),
-    enabled: !!userId,
+    queryKey: ["monthIncome", user?.id, currentMonth],
+    queryFn: () => getIncomes({ user_id: user.id, month: currentMonth }),
   });
 
   return {
@@ -43,5 +39,6 @@ export function useDashboardData() {
     monthExpenses: monthExp || [],
     monthIncomes: monthInc || [],
     isLoading: load1 || load2 || load3 || load4,
+    currentMonth,
   };
 }

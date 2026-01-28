@@ -6,8 +6,6 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { formatCurrency } from "../../utils/helpers"; // Optional: if you want formatted tooltips
-import { useCurrency } from "../../context/CurrencyContext"; // Optional: if you want currency in tooltip
 
 const CATEGORY_COLORS = {
   "Food & Drinks": "#10B981",
@@ -24,9 +22,6 @@ const CATEGORY_COLORS = {
 };
 
 function PieCharts({ monthlyExpense = [] }) {
-  // Optional: Get currency for better tooltips
-  // const { currency } = useCurrency();
-
   // Safely build data
   const data =
     monthlyExpense.length > 0

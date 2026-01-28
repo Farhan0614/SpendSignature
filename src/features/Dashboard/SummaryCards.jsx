@@ -2,7 +2,12 @@ import { formatCurrency } from "../../utils/helpers";
 import { useCurrency } from "../../context/CurrencyContext";
 import { HiCheck, HiTrendingUp } from "react-icons/hi";
 
-function SummaryCards({ totalBalance, monthlyBalance, monthlyExpense }) {
+function SummaryCards({
+  totalBalance,
+  monthlyBalance,
+  monthlyExpense,
+  displayMonth,
+}) {
   const { currency } = useCurrency();
 
   return (
@@ -21,7 +26,7 @@ function SummaryCards({ totalBalance, monthlyBalance, monthlyExpense }) {
         <div className="flex items-center justify-between px-5 py-3">
           <p className="text-sm">
             <span className="font-bold text-emerald-500">Total Income</span>{" "}
-            <span className="font-medium text-slate-400">(This Month)</span>
+            <span className="font-medium text-slate-400">({displayMonth})</span>
           </p>
           <HiTrendingUp className="h-7 w-7 text-emerald-600" />
         </div>
@@ -41,7 +46,7 @@ function SummaryCards({ totalBalance, monthlyBalance, monthlyExpense }) {
         <div className="flex items-center justify-between px-5 py-3">
           <p className="text-sm">
             <span className="font-bold text-rose-500">Total Expense</span>{" "}
-            <span className="font-medium text-slate-400">(This Month)</span>
+            <span className="font-medium text-slate-400">({displayMonth})</span>
           </p>
           <HiTrendingUp className="h-7 w-7 text-red-600" />
         </div>

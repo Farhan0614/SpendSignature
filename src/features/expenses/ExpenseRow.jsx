@@ -1,12 +1,11 @@
 import { useCurrency } from "../../context/CurrencyContext";
-
 import {
   formatCurrency,
   formattedFullDate,
   formattedTitle,
 } from "../../utils/helpers";
 import { HiArrowDownCircle } from "react-icons/hi2";
-import Modal from "../../ui/Modal";
+import Modal from "../../ui/Modal"; // Ensure this import is correct
 import ExpenseDetails from "./ExpenseDetails";
 import { useIcon } from "../../hooks/useIcon";
 
@@ -23,7 +22,8 @@ function ExpenseRow({ expense }) {
   const Icon = useIcon(icon_name);
 
   return (
-    <>
+    // FIX: Wrap this specific row in its own Modal Provider
+    <Modal>
       <Modal.Open opens={`expense-${id}`}>
         <div className="mb-1 flex cursor-pointer items-center justify-between transition-all duration-200 hover:bg-slate-100">
           <span className="flex items-center gap-1 font-sans font-semibold">
@@ -46,7 +46,7 @@ function ExpenseRow({ expense }) {
       <Modal.Window name={`expense-${id}`}>
         <ExpenseDetails expense={expense} />
       </Modal.Window>
-    </>
+    </Modal>
   );
 }
 
