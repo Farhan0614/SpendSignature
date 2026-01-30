@@ -2,54 +2,36 @@ import { FaHashtag } from "react-icons/fa";
 import { formatCurrency } from "../../utils/helpers";
 import { useCurrency } from "../../context/CurrencyContext";
 
-function CategorySpending({ categoryExpenses }) {
+function CategorySpending({ viewTotal = 0, globalTotal = 0, view }) {
   const { currency } = useCurrency();
 
-  const groupedByMonth = categoryExpenses.reduce((acc, exp) => {
-    const monthKey = exp.date.slice(0, 7);
-    if (!acc[monthKey]) acc[monthKey] = [];
-    acc[monthKey].push(exp);
-    return acc;
-  }, {});
-
-  const currentMonthKey = new Date().toISOString().slice(0, 7);
-  const currentMonthExpenses = groupedByMonth[currentMonthKey] || [];
-
-  const spentThisMonth = currentMonthExpenses.reduce(
-    (sum, exp) => sum + exp.amount,
-    0,
-  );
-  console.log(spentThisMonth);
-
-  const totalSpent = categoryExpenses?.reduce(
-    (sum, exp) => sum + exp.amount,
-    0,
-  );
+  // Dynamic Label: "Spent This Month" vs "Spent This Year"
+  const viewLabel = view === "monthly" ? "Spent This Month" : "Spent This Year";
 
   return (
-    <>
-      <div className="mb-10 flex items-center gap-6 border-b border-slate-50 pb-4">
-        <div>
-          <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
-            <FaHashtag className="text-slate-400" />
-            <span>Spent This Month</span>
-          </div>
-          <span className="font-sans text-sm font-bold text-slate-700">
-            {formatCurrency(spentThisMonth, currency)}
-          </span>
+    <div className="mb-10 flex items-center gap-6 border-b border-slate-50 pb-4">
+      {/* 1. VIEW TOTAL (Context Aware) */}
+      <div>
+        <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
+          <FaHashtag className="text-slate-400" />
+          <span>{viewLabel}</span>
         </div>
-
-        <div>
-          <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
-            <FaHashtag className="text-slate-400" />
-            <span>Total Spent</span>
-          </div>
-          <span className="font-sans text-sm font-bold text-slate-700">
-            {formatCurrency(totalSpent, currency)}
-          </span>
-        </div>
+        <span className="font-sans text-sm font-bold text-slate-700">
+          {formatCurrency(viewTotal, currency)}
+        </span>
       </div>
-    </>
+
+      {/* 2. GLOBAL TOTAL (All Time) */}
+      <div>
+        <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
+          <FaHashtag className="text-slate-400" />
+          <span>Total Spent (All Time)</span>
+        </div>
+        <span className="font-sans text-sm font-bold text-slate-700">
+          {formatCurrency(globalTotal, currency)}
+        </span>
+      </div>
+    </div>
   );
 }
 

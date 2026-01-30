@@ -1,9 +1,5 @@
 import { useCurrency } from "../../context/CurrencyContext";
-import {
-  formatCurrency,
-  formattedFullDate,
-  formattedTitle,
-} from "../../utils/helpers";
+import { formatCurrency, formattedFullDate } from "../../utils/helpers";
 
 function ExpenseList({ expense }) {
   const { currency } = useCurrency();
@@ -18,7 +14,7 @@ function ExpenseList({ expense }) {
 
       {/* Col 2: Title */}
       <span className="truncate pr-4 text-sm font-bold text-slate-700">
-        {formattedTitle(title)}
+        {title}
       </span>
 
       <span className="text-right text-sm font-bold text-slate-900">

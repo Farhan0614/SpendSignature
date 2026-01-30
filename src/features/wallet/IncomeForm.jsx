@@ -66,6 +66,7 @@ function IncomeForm() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             type="number"
+            onWheel={(e) => e.target.blur()}
             min="0"
             placeholder="e.g. 5000"
             disabled={isAddingIncome}

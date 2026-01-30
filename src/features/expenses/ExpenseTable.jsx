@@ -55,8 +55,6 @@ function ExpenseTable() {
       };
     });
 
-  console.log(groupedData, groupedExpenses);
-
   return (
     <div className="mt-8">
       {groupedExpenses.map((group, index) => (

@@ -1,9 +1,7 @@
 import { FaAd, FaCalendar, FaHashtag } from "react-icons/fa";
 import ExpenseList from "./ExpenseList";
 
-function CategoryTable({ categoryExpenses }) {
-  const count = categoryExpenses?.length || 0;
-
+function CategoryTable({ categoryExpenses, count }) {
   return (
     <div className="mt-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
       {/* HEADER */}

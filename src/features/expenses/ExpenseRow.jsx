@@ -8,8 +8,10 @@ import { HiArrowDownCircle } from "react-icons/hi2";
 import Modal from "../../ui/Modal"; // Ensure this import is correct
 import ExpenseDetails from "./ExpenseDetails";
 import { useIcon } from "../../hooks/useIcon";
+import { useNavigate } from "react-router-dom";
 
 function ExpenseRow({ expense }) {
+  const navigate = useNavigate();
   const { currency } = useCurrency();
   const {
     amount,
@@ -21,8 +23,14 @@ function ExpenseRow({ expense }) {
 
   const Icon = useIcon(icon_name);
 
+  function handleCategoryClick(e) {
+    console.log(e);
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/category/${category_name}`);
+  }
+
   return (
-    // FIX: Wrap this specific row in its own Modal Provider
     <Modal>
       <Modal.Open opens={`expense-${id}`}>
         <div className="mb-1 flex cursor-pointer items-center justify-between transition-all duration-200 hover:bg-slate-100">
@@ -31,10 +39,14 @@ function ExpenseRow({ expense }) {
             <span>{formattedTitle(title)}</span>
           </span>
           <div className="flex items-center gap-5 text-sm font-semibold">
-            <span className="flex items-center justify-center gap-1 font-sans">
-              {<Icon className="h-4 w-4" />}
+            <button
+              onClick={handleCategoryClick}
+              className="z-10 flex cursor-pointer items-center justify-center gap-1 rounded-md px-2 py-1 transition-colors hover:text-indigo-700"
+              title="View Category Details"
+            >
+              {Icon && <Icon className="h-4 w-4" />}
               <span>{category_name}</span>
-            </span>
+            </button>
             <span className="font-sans">
               {formatCurrency(amount, currency)}
             </span>
