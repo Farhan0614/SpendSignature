@@ -40,6 +40,37 @@ export async function getIncomes({ user_id, month, year, limit }) {
   return data;
 }
 
+export async function deleteIncome(id) {
+  const { data, error } = await supabase.from("wallet").delete().eq("id", id);
+  if (error) throw new Error("Income could not be deleted");
+  return data;
+}
+
+export async function editIncome({ id, ...obj }) {
+  // We need to construct the update object carefully
+  const updates = {
+    income: parseFloat(obj.income),
+    created_at: obj.created_at, // The new date selected by user
+  };
+
+  // AUTOMATICALLY UPDATE MONTH/YEAR COLUMNS
+  // If the user changed the date, we must move the record to the correct month bucket
+  if (obj.created_at) {
+    const dateObj = new Date(obj.created_at);
+    updates.month = dateObj.getMonth() + 1; // JS months are 0-11
+    updates.year = dateObj.getFullYear();
+  }
+
+  const { data, error } = await supabase
+    .from("wallet")
+    .update(updates)
+    .eq("id", id)
+    .select();
+
+  if (error) throw new Error("Income could not be updated");
+  return data;
+}
+
 // 3. GET ALL INCOME AMOUNTS (CRITICAL: Keeps your Total Balance working)
 export async function getIncomeAmounts(user_id) {
   const { data, error } = await supabase

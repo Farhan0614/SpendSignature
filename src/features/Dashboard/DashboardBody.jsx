@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
+import { format, isSameMonth } from "date-fns"; // 1. Import isSameMonth
 import SummaryCards from "./SummaryCards";
 import Loader from "../../ui/Loader";
 import LineChart from "./LineChart";
@@ -57,9 +57,18 @@ function DashboardBody() {
     date: inc.created_at ? new Date(inc.created_at) : new Date(),
   }));
 
-  const displayMonth = currentMonth
-    ? format(new Date(`${currentMonth}-01`), "MMMM")
-    : format(new Date(), "MMMM");
+  // --- 4. NEW DATE LOGIC ---
+  const selectedDate = new Date(`${currentMonth}-01`);
+  const today = new Date();
+  const isCurrent = isSameMonth(selectedDate, today);
+
+  // Text for the "Welcome" sentence (lowercase flows better)
+  const sentenceDate = isCurrent
+    ? "this month"
+    : format(selectedDate, "MMMM yyyy");
+
+  // Text for the Cards (Title Case looks better in widgets)
+  const cardDate = isCurrent ? "This Month" : format(selectedDate, "MMMM yyyy");
 
   return (
     <div className="space-y-8">
@@ -73,13 +82,12 @@ function DashboardBody() {
           </h1>
           <p className="mt-1 text-slate-500">
             Here is your financial overview for{" "}
-            <span className="font-bold text-slate-700">{displayMonth}</span>.
+            <span className="font-bold text-slate-700">{sentenceDate}</span>.
           </p>
         </div>
 
         {/* Right: Controls (Date Nav + Add Button) */}
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-          {/* THE NEW NAVIGATOR */}
           <DateNavigator />
 
           <button
@@ -94,23 +102,20 @@ function DashboardBody() {
       {/* SECTION 2: METRICS */}
       <section>
         <SummaryCards
-          displayMonth={displayMonth}
+          displayMonth={cardDate} // Pass the Card specific text
           totalBalance={currentBalance}
           monthlyBalance={monthlyBalance}
           monthlyExpense={totalMonthlyExpense}
         />
       </section>
 
-      {/* SECTION 3: MAIN GRID */}
+      {/* ... rest of the code remains the same ... */}
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* === LEFT COLUMN (2/3 width) === */}
+        {/* ... */}
         <div className="flex flex-col gap-8 lg:col-span-2">
-          {/* Chart Area */}
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <LineChart />
           </div>
-
-          {/* SPLIT LISTS: EXPENSES vs INCOMES */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <RecentTransactions
               title="Recent Expenses"
@@ -123,17 +128,13 @@ function DashboardBody() {
           </div>
         </div>
 
-        {/* === RIGHT COLUMN (1/3 width) === */}
         <div className="flex flex-col gap-8">
-          {/* Budget Widget */}
           <div className="rounded-2xl bg-white shadow-sm transition-transform hover:scale-[1.02]">
             <ExpenseBarChart
               income={monthlyBalance}
               expense={totalMonthlyExpense}
             />
           </div>
-
-          {/* Pie Chart Widget */}
           <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-6 text-lg font-bold text-slate-700">
               Expense Breakdown

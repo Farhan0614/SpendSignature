@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { format, parseISO, isSameMonth } from "date-fns";
+import { format, isSameMonth } from "date-fns";
 import Loader from "../../ui/Loader";
 import IncHisItem from "./IncHisItem";
 import { getMonthName, formatCurrency } from "../../utils/helpers";
@@ -35,12 +35,7 @@ function History({ incomes, isLoading, view }) {
   if (view === "monthly") {
     // Simple List (Already sorted by date from API)
     content = incomes?.map((income) => (
-      <IncHisItem
-        key={income.id}
-        amount={income.income}
-        month={income.month}
-        year={income.year}
-      />
+      <IncHisItem key={income.id} item={income} />
     ));
   } else {
     // YEARLY: Group by Month
@@ -79,12 +74,7 @@ function History({ incomes, isLoading, view }) {
                 {/* Items in that month */}
                 <div className="flex flex-col gap-2">
                   {items.map((income) => (
-                    <IncHisItem
-                      key={income.id}
-                      amount={income.income}
-                      month={income.month}
-                      year={income.year}
-                    />
+                    <IncHisItem key={income.id} item={income} />
                   ))}
                 </div>
               </div>

@@ -4,17 +4,31 @@ import { useUser } from "../authentication/useUser";
 import LoaderMini from "../../ui/LoaderMini";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { useEditExpense } from "./useEditExpense";
 
-function ExpenseForm({ categories, handleShowForm, showForm }) {
+function ExpenseForm({
+  categories,
+  handleShowForm,
+  showForm,
+  expenseToEdit = {},
+}) {
+  const { id: editId, ...editValues } = expenseToEdit;
+  const isEditSession = Boolean(editId);
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: isEditSession ? editValues : {},
+  });
+
   const { createExpense, isCreating } = useCreateExpense();
+  const { editExpense, isEditing } = useEditExpense();
   const { user } = useUser();
 
+  const isWorking = isCreating || isEditing;
   const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
@@ -40,15 +54,30 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
       return;
     }
 
-    createExpense(
-      { ...data, user_id: user.id },
-      {
-        onSuccess: () => {
-          reset();
-          handleShowForm();
+    // 1. EDIT MODE
+    if (isEditSession) {
+      editExpense(
+        { ...data, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+            handleShowForm();
+          },
         },
-      },
-    );
+      );
+    }
+
+    // 2. CREATE MODE
+    else
+      createExpense(
+        { ...data, user_id: user.id },
+        {
+          onSuccess: () => {
+            reset();
+            handleShowForm();
+          },
+        },
+      );
   }
 
   const inputClass =
@@ -147,10 +176,32 @@ function ExpenseForm({ categories, handleShowForm, showForm }) {
         />
       </div>
 
-      {/* Submit Button */}
-      <div className="mt-2 flex justify-end sm:col-span-2 lg:col-span-6">
-        <button className="flex w-full cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-2.5 font-bold text-white transition-all hover:bg-indigo-700 hover:shadow-md disabled:bg-indigo-300 sm:w-auto">
-          {isCreating ? <LoaderMini /> : "Add Transaction"}
+      {/* BUTTONS ROW */}
+      <div className="mt-2 flex items-center justify-end gap-2 sm:col-span-2 lg:col-span-6">
+        {/* Cancel Button (Only for Edit Mode) */}
+        {isEditSession && (
+          <button
+            type="button"
+            onClick={handleShowForm}
+            disabled={isWorking}
+            className="cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50"
+          >
+            Cancel
+          </button>
+        )}
+
+        {/* Submit Button */}
+        <button
+          disabled={isWorking}
+          className="flex w-full cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-2.5 font-bold text-white transition-all hover:bg-indigo-700 hover:shadow-md disabled:bg-indigo-300 sm:w-auto"
+        >
+          {isWorking ? (
+            <LoaderMini />
+          ) : isEditSession ? (
+            "Save Changes"
+          ) : (
+            "Add Transaction"
+          )}
         </button>
       </div>
     </form>

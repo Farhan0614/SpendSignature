@@ -30,14 +30,13 @@ function Window({ children, name }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm transition-all">
-      {/* CHANGED: Better max-width, padding, and mobile sizing */}
       <div
         ref={ref}
-        className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl transition-all md:p-8"
+        className="relative max-h-[90vh] w-auto max-w-fit overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl transition-all md:p-8"
       >
         <button
           onClick={close}
-          className="absolute top-4 right-4 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          className="absolute top-4 right-4 z-50 cursor-pointer rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
         >
           <HiXMark className="h-6 w-6" />
         </button>

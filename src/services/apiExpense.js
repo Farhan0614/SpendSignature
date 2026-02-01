@@ -3,6 +3,7 @@ import { PAGE_SIZE } from "../utils/constants";
 // services/apiExpense.js
 
 export async function createExpense(expense) {
+  console.log(expense);
   const { data, error } = await supabase
     .from("expenses")
     .insert([expense])
@@ -58,6 +59,36 @@ export async function getExpenses({ user_id, month, year, limit }) {
   if (error) {
     console.error(error);
     throw new Error("Expenses could not be loaded");
+  }
+
+  return data;
+}
+
+export async function deleteExpense(id) {
+  const { data, error } = await supabase.from("expenses").delete().eq("id", id);
+
+  if (error) throw new Error("Expense could not be deleted");
+  return data;
+}
+
+export async function editExpense({ id, ...obj }) {
+  const expenseData = {
+    title: obj.title,
+    amount: parseFloat(obj.amount),
+    category_id: parseInt(obj.category_id),
+    date: obj.date,
+    notes: obj.notes,
+  };
+
+  const { data, error } = await supabase
+    .from("expenses")
+    .update(expenseData)
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    console.error("Supabase Update Error:", error);
+    throw new Error("Expense could not be updated");
   }
 
   return data;

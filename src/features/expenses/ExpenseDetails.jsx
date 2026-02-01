@@ -1,16 +1,34 @@
+import { useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 import {
   formatCurrency,
   formattedFullDate,
   formattedTitle,
 } from "../../utils/helpers";
-import { FaCalendar, FaHashtag, FaTag } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaHashtag,
+  FaTag,
+  FaPencilAlt,
+  FaTrash,
+} from "react-icons/fa";
 import { MdNotes } from "react-icons/md";
 import { useIcon } from "../../hooks/useIcon";
+import { useDeleteExpense } from "./useDeleteExpense";
+import ExpenseForm from "./ExpenseForm";
+import { useCategories } from "../categories/useCategories";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
-function ExpenseDetails({ expense }) {
+function ExpenseDetails({ expense, onCloseModal }) {
   const { currency } = useCurrency();
+  const { categories } = useCategories();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const { deleteExpense, isDeleting } = useDeleteExpense();
+
   const {
+    id,
     amount,
     date,
     notes,
@@ -20,15 +38,44 @@ function ExpenseDetails({ expense }) {
 
   const Icon = useIcon(icon_name);
 
+  // --- 1. EDIT MODE (Wide & Large) ---
+  if (isEditing) {
+    return (
+      <div className="w-[90vw] max-w-4xl">
+        {" "}
+        {/* Huge width for Form */}
+        <h2 className="mb-4 text-xl font-bold text-slate-800">Edit Expense</h2>
+        <ExpenseForm
+          categories={categories}
+          expenseToEdit={expense}
+          handleShowForm={() => setIsEditing(false)}
+        />
+      </div>
+    );
+  }
+
+  // --- 2. DELETE MODE (Wider & Short) ---
+  if (isConfirmingDelete) {
+    return (
+      <ConfirmDelete
+        resourceName="Expense"
+        message={`Are you sure you want to delete "${title}"?`}
+        onConfirm={() => deleteExpense(id, { onSuccess: onCloseModal })}
+        onCancel={() => setIsConfirmingDelete(false)}
+        disabled={isDeleting}
+      />
+    );
+  }
+
+  // --- 3. DEFAULT DETAILS MODE (Standard Width) ---
   return (
-    // CHANGED: Flexible width, sensible max-width, removed fixed height
-    <div className="w-full max-w-lg space-y-8">
-      {/* Header */}
+    <div className="flex w-[85vw] max-w-lg flex-col gap-8">
+      {/* Header & Icon */}
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
-          {Icon && <Icon size={40} />}
+        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+          {Icon && <Icon size={48} />}
         </div>
-        <h2 className="text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
+        <h2 className="text-3xl font-black tracking-tight text-slate-900">
           {formattedTitle(title)}
         </h2>
       </div>
@@ -60,7 +107,7 @@ function ExpenseDetails({ expense }) {
       </div>
 
       {/* Notes Section */}
-      <div className="rounded-xl bg-slate-50 p-4">
+      <div className="rounded-xl bg-slate-50 p-6">
         <div className="mb-2 flex items-center gap-2 text-slate-500">
           <MdNotes className="h-5 w-5" />
           <span className="text-sm font-bold tracking-wide uppercase">
@@ -70,6 +117,27 @@ function ExpenseDetails({ expense }) {
         <p className="text-sm text-slate-600 italic">
           {notes || "No notes provided."}
         </p>
+      </div>
+
+      {/* BOTTOM RIGHT ACTION BUTTONS */}
+      <div className="mt-4 flex justify-end gap-3 pt-4">
+        <button
+          onClick={() => setIsEditing(true)}
+          className="flex cursor-pointer items-center gap-2 rounded-lg bg-indigo-50 px-5 py-3 font-semibold text-indigo-600 transition-colors hover:bg-indigo-100 hover:text-indigo-700"
+          title="Edit Expense"
+        >
+          <FaPencilAlt size={18} />
+          <span>Edit</span>
+        </button>
+
+        <button
+          onClick={() => setIsConfirmingDelete(true)}
+          className="flex cursor-pointer items-center gap-2 rounded-lg bg-red-50 px-5 py-3 font-semibold text-red-600 transition-colors hover:bg-red-100 hover:text-red-700"
+          title="Delete Expense"
+        >
+          <FaTrash size={18} />
+          <span>Delete</span>
+        </button>
       </div>
     </div>
   );
