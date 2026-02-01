@@ -6,7 +6,6 @@ function IncomeEditForm({ incomeItem, onClose, onSuccess }) {
   const { editIncome, isEditing: isUpdating } = useEditIncome();
   const { id, income, created_at } = incomeItem;
 
-  // Get Today for max date
   const today = new Date().toISOString().split("T")[0];
 
   const {
@@ -21,8 +20,35 @@ function IncomeEditForm({ incomeItem, onClose, onSuccess }) {
   });
 
   function onSubmit(data) {
+    // 1. Parse the NEW date selected by the user
+    const [year, month, day] = data.created_at.split("-").map(Number);
+
+    // 2. Create a Date object from the ORIGINAL timestamp
+    let finalDate = new Date(created_at);
+
+    if (
+      finalDate.getHours() === 0 &&
+      finalDate.getMinutes() === 0 &&
+      finalDate.getSeconds() === 0
+    ) {
+      finalDate = new Date(); // Switch to "Now"
+    }
+
+    // 3. Update the Year/Month/Day to match the user's input
+    // (Local time manipulation preserves the time of day)
+    finalDate.setFullYear(year);
+    finalDate.setMonth(month - 1);
+    finalDate.setDate(day);
+
+    // 4. Generate timestamp
+    const fullTimestamp = finalDate.toISOString();
+
     editIncome(
-      { ...data, id },
+      {
+        id,
+        income: parseFloat(data.income),
+        created_at: fullTimestamp,
+      },
       {
         onSuccess: () => onSuccess(),
       },
