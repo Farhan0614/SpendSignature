@@ -5,6 +5,8 @@ import {
   FaHome,
   FaPlug,
   FaShoppingCart,
+  FaPlane,
+  FaEllipsisH,
 } from "react-icons/fa";
 import { GiKnifeFork } from "react-icons/gi";
 import { HiHeart } from "react-icons/hi";
@@ -23,6 +25,8 @@ const iconMap = {
   HiPlus,
   MdAirplanemodeActive,
   BsBank,
+  FaPlane,
+  FaEllipsisH,
 };
 
 export default iconMap;

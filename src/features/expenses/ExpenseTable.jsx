@@ -1,30 +1,56 @@
 import { format, parseISO } from "date-fns";
+import { useSearchParams } from "react-router-dom";
 import EmptyExpense from "../../ui/EmptyExpense";
 import Loader from "../../ui/Loader";
 import { useExpense } from "./useExpense";
 import GroupExpenses from "./GroupExpenses";
+import ExpenseRow from "./ExpenseRow";
 
 function ExpenseTable() {
   const { expenses, isLoading, view } = useExpense();
+  const [searchParams] = useSearchParams();
+
+  const sortBy = searchParams.get("sortBy") || "date-desc";
+  const [field, direction] = sortBy.split("-");
+
+  // 1. Determine Modifier (1 for Ascending, -1 for Descending)
+  const modifier = direction === "asc" ? 1 : -1;
 
   if (isLoading) return <Loader />;
   if (!expenses || expenses.length === 0) return <EmptyExpense />;
 
+  // --- SCENARIO 1: SORT BY AMOUNT (FLAT VIEW) ---
+  if (field === "amount") {
+    const sortedExpenses = expenses.slice().sort((a, b) => {
+      return (a.amount - b.amount) * modifier;
+    });
+
+    return (
+      <div className="mt-8 flex flex-col gap-2">
+        <h3 className="mb-2 text-sm font-bold tracking-wider text-slate-500 uppercase">
+          Ranked by Amount
+        </h3>
+        <div className="rounded-xl border border-slate-200 bg-white p-2">
+          {sortedExpenses.map((expense) => (
+            <ExpenseRow expense={expense} key={expense.id} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // --- SCENARIO 2: SORT BY DATE (GROUPED VIEW) ---
   let groupedData = {};
 
-  // --- LOGIC 1: MONTHLY VIEW (Group by Day) ---
   if (view === "monthly") {
     groupedData = expenses.reduce((acc, exp) => {
-      const dayKey = exp.date; // "2026-02-15"
+      const dayKey = exp.date;
       if (!acc[dayKey]) acc[dayKey] = [];
       acc[dayKey].push(exp);
       return acc;
     }, {});
-  }
-  // --- LOGIC 2: YEARLY VIEW (Group by Month) ---
-  else {
+  } else {
     groupedData = expenses.reduce((acc, exp) => {
-      // Extract YYYY-MM
       const monthKey = exp.date.slice(0, 7);
       if (!acc[monthKey]) acc[monthKey] = [];
       acc[monthKey].push(exp);
@@ -32,25 +58,27 @@ function ExpenseTable() {
     }, {});
   }
 
-  // Convert Object to Array for rendering
-  // Object.entries returns [["2026-02-15", [...expenses]], ...]
   const groupedExpenses = Object.entries(groupedData)
-    // Optional: Sort keys descending (newest first)
-    .sort((a, b) => b[0].localeCompare(a[0]))
+    // 2. Sort the Groups (e.g., January vs February)
+    .sort((a, b) => {
+      return a[0].localeCompare(b[0]) * modifier;
+    })
     .map(([periodKey, items]) => {
-      let prettyPeriod;
+      // 3. FIX: Sort the Items INSIDE the group (e.g., Jan 1st vs Jan 5th)
+      const sortedItems = items.sort((a, b) => {
+        return (new Date(a.date) - new Date(b.date)) * modifier;
+      });
 
+      let prettyPeriod;
       if (view === "monthly") {
-        // Input: "2026-02-15" -> Output: "Feb 15, 2026"
         prettyPeriod = format(parseISO(periodKey), "MMM dd, yyyy");
       } else {
-        // Input: "2026-02" -> Output: "February"
         prettyPeriod = format(parseISO(`${periodKey}-01`), "MMMM");
       }
 
       return {
         period: prettyPeriod,
-        expenses: items,
+        expenses: sortedItems, // Use the sorted list
         total: items.reduce((sum, exp) => sum + exp.amount, 0),
       };
     });

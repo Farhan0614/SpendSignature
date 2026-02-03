@@ -7,10 +7,11 @@ import { useIcon } from "../../hooks/useIcon";
 import Loader from "../../ui/Loader";
 import CategoryTable from "./CategoryTable";
 import CategorySpending from "./CategorySpending";
-import Pagination from "../../ui/Pagination"; // New component
-import ViewToggle from "../../ui/ViewToggle"; // Reuse!
-import DateNavigator from "../../ui/DateNavigator"; // Reuse!
-import YearNavigator from "../../ui/YearNavigator"; // Reuse!
+import Pagination from "../../ui/Pagination";
+import ViewToggle from "../../ui/ViewToggle";
+import DateNavigator from "../../ui/DateNavigator";
+import YearNavigator from "../../ui/YearNavigator";
+import SortBy from "../../ui/SortBy"; // <--- 1. IMPORT THIS
 
 function CategoryDetails() {
   const { categoryName } = useParams();
@@ -19,10 +20,8 @@ function CategoryDetails() {
   const { categories } = useCategories();
 
   // 1. Fetch Optimized Data
-  const { expenses, count, stats, isLoading, view } = useCategoryExpenses(
-    user?.id,
-    categoryName,
-  );
+  const { expenses, count, stats, isLoadingList, isLoadingStats, view } =
+    useCategoryExpenses(user?.id, categoryName);
 
   const categoryIcon = categories?.find(
     (category) => category.name === categoryName,
@@ -30,11 +29,11 @@ function CategoryDetails() {
 
   const Icon = useIcon(categoryIcon);
 
-  if (isLoading) return <Loader />;
+  if (isLoadingStats) return <Loader />;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
-      {/* HEADER NAV */}
+      {/* HEADER NAV (Keep as is) */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <button
           onClick={() => navigate("/category")}
@@ -43,14 +42,13 @@ function CategoryDetails() {
           <HiArrowLeft /> Back
         </button>
 
-        {/* REUSE YOUR NAVIGATION LOGIC HERE */}
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <ViewToggle />
           {view === "monthly" ? <DateNavigator /> : <YearNavigator />}
         </div>
       </div>
 
-      {/* TITLE Header */}
+      {/* TITLE Header (Keep as is) */}
       <div className="mb-8 flex items-center gap-4">
         <div className="rounded-2xl bg-indigo-50 p-4 text-indigo-600">
           {Icon ? <Icon className="h-8 w-8 md:h-12 md:w-12" /> : null}
@@ -60,18 +58,39 @@ function CategoryDetails() {
         </h1>
       </div>
 
-      {/* STATS (Pass the pre-calculated stats) */}
+      {/* STATS (Keep as is) */}
       <CategorySpending
         viewTotal={stats?.viewTotal || 0}
         globalTotal={stats?.globalTotal || 0}
         view={view}
       />
 
-      {/* TABLE + PAGINATION */}
-      <div>
-        <CategoryTable categoryExpenses={expenses} count={count} />
-        <Pagination count={count} />
+      {/* --- 2. ADD SORTING HERE --- */}
+      {/* Placed between stats and table for clear "List Control" context */}
+      <div className="mb-4 flex justify-end">
+        <SortBy
+          options={[
+            { value: "date-desc", label: "Newest First" },
+            { value: "date-asc", label: "Oldest First" },
+            { value: "amount-desc", label: "Amount (High)" },
+            { value: "amount-asc", label: "Amount (Low)" },
+          ]}
+        />
       </div>
+
+      {/* TABLE + PAGINATION */}
+      {isLoadingList ? (
+        // 1. LOADER STATE: Keeps height to prevent layout jump
+        <div className="flex h-96 items-center justify-center rounded-2xl border border-slate-200 bg-white">
+          <Loader />
+        </div>
+      ) : (
+        // 2. DATA STATE
+        <div>
+          <CategoryTable categoryExpenses={expenses} count={count} />
+          <Pagination count={count} />
+        </div>
+      )}
     </div>
   );
 }

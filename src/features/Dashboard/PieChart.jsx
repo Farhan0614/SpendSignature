@@ -8,16 +8,16 @@ import {
 } from "recharts";
 
 const CATEGORY_COLORS = {
-  "Food & Drinks": "#10B981",
+  "Food & Groceries": "#10B981",
   Transport: "#F59E0B",
   Shopping: "#6366F1",
   Entertainment: "#EF4444",
   "Health & Fitness": "#06B6D4",
-  Utilities: "#3B82F6",
+  "Bills & Utilities": "#3B82F6",
   Travel: "#8B5CF6",
   Education: "#84CC16",
-  Home: "#F97316",
-  Savings: "#14B8A6",
+  Housing: "#F97316",
+  Financial: "#14B8A6",
   Others: "#A855F7",
 };
 

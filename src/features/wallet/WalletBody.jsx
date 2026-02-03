@@ -7,6 +7,7 @@ import BalanceCards from "./BalanceCards";
 import IncomeForm from "./IncomeForm";
 import History from "./History";
 import ViewToggle from "../../ui/ViewToggle";
+import SortBy from "../../ui/SortBy";
 
 function Wallet() {
   // 1. Get Data & View State
@@ -24,8 +25,17 @@ function Wallet() {
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <ViewToggle />
-
           {view === "monthly" ? <DateNavigator /> : <YearNavigator />}
+
+          {/* ADD SORTING HERE */}
+          <SortBy
+            options={[
+              { value: "date-desc", label: "Newest First" },
+              { value: "date-asc", label: "Oldest First" },
+              { value: "amount-desc", label: "Amount (High)" },
+              { value: "amount-asc", label: "Amount (Low)" },
+            ]}
+          />
         </div>
       </div>
 

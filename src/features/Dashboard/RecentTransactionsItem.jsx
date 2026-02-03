@@ -2,10 +2,13 @@ import { format } from "date-fns";
 import { HiArrowDown, HiArrowUp } from "react-icons/hi";
 import { formatCurrency } from "../../utils/helpers";
 import { useCurrency } from "../../context/CurrencyContext";
+import { useIcon } from "../../hooks/useIcon";
 
 function RecentTransactionsItem({ trx, index }) {
   const { currency } = useCurrency();
   const isExpense = trx.type === "expense";
+
+  const Icon = useIcon(trx.icon_name);
 
   return (
     <div className="flex items-center justify-between border-b border-slate-50 pb-2 last:border-none last:pb-0">
@@ -18,8 +21,13 @@ function RecentTransactionsItem({ trx, index }) {
               : "bg-emerald-50 text-emerald-600"
           }`}
         >
+          {/* 3. Logic: Show Category Icon for Expense, Arrow for Income */}
           {isExpense ? (
-            <HiArrowDown className="h-5 w-5" />
+            Icon ? (
+              <Icon className="h-5 w-5" />
+            ) : (
+              <HiArrowDown className="h-5 w-5" />
+            )
           ) : (
             <HiArrowUp className="h-5 w-5" />
           )}

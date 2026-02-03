@@ -118,13 +118,25 @@ export async function getExpensesByCategory({
   month,
   year,
   page = 1,
+  sortBy = "date-desc", // Default param
 }) {
+  // ... existing query setup ...
+
   let query = supabase
     .from("expenses")
-    .select("*, categories!inner(name, icon_name)", { count: "exact" }) // Request count!
+    .select("*, categories!inner(name, icon_name)", { count: "exact" })
     .eq("user_id", user_id)
-    .eq("categories.name", categoryName)
-    .order("date", { ascending: false });
+    .eq("categories.name", categoryName);
+
+  // ... Date Filtering Logic ...
+
+  // --- SORTING LOGIC ---
+  const [field, direction] = sortBy.split("-");
+  // Map 'amount' or 'date' to Supabase syntax
+  query = query.order(field, { ascending: direction === "asc" });
+
+  // Secondary sort to keep pagination stable
+  query = query.order("created_at", { ascending: false });
 
   // A. Apply Date Filters (Reuse logic from getExpenses)
   if (view === "monthly" && month) {

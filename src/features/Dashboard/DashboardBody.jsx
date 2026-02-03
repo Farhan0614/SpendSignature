@@ -47,6 +47,7 @@ function DashboardBody() {
     title: exp.title || exp.categories?.name || "Expense",
     amount: exp.amount,
     date: new Date(exp.date),
+    icon_name: exp.categories?.icon_name, // <--- ADD THIS
   }));
 
   const formattedIncomes = recentIncomes.map((inc) => ({
@@ -94,7 +95,7 @@ function DashboardBody() {
             onClick={() => navigate("/expense")}
             className="cursor-pointer rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
           >
-            + Add Transaction
+            + Add Expense
           </button>
         </div>
       </section>

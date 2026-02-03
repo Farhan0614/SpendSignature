@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   getExpensesByCategory,
   getCategoryStats,
@@ -14,6 +14,7 @@ export function useCategoryExpenses(user_id, categoryName) {
     searchParams.get("month") || new Date().toISOString().slice(0, 7);
   const year = searchParams.get("year") || new Date().getFullYear().toString();
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+  const sortBy = searchParams.get("sortBy") || "date-desc"; // Get from URL
 
   // 2. Query for LIST (Paginated)
   const { data: { data: expenses, count } = {}, isLoading: isLoadingList } =
@@ -26,6 +27,7 @@ export function useCategoryExpenses(user_id, categoryName) {
         month,
         year,
         page,
+        sortBy,
       ],
       queryFn: () =>
         getExpensesByCategory({
@@ -35,8 +37,9 @@ export function useCategoryExpenses(user_id, categoryName) {
           month,
           year,
           page,
+          sortBy,
         }),
-      placeholderData: keepPreviousData, // Keeps UI stable while fetching next page
+
       enabled: !!user_id,
     });
 
@@ -52,7 +55,8 @@ export function useCategoryExpenses(user_id, categoryName) {
     expenses,
     count,
     stats,
-    isLoading: isLoadingList || isLoadingStats,
+    isLoadingList,
+    isLoadingStats,
     view,
   };
 }

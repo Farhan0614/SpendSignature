@@ -9,6 +9,25 @@ function History({ incomes, isLoading, view }) {
   const { currency } = useCurrency();
   const [searchParams] = useSearchParams();
 
+  // 1. GET SORT PARAM (Default to date-desc)
+  const sortBy = searchParams.get("sortBy") || "date-desc";
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+
+  // 2. SORT THE DATA (Client-Side)
+  // We create a copy with .slice() to avoid mutating the original prop
+  const sortedIncomes = incomes?.slice().sort((a, b) => {
+    if (field === "date") {
+      // Sort by created_at string
+      return (new Date(a.created_at) - new Date(b.created_at)) * modifier;
+    }
+    if (field === "amount") {
+      // Sort by income number
+      return (a.income - b.income) * modifier;
+    }
+    return 0;
+  });
+
   // --- 1. DYNAMIC TITLE LOGIC ---
   const today = new Date();
   let historyTitle = "";
@@ -34,12 +53,12 @@ function History({ incomes, isLoading, view }) {
 
   if (view === "monthly") {
     // Simple List (Already sorted by date from API)
-    content = incomes?.map((income) => (
+    content = sortedIncomes?.map((income) => (
       <IncHisItem key={income.id} item={income} />
     ));
   } else {
     // YEARLY: Group by Month
-    const grouped = incomes?.reduce((acc, item) => {
+    const grouped = sortedIncomes?.reduce((acc, item) => {
       const key = `${item.month}-${item.year}`;
       if (!acc[key]) acc[key] = [];
       acc[key].push(item);
@@ -94,7 +113,7 @@ function History({ incomes, isLoading, view }) {
         <div className="flex h-40 items-center justify-center">
           <Loader />
         </div>
-      ) : !incomes || incomes.length === 0 ? (
+      ) : !sortedIncomes || sortedIncomes.length === 0 ? (
         <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-100 py-10">
           <p className="font-medium text-slate-400">No records found</p>
         </div>
