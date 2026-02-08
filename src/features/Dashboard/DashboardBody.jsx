@@ -11,11 +11,12 @@ import DateNavigator from "../../ui/DateNavigator";
 import { useDashboardData } from "./useDashboardData";
 import { useBalanceData } from "../wallet/useBalanceData";
 import { useProfile } from "../settings/useProfile";
+import { useUser } from "../authentication/useUser";
 
 function DashboardBody() {
   const navigate = useNavigate();
   const { profile } = useProfile();
-
+  const { user } = useUser();
   // 1. DATA FETCHING
   const {
     recentExpenses,
@@ -79,7 +80,10 @@ function DashboardBody() {
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
             Welcome back,{" "}
-            {profile.full_name ? profile.full_name.split(" ")[0] : "User"}!
+            {profile.full_name
+              ? profile.full_name
+              : user.email.split("@").at(0)}
+            !
           </h1>
           <p className="mt-1 text-slate-500">
             Here is your financial overview for{" "}
@@ -137,10 +141,10 @@ function DashboardBody() {
             />
           </div>
           <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="mb-6 text-lg font-bold text-slate-700">
+            <h2 className="text-lg font-bold text-slate-700">
               Expense Breakdown
             </h2>
-            <div className="h-[250px] w-full">
+            <div className="w-full">
               <PieCharts monthlyExpense={monthExpenses} />
             </div>
           </div>

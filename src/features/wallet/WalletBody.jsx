@@ -1,15 +1,11 @@
-import YearNavigator from "../../ui/YearNavigator";
 import { useBalanceData } from "./useBalanceData";
 import Loader from "../../ui/Loader";
 import { useGetIncome } from "./useGetIncome";
-import DateNavigator from "../../ui/DateNavigator";
 import BalanceCards from "./BalanceCards";
 import IncomeForm from "./IncomeForm";
 import History from "./History";
-import ViewToggle from "../../ui/ViewToggle";
-import SortBy from "../../ui/SortBy";
 
-function Wallet() {
+function WalletBody() {
   // 1. Get Data & View State
   const { incomes, isLoading, view } = useGetIncome();
   const { currentBalance, isLoading: loadingBalance } = useBalanceData();
@@ -21,25 +17,7 @@ function Wallet() {
 
   return (
     <div className="space-y-8">
-      {/* SECTION 1: HEADER & CONTROLS */}
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-          <ViewToggle />
-          {view === "monthly" ? <DateNavigator /> : <YearNavigator />}
-
-          {/* ADD SORTING HERE */}
-          <SortBy
-            options={[
-              { value: "date-desc", label: "Newest First" },
-              { value: "date-asc", label: "Oldest First" },
-              { value: "amount-desc", label: "Amount (High)" },
-              { value: "amount-asc", label: "Amount (Low)" },
-            ]}
-          />
-        </div>
-      </div>
-
-      {/* SECTION 2: STATS */}
+      {/* SECTION 1: STATS */}
       <section>
         <BalanceCards
           totalBalance={currentBalance}
@@ -50,7 +28,7 @@ function Wallet() {
         />
       </section>
 
-      {/* SECTION 3: ACTION & HISTORY */}
+      {/* SECTION 2: ACTION & HISTORY */}
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div className="h-[500px]">
           <IncomeForm />
@@ -64,4 +42,4 @@ function Wallet() {
   );
 }
 
-export default Wallet;
+export default WalletBody;

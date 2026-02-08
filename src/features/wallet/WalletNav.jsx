@@ -1,10 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import DateNavigator from "../../ui/DateNavigator";
-import YearNavigator from "../../ui/YearNavigator";
-import ViewToggle from "../../ui/ViewToggle";
 import SortBy from "../../ui/SortBy";
+import ViewToggle from "../../ui/ViewToggle";
+import YearNavigator from "../../ui/YearNavigator";
 
-function ExpenseNav() {
+function WalletNav() {
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "monthly";
 
@@ -25,4 +25,4 @@ function ExpenseNav() {
   );
 }
 
-export default ExpenseNav;
+export default WalletNav;

@@ -3,7 +3,7 @@ import Heading from "../ui/Heading";
 import { useUser } from "../features/authentication/useUser";
 import Redirect from "../ui/Redirect";
 import ExpensesBody from "../features/expenses/ExpensesBody";
-import ExpenseNav from "../features/expenses/ExpenseNav"; // Import the new smart component
+import ExpenseNav from "../features/expenses/ExpenseNav";
 
 function Expenses() {
   const { user, isAuthenticated } = useUser();
@@ -12,7 +12,7 @@ function Expenses() {
     return <Redirect pageName="expenses" />;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 md:px-8">
+    <div className="space-y-8">
       {/* HEADER SECTION */}
       <header className="flex flex-col gap-4 border-b border-slate-200 pb-4 xl:flex-row xl:items-center xl:justify-between">
         {/* Left: Title */}
@@ -21,7 +21,6 @@ function Expenses() {
           <Heading>Expenses</Heading>
         </div>
 
-        {/* Right: Controls (Now encapsulated!) */}
         <div className="w-full overflow-x-auto pb-1 md:w-auto md:pb-0">
           <ExpenseNav />
         </div>

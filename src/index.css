@@ -7,3 +7,23 @@
   --font-mono: "Roboto Mono", monospace;
   --font-space: "Space Mono", monospace;
 }
+/* 1. Target the main container */
+div.recharts-wrapper {
+  outline: none !important;
+}
+
+/* 2. Target the SVG surface */
+.recharts-surface {
+  outline: none !important;
+}
+
+/* 3. Target the specific slices (Donut segments) */
+.recharts-sector {
+  outline: none !important;
+  cursor: default; /* Optional: Stops the 'text' cursor from appearing */
+}
+
+/* 4. Target the legend items */
+.recharts-legend-item {
+  outline: none !important;
+}

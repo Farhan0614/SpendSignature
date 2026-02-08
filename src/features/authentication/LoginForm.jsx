@@ -69,21 +69,18 @@ function LoginForm({ mode }) {
             )}
           </button>
 
-          <button
-            type="button"
-            className="rounded-[8px] border border-slate-300 bg-white px-6 py-3 font-sans font-bold text-slate-700 transition-all duration-300 hover:bg-slate-100"
-          >
-            Continue with Google
-          </button>
-
           <div className="text-center text-sm text-slate-600">
             {mode === "login" ? (
               <p>
                 Need an account?
                 <button
                   type="button"
-                  onClick={() => navigate("/signup")}
-                  className="font-bold text-indigo-600 hover:underline"
+                  onClick={() => {
+                    navigate("/signup");
+                    setEmail("");
+                    setPassword("");
+                  }}
+                  className="cursor-pointer font-bold text-indigo-600 hover:underline"
                 >
                   Sign Up
                 </button>
@@ -93,8 +90,12 @@ function LoginForm({ mode }) {
                 Already have an account?
                 <button
                   type="button"
-                  onClick={() => navigate("/login")}
-                  className="font-bold text-indigo-600 hover:underline"
+                  onClick={() => {
+                    navigate("/login");
+                    setEmail("");
+                    setPassword("");
+                  }}
+                  className="cursor-pointer font-bold text-indigo-600 hover:underline"
                 >
                   Sign In
                 </button>

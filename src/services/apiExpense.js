@@ -3,7 +3,6 @@ import { PAGE_SIZE } from "../utils/constants";
 // services/apiExpense.js
 
 export async function createExpense(expense) {
-  console.log(expense);
   const { data, error } = await supabase
     .from("expenses")
     .insert([expense])

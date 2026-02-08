@@ -10,10 +10,10 @@ function Categories() {
     return <Redirect pageName="categories" />;
 
   return (
-    <div className="space-y-6 px-15">
-      <header>
+    <div className="space-y-6">
+      <header className="flex items-center gap-2 border-b border-slate-200 pb-6 text-slate-900">
         <div className="flex items-center gap-2 text-slate-900">
-          <FaTag className="h-7 w-7" />
+          <FaTag className="h-7 w-7 text-indigo-600" />
           <Heading>Category</Heading>
         </div>
       </header>
