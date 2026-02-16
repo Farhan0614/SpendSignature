@@ -12,23 +12,22 @@ function History({ incomes, isLoading, view }) {
   // 1. GET SORT PARAM (Default to date-desc)
   const sortBy = searchParams.get("sortBy") || "date-desc";
   const [field, direction] = sortBy.split("-");
+
+  // modifier: 1 for Ascending (Oldest First), -1 for Descending (Newest First)
   const modifier = direction === "asc" ? 1 : -1;
 
   // 2. SORT THE DATA (Client-Side)
-  // We create a copy with .slice() to avoid mutating the original prop
   const sortedIncomes = incomes?.slice().sort((a, b) => {
     if (field === "date") {
-      // Sort by created_at string
       return (new Date(a.created_at) - new Date(b.created_at)) * modifier;
     }
     if (field === "amount") {
-      // Sort by income number
       return (a.income - b.income) * modifier;
     }
     return 0;
   });
 
-  // --- 1. DYNAMIC TITLE LOGIC ---
+  // --- DYNAMIC TITLE LOGIC ---
   const today = new Date();
   let historyTitle = "";
 
@@ -48,16 +47,30 @@ function History({ incomes, isLoading, view }) {
     historyTitle = `Yearly Breakdown - ${currentYear}`;
   }
 
-  // --- 2. GROUPING & SORTING LOGIC ---
+  // --- RENDER CONTENT LOGIC ---
   let content;
 
-  if (view === "monthly") {
-    // Simple List (Already sorted by date from API)
-    content = sortedIncomes?.map((income) => (
-      <IncHisItem key={income.id} item={income} />
-    ));
+  // Show Flat List if Monthly OR if sorting by Amount
+  const showFlatList = view === "monthly" || field === "amount";
+
+  if (showFlatList) {
+    // --- SCENARIO A: FLAT LIST ---
+    content = (
+      <>
+        {field === "amount" && (
+          <h3 className="mb-2 text-sm font-bold tracking-wider text-slate-500 uppercase">
+            Ranked by Amount
+          </h3>
+        )}
+        <div className="flex flex-col gap-2">
+          {sortedIncomes?.map((income) => (
+            <IncHisItem key={income.id} item={income} />
+          ))}
+        </div>
+      </>
+    );
   } else {
-    // YEARLY: Group by Month
+    // --- SCENARIO B: GROUPED BY MONTH (Yearly View + Date Sort) ---
     const grouped = sortedIncomes?.reduce((acc, item) => {
       const key = `${item.month}-${item.year}`;
       if (!acc[key]) acc[key] = [];
@@ -65,12 +78,16 @@ function History({ incomes, isLoading, view }) {
       return acc;
     }, {});
 
-    // Render Groups (Sorted Descending by Month)
     content = grouped
       ? Object.entries(grouped)
-          // Sort Logic: Compare the month of the first item in each group
-          // b[1][0].month - a[1][0].month sorts Descending (Dec -> Jan)
-          .sort((a, b) => b[1][0].month - a[1][0].month)
+          // FIX: Sort the Groups based on the modifier!
+          // Ascending: Jan -> Dec
+          // Descending: Dec -> Jan
+          .sort((a, b) => {
+            const monthA = a[1][0].month;
+            const monthB = b[1][0].month;
+            return (monthA - monthB) * modifier;
+          })
           .map(([key, items]) => {
             const monthNum = items[0].month;
             const groupTotal = items.reduce(
@@ -80,7 +97,6 @@ function History({ incomes, isLoading, view }) {
 
             return (
               <div key={key} className="mb-4 last:mb-0">
-                {/* Header with Total */}
                 <div className="sticky top-0 mb-2 flex items-center justify-between bg-white/95 py-1 backdrop-blur-sm">
                   <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase">
                     {getMonthName(monthNum)}
@@ -90,7 +106,6 @@ function History({ incomes, isLoading, view }) {
                   </span>
                 </div>
 
-                {/* Items in that month */}
                 <div className="flex flex-col gap-2">
                   {items.map((income) => (
                     <IncHisItem key={income.id} item={income} />
@@ -105,7 +120,6 @@ function History({ incomes, isLoading, view }) {
   return (
     <div className="flex h-full w-full flex-col rounded-2xl bg-white p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
-        {/* Uses the dynamic title now */}
         <h2 className="text-lg font-bold text-slate-700">{historyTitle}</h2>
       </div>
 
@@ -119,7 +133,7 @@ function History({ incomes, isLoading, view }) {
         </div>
       ) : (
         <div className="custom-scrollbar flex-1 overflow-y-auto pr-2">
-          <div className="flex flex-col gap-2">{content}</div>
+          {content}
         </div>
       )}
     </div>
