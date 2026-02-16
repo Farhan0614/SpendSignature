@@ -1,10 +1,16 @@
 import { useForm } from "react-hook-form";
-import { useCreateExpense } from "./useCreateExpense";
-import { useUser } from "../authentication/useUser";
-import LoaderMini from "../../ui/LoaderMini";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+
+// Hooks
+import { useCreateExpense } from "./useCreateExpense";
 import { useEditExpense } from "./useEditExpense";
+import { useUser } from "../authentication/useUser";
+import { usePredictAnomaly } from "./usePredictAnomaly";
+
+// UI
+import LoaderMini from "../../ui/LoaderMini";
+import ConfirmAnomaly from "../../ui/ConfirmAnomaly";
 
 function ExpenseForm({
   categories,
@@ -14,75 +20,97 @@ function ExpenseForm({
 }) {
   const { id: editId, ...editValues } = expenseToEdit;
   const isEditSession = Boolean(editId);
+  // --- STATE ---
+  // We use this to toggle between showing the Form and showing the Warning
+  const [showAnomalyWarning, setShowAnomalyWarning] = useState(false);
+  const [pendingData, setPendingData] = useState(null); // Store form data while waiting
 
+  const today = new Date().toISOString().split("T")[0];
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: isEditSession ? editValues : {},
+    defaultValues: isEditSession ? editValues : { date: today },
   });
 
   const { createExpense, isCreating } = useCreateExpense();
   const { editExpense, isEditing } = useEditExpense();
   const { user } = useUser();
+  const { isChecking, anomalyResult, predict, resetAnomaly } =
+    usePredictAnomaly();
 
-  const isWorking = isCreating || isEditing;
-  const today = new Date().toISOString().split("T")[0];
+  const isWorking = isCreating || isEditing || isChecking;
 
+  // --- RESET LOGIC ---
   useEffect(() => {
     if (!showForm) {
       reset();
+      setShowAnomalyWarning(false);
+      resetAnomaly();
     }
-  }, [showForm, reset]);
+    // We intentionally ignore dependencies to prevent an infinite reset loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showForm]);
 
   useEffect(() => {
-    if (errors?.amount?.message) {
-      toast.error(errors.amount.message);
-    }
-    if (errors?.date?.message) {
-      toast.error(errors.date.message);
-    }
+    if (errors?.amount?.message) toast.error(errors.amount.message);
+    if (errors?.date?.message) toast.error(errors.date.message);
   }, [errors]);
 
+  // --- 1. THE USER CLICKS "SAVE" ---
   function onSubmit(data) {
     const expenseAmount = parseFloat(data.amount);
+    if (expenseAmount <= 0) return toast.error("Expense must be positive");
 
-    if (expenseAmount <= 0) {
-      toast.error("Expense must be greater than 0");
-      return;
-    }
+    // Store data temporarily in case we need to show the warning
+    setPendingData(data);
 
-    // 1. EDIT MODE
-    if (isEditSession) {
-      editExpense(
-        { ...data, id: editId },
-        {
-          onSuccess: () => {
-            reset();
-            handleShowForm();
-          },
-        },
-      );
-    }
+    // Call the AI Hook
+    predict({
+      amount: expenseAmount,
+      categoryId: data.category_id,
+      // Scenario A: AI says it's normal -> Save immediately
+      onSuccessNormal: () => finalSave(data),
+      // Scenario B: AI says weird -> Show Warning UI
+      onAnomaly: () => setShowAnomalyWarning(true),
+    });
+  }
 
-    // 2. CREATE MODE
-    else
-      createExpense(
-        { ...data, user_id: user.id },
-        {
-          onSuccess: () => {
-            reset();
-            handleShowForm();
-          },
-        },
-      );
+  // --- 2. THE FINAL SAVE (Called either immediately or after confirming warning) ---
+  function finalSave(data) {
+    const payload = isEditSession
+      ? { ...data, id: editId }
+      : { ...data, user_id: user.id };
+
+    const action = isEditSession ? editExpense : createExpense;
+
+    action(payload, {
+      onSuccess: () => {
+        reset();
+        setShowAnomalyWarning(false); // Close warning if open
+        handleShowForm();
+      },
+    });
+  }
+
+  // --- RENDER: ANOMALY WARNING MODE ---
+  // If AI flagged it, we hide the form and show the warning
+  if (showAnomalyWarning && anomalyResult) {
+    return (
+      <ConfirmAnomaly
+        message={anomalyResult.message}
+        amount={pendingData?.amount}
+        onConfirm={() => finalSave(pendingData)} // User says "Save Anyway"
+        onCancel={() => setShowAnomalyWarning(false)} // User says "Let me fix it"
+        isSaving={isCreating || isEditing}
+      />
+    );
   }
 
   const inputClass =
     "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none";
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -178,7 +206,6 @@ function ExpenseForm({
 
       {/* BUTTONS ROW */}
       <div className="mt-2 flex items-center justify-end gap-2 sm:col-span-2 lg:col-span-6">
-        {/* Cancel Button (Only for Edit Mode) */}
         {isEditSession && (
           <button
             type="button"
@@ -190,7 +217,6 @@ function ExpenseForm({
           </button>
         )}
 
-        {/* Submit Button */}
         <button
           disabled={isWorking}
           className="flex w-full cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-2.5 font-bold text-white transition-all hover:bg-indigo-700 hover:shadow-md disabled:bg-indigo-300 sm:w-auto"
