@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom"; // <--- 1. Import this
 import CategoryItem from "./CategoryItem";
 import { useCategories } from "./useCategories";
 import Loader from "../../ui/Loader";
@@ -8,12 +9,26 @@ import { useUser } from "../authentication/useUser";
 function CategoriesList() {
   const { categories, isLoading } = useCategories();
   const { user } = useUser();
+  const [searchParams] = useSearchParams(); // <--- 2. Get Params
 
-  const startDate = formatISO(startOfMonth(new Date()), {
+  // --- 3. DYNAMIC DATE LOGIC ---
+  // Check if user selected a specific month in URL (e.g. ?month=2023-12)
+  const currentMonthParam = searchParams.get("month");
+
+  // If param exists, use it. Otherwise, use Today.
+  const referenceDate = currentMonthParam
+    ? new Date(`${currentMonthParam}-01`)
+    : new Date();
+
+  // Calculate Start/End based on that Reference Date
+  const startDate = formatISO(startOfMonth(referenceDate), {
     representation: "date",
   });
-  const endDate = formatISO(endOfMonth(new Date()), { representation: "date" });
+  const endDate = formatISO(endOfMonth(referenceDate), {
+    representation: "date",
+  });
 
+  // --- 4. DATA FETCHING (Unchanged, but now receives dynamic dates) ---
   const { monthAmount, isLoading: isLoadingAmount } = useMonthAmount(
     startDate,
     endDate,
