@@ -12,6 +12,7 @@ import { useDashboardData } from "./useDashboardData";
 import { useBalanceData } from "../wallet/useBalanceData";
 import { useProfile } from "../settings/useProfile";
 import { useUser } from "../authentication/useUser";
+import { HiPlus } from "react-icons/hi2";
 
 function DashboardBody() {
   const navigate = useNavigate();
@@ -91,16 +92,29 @@ function DashboardBody() {
           </p>
         </div>
 
-        {/* Right: Controls (Date Nav + Add Button) */}
-        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        {/* Right: Controls (Date Nav + Compact Buttons) */}
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <DateNavigator />
 
-          <button
-            onClick={() => navigate("/expense")}
-            className="cursor-pointer rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
-          >
-            + Add Expense
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Compact Secondary Button -> Income */}
+            <button
+              onClick={() => navigate("/wallet")}
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none active:translate-y-0 active:scale-95"
+            >
+              <HiPlus className="h-4 w-4 text-emerald-500" />
+              Income
+            </button>
+
+            {/* Compact Primary Button -> Expense */}
+            <button
+              onClick={() => navigate("/expense")}
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-200 transition-all hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0 active:scale-95"
+            >
+              <HiPlus className="h-4 w-4" />
+              Expense
+            </button>
+          </div>
         </div>
       </section>
 

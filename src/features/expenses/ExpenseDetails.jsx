@@ -18,11 +18,11 @@ import { useDeleteExpense } from "./useDeleteExpense";
 import ExpenseForm from "./ExpenseForm";
 import { useCategories } from "../categories/useCategories";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import { format } from "date-fns";
 
 function ExpenseDetails({ expense, onCloseModal }) {
   const { currency } = useCurrency();
   const { categories } = useCategories();
-
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const { deleteExpense, isDeleting } = useDeleteExpense();
@@ -33,18 +33,18 @@ function ExpenseDetails({ expense, onCloseModal }) {
     date,
     notes,
     title,
+    created_at,
     categories: { name: category_name, icon_name },
   } = expense;
 
   const Icon = useIcon(icon_name);
 
-  // --- 1. EDIT MODE (Wide & Large) ---
   if (isEditing) {
     return (
       <div className="w-[90vw] max-w-4xl">
-        {" "}
-        {/* Huge width for Form */}
-        <h2 className="mb-4 text-xl font-bold text-slate-800">Edit Expense</h2>
+        <h2 className="mb-6 text-2xl font-black text-slate-900">
+          Edit Expense
+        </h2>
         <ExpenseForm
           categories={categories}
           expenseToEdit={expense}
@@ -54,7 +54,6 @@ function ExpenseDetails({ expense, onCloseModal }) {
     );
   }
 
-  // --- 2. DELETE MODE (Wider & Short) ---
   if (isConfirmingDelete) {
     return (
       <ConfirmDelete
@@ -67,77 +66,86 @@ function ExpenseDetails({ expense, onCloseModal }) {
     );
   }
 
-  // --- 3. DEFAULT DETAILS MODE (Standard Width) ---
   return (
-    <div className="flex w-[85vw] max-w-lg flex-col gap-8">
+    <div className="flex w-[85vw] max-w-md flex-col gap-6 pt-2">
       {/* Header & Icon */}
-      <div className="text-center">
-        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
-          {Icon && <Icon size={48} />}
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-50 to-indigo-100 text-indigo-600 shadow-inner">
+          {Icon && <Icon size={36} />}
         </div>
         <h2 className="text-3xl font-black tracking-tight text-slate-900">
           {formattedTitle(title)}
         </h2>
       </div>
 
-      {/* Grid Stats */}
-      <div className="grid grid-cols-3 divide-x divide-slate-100 border-y border-slate-100 py-6">
-        <div className="flex flex-col items-center gap-1 px-2 text-center">
-          <span className="flex items-center gap-1 text-xs font-bold text-slate-400 uppercase">
-            <FaHashtag /> Amount
+      {/* Soft Stats Grid */}
+      <div className="grid grid-cols-3 gap-2 rounded-2xl bg-slate-50 p-4">
+        <div className="flex flex-col items-center justify-center gap-1 text-center">
+          <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+            <FaHashtag className="mr-1 inline" />
+            Amount
           </span>
-          <span className="font-bold text-slate-700">
+          <span className="font-sans font-black text-rose-600">
             {formatCurrency(amount, currency)}
           </span>
         </div>
-        <div className="flex flex-col items-center gap-1 px-2 text-center">
-          <span className="flex items-center gap-1 text-xs font-bold text-slate-400 uppercase">
-            <FaCalendar /> Date
+        <div className="flex flex-col items-center justify-center gap-1 border-x border-slate-200/60 px-2 text-center">
+          <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+            <FaCalendar className="mr-1 inline" />
+            Date
           </span>
-          <span className="font-bold text-slate-700">
+          <span className="text-sm font-bold text-slate-700">
             {formattedFullDate(date)}
           </span>
         </div>
-        <div className="flex flex-col items-center gap-1 px-2 text-center">
-          <span className="flex items-center gap-1 text-xs font-bold text-slate-400 uppercase">
-            <FaTag /> Category
+        <div className="flex flex-col items-center justify-center gap-1 text-center">
+          <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+            <FaTag className="mr-1 inline" />
+            Category
           </span>
-          <span className="font-bold text-slate-700">{category_name}</span>
+          <span className="text-sm font-bold text-slate-700">
+            {category_name}
+          </span>
         </div>
       </div>
 
       {/* Notes Section */}
-      <div className="rounded-xl bg-slate-50 p-6">
-        <div className="mb-2 flex items-center gap-2 text-slate-500">
+      <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+        <div className="mb-2 flex items-center gap-2 text-slate-400">
           <MdNotes className="h-5 w-5" />
-          <span className="text-sm font-bold tracking-wide uppercase">
+          <span className="text-xs font-bold tracking-wider uppercase">
             Notes
           </span>
         </div>
-        <p className="text-sm text-slate-600 italic">
-          {notes || "No notes provided."}
+        <p className="text-sm font-medium text-slate-600">
+          {notes || (
+            <span className="text-slate-400 italic">No notes provided.</span>
+          )}
         </p>
       </div>
 
-      {/* BOTTOM RIGHT ACTION BUTTONS */}
-      <div className="mt-4 flex justify-end gap-3 pt-4">
+      {/* ACTION BUTTONS */}
+      <div className="mt-2 flex gap-3">
         <button
           onClick={() => setIsEditing(true)}
-          className="flex cursor-pointer items-center gap-2 rounded-lg bg-indigo-50 px-5 py-3 font-semibold text-indigo-600 transition-colors hover:bg-indigo-100 hover:text-indigo-700"
-          title="Edit Expense"
+          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 font-bold text-slate-700 transition-colors hover:bg-slate-200 focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:outline-none"
         >
-          <FaPencilAlt size={18} />
-          <span>Edit</span>
+          <FaPencilAlt size={14} /> Edit
         </button>
-
         <button
           onClick={() => setIsConfirmingDelete(true)}
-          className="flex cursor-pointer items-center gap-2 rounded-lg bg-red-50 px-5 py-3 font-semibold text-red-600 transition-colors hover:bg-red-100 hover:text-red-700"
-          title="Delete Expense"
+          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-rose-50 py-3 font-bold text-rose-600 transition-colors hover:bg-rose-100 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
         >
-          <FaTrash size={18} />
-          <span>Delete</span>
+          <FaTrash size={14} /> Delete
         </button>
+      </div>
+
+      {/* NEW: Audit Trail / Entry Date */}
+      <div className="mt-1 text-center">
+        <p className="text-[12px] font-medium text-slate-400">
+          Entry added on{" "}
+          {format(new Date(created_at), "MMM dd, yyyy 'at' hh:mm a")}
+        </p>
       </div>
     </div>
   );
