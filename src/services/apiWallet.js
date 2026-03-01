@@ -19,24 +19,26 @@ export async function getIncomes({ user_id, month, year, limit }) {
     .from("wallet")
     .select("*")
     .eq("user_id", user_id)
-    .order("created_at", { ascending: false });
+    .order("date", { ascending: false }) // Sort by the actual transaction date
+    .order("created_at", { ascending: false }); // Fallback sort
 
-  // SCENARIO 1: Monthly View (e.g., month = "2026-02")
+  // USE THE EXACT SAME LOGIC AS EXPENSES NOW!
   if (month) {
     const [yearStr, monthStr] = month.split("-");
-    query = query.eq("month", parseInt(monthStr)).eq("year", parseInt(yearStr));
+    const startDate = `${month}-01`;
+    const daysInMonth = new Date(yearStr, monthStr, 0).getDate();
+    const endDate = `${month}-${daysInMonth}`;
+    query = query.gte("date", startDate).lte("date", endDate);
   } else if (year) {
-    query = query.eq("year", parseInt(year));
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+    query = query.gte("date", startDate).lte("date", endDate);
   }
 
-  if (limit) {
-    query = query.limit(limit);
-  }
+  if (limit) query = query.limit(limit);
 
   const { data, error } = await query;
-
   if (error) throw new Error("Error loading income");
-
   return data;
 }
 
@@ -47,19 +49,12 @@ export async function deleteIncome(id) {
 }
 
 export async function editIncome({ id, ...obj }) {
-  // We need to construct the update object carefully
+  // MUCH CLEANER! No manual month/year extraction.
   const updates = {
     income: parseFloat(obj.income),
-    created_at: obj.created_at, // The new date selected by user
+    date: obj.date,
+    source: obj.source,
   };
-
-  // AUTOMATICALLY UPDATE MONTH/YEAR COLUMNS
-  // If the user changed the date, we must move the record to the correct month bucket
-  if (obj.created_at) {
-    const dateObj = new Date(obj.created_at);
-    updates.month = dateObj.getMonth() + 1; // JS months are 0-11
-    updates.year = dateObj.getFullYear();
-  }
 
   const { data, error } = await supabase
     .from("wallet")
@@ -96,11 +91,11 @@ export async function getExpenseAmounts(user_id) {
 export async function getIncomesInRange(user_id, startDate, endDate) {
   const { data, error } = await supabase
     .from("wallet")
-    .select("income, created_at, month, year")
+    .select("income, date, source") // Select new columns
     .eq("user_id", user_id)
-    .gte("created_at", startDate)
-    .lte("created_at", endDate)
-    .order("created_at", { ascending: true });
+    .gte("date", startDate) // Range uses the new date column
+    .lte("date", endDate)
+    .order("date", { ascending: true });
 
   if (error) throw new Error("Error loading chart income");
   return data;

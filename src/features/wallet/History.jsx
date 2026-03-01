@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { format, isSameMonth } from "date-fns";
 import Loader from "../../ui/Loader";
 import IncHisItem from "./IncHisItem";
-import { getMonthName, formatCurrency } from "../../utils/helpers";
+import { formatCurrency } from "../../utils/helpers";
 import { useCurrency } from "../../context/CurrencyContext";
 
 function History({ incomes, isLoading, view }) {
@@ -18,12 +18,9 @@ function History({ incomes, isLoading, view }) {
 
   // 2. SORT THE DATA (Client-Side)
   const sortedIncomes = incomes?.slice().sort((a, b) => {
-    if (field === "date") {
-      return (new Date(a.created_at) - new Date(b.created_at)) * modifier;
-    }
-    if (field === "amount") {
-      return (a.income - b.income) * modifier;
-    }
+    if (field === "date")
+      return (new Date(a.date) - new Date(b.date)) * modifier; // Changed created_at -> date
+    if (field === "amount") return (a.income - b.income) * modifier;
     return 0;
   });
 
@@ -72,7 +69,7 @@ function History({ incomes, isLoading, view }) {
   } else {
     // --- SCENARIO B: GROUPED BY MONTH (Yearly View + Date Sort) ---
     const grouped = sortedIncomes?.reduce((acc, item) => {
-      const key = `${item.month}-${item.year}`;
+      const key = item.date.slice(0, 7);
       if (!acc[key]) acc[key] = [];
       acc[key].push(item);
       return acc;
@@ -80,26 +77,24 @@ function History({ incomes, isLoading, view }) {
 
     content = grouped
       ? Object.entries(grouped)
-          // FIX: Sort the Groups based on the modifier!
-          // Ascending: Jan -> Dec
-          // Descending: Dec -> Jan
-          .sort((a, b) => {
-            const monthA = a[1][0].month;
-            const monthB = b[1][0].month;
-            return (monthA - monthB) * modifier;
-          })
-          .map(([key, items]) => {
-            const monthNum = items[0].month;
+          .sort((a, b) => a[0].localeCompare(b[0]) * modifier) // Sort alphabetically by "YYYY-MM"
+          .map(([periodKey, items]) => {
             const groupTotal = items.reduce(
               (sum, item) => sum + item.income,
               0,
             );
 
+            // Format "2026-02" to "February 2026"
+            const prettyMonth = format(
+              new Date(`${periodKey}-01`),
+              "MMMM yyyy",
+            );
+
             return (
-              <div key={key} className="mb-4 last:mb-0">
+              <div key={periodKey} className="mb-4 last:mb-0">
                 <div className="sticky top-0 mb-2 flex items-center justify-between bg-white/95 py-1 backdrop-blur-sm">
                   <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase">
-                    {getMonthName(monthNum)}
+                    {prettyMonth}
                   </h3>
                   <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700">
                     {formatCurrency(groupTotal, currency)}

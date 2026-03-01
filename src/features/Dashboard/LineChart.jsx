@@ -15,7 +15,6 @@ import { useChartData } from "./useChartData";
 function IncomeVsExpenseChart() {
   const { expenses, incomes, isLoading, anchorDate } = useChartData();
 
-  // 1. LOADING STATE (Handled Internally)
   if (isLoading)
     return (
       <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm">
@@ -28,7 +27,6 @@ function IncomeVsExpenseChart() {
       </div>
     );
 
-  // 2. DATA PROCESSING (Same as before)
   const chartData = [];
   for (let i = 5; i >= 0; i--) {
     const date = subMonths(anchorDate, i);
@@ -41,25 +39,28 @@ function IncomeVsExpenseChart() {
   }
 
   expenses?.forEach((exp) => {
+    if (!exp.date) return; // Safety check
     const key = format(parseISO(exp.date), "yyyy-MM");
     const bucket = chartData.find((d) => d.key === key);
     if (bucket) bucket.expense += exp.amount;
   });
 
   incomes?.forEach((inc) => {
-    const key = format(parseISO(inc.created_at), "yyyy-MM");
+    if (!inc.date) return; // Safety check
+
+    // FIX: Changed parseISO(inc.created_at) to parseISO(inc.date)
+    const key = format(parseISO(inc.date), "yyyy-MM");
+
     const bucket = chartData.find((d) => d.key === key);
     if (bucket) bucket.income += inc.income;
   });
 
-  // 3. RENDER CHART
   return (
-    <div className="w-full rounded-2xl bg-white p-6 shadow-sm">
+    <div className="w-full rounded-2xl bg-white shadow-sm">
       <h2 className="mb-6 font-sans text-lg font-bold text-slate-700">
         Income vs Expense (Last 6 Months)
       </h2>
 
-      {/* Fixed height container ensures no layout shift */}
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart

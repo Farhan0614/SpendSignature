@@ -55,9 +55,9 @@ function DashboardBody() {
   const formattedIncomes = recentIncomes.map((inc) => ({
     id: inc.id,
     type: "income",
-    title: "Income Received",
+    title: inc.source || "Income Received",
     amount: inc.income,
-    date: inc.created_at ? new Date(inc.created_at) : new Date(),
+    date: inc.date ? new Date(inc.date) : new Date(inc.created_at),
   }));
 
   // --- 4. NEW DATE LOGIC ---

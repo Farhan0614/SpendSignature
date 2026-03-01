@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import LoaderMini from "../../ui/LoaderMini";
 import { useEditIncome } from "./useEditIncome";
+import FormInput from "../../ui/FormInput";
 
 function IncomeEditForm({ incomeItem, onClose, onSuccess }) {
   const { editIncome, isEditing: isUpdating } = useEditIncome();
-  const { id, income, created_at } = incomeItem;
+  const { id, income, date, source } = incomeItem;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -15,99 +16,77 @@ function IncomeEditForm({ incomeItem, onClose, onSuccess }) {
   } = useForm({
     defaultValues: {
       income: income,
-      created_at: new Date(created_at).toISOString().split("T")[0],
+      source: source,
+      date: date,
     },
   });
 
   function onSubmit(data) {
-    // 1. Parse the NEW date selected by the user
-    const [year, month, day] = data.created_at.split("-").map(Number);
-
-    // 2. Create a Date object from the ORIGINAL timestamp
-    let finalDate = new Date(created_at);
-
-    if (
-      finalDate.getHours() === 0 &&
-      finalDate.getMinutes() === 0 &&
-      finalDate.getSeconds() === 0
-    ) {
-      finalDate = new Date(); // Switch to "Now"
-    }
-
-    // 3. Update the Year/Month/Day to match the user's input
-    // (Local time manipulation preserves the time of day)
-    finalDate.setFullYear(year);
-    finalDate.setMonth(month - 1);
-    finalDate.setDate(day);
-
-    // 4. Generate timestamp
-    const fullTimestamp = finalDate.toISOString();
-
     editIncome(
       {
         id,
         income: parseFloat(data.income),
-        created_at: fullTimestamp,
+        date: data.date,
+        source: data.source,
       },
       {
         onSuccess: () => onSuccess(),
       },
     );
   }
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
+      noValidate
       className="flex w-[85vw] max-w-sm flex-col gap-5"
     >
-      <h3 className="text-xl font-bold text-slate-800">Edit Income</h3>
+      <h3 className="text-2xl font-black text-slate-900">Edit Income</h3>
 
-      {/* Amount */}
-      <div className="space-y-1">
-        <label className="text-xs font-bold text-slate-500 uppercase">
-          Amount
-        </label>
-        <input
-          type="number"
-          step="0.01"
-          {...register("income", { required: true, min: 1 })}
-          className="w-full rounded-lg border border-slate-200 p-2.5 font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-        />
-      </div>
+      <FormInput
+        id="date"
+        type="date"
+        label="Date Received"
+        max={today}
+        error={errors.date?.message} // Pass inline errors down to the component
+        register={register("date", {
+          required: "Date is required",
+          validate: (value) => value <= today || "Future dates not allowed",
+        })}
+      />
 
-      {/* Date */}
-      <div className="space-y-1">
-        <label className="text-xs font-bold text-slate-500 uppercase">
-          Date Received
-        </label>
-        <input
-          type="date"
-          max={today}
-          {...register("created_at", {
-            required: true,
-            validate: (value) => value <= today || "Future dates not allowed",
-          })}
-          className="w-full rounded-lg border border-slate-200 p-2.5 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-        />
-        {errors.created_at && (
-          <span className="text-xs text-red-500">
-            {errors.created_at.message}
-          </span>
-        )}
-      </div>
+      <FormInput
+        id="source"
+        type="text"
+        label="Source"
+        error={errors.source?.message}
+        register={register("source", { required: "Source is required" })}
+      />
+
+      <FormInput
+        id="amount"
+        type="number"
+        step="0.01"
+        label="Amount"
+        onWheel={(e) => e.target.blur()}
+        error={errors.income?.message}
+        register={register("income", {
+          required: "Amount is required",
+          min: 1,
+        })}
+      />
 
       {/* Buttons */}
       <div className="mt-2 flex gap-3">
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 cursor-pointer rounded-lg border border-slate-200 py-2.5 text-sm font-semibold hover:bg-slate-50"
+          className="flex-1 cursor-pointer rounded-xl border border-slate-200 py-3 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none"
         >
           Cancel
         </button>
         <button
           disabled={isUpdating}
-          className="flex flex-1 cursor-pointer items-center justify-center rounded-lg bg-indigo-600 py-2.5 text-sm font-bold text-white hover:bg-indigo-700"
+          className="flex flex-1 cursor-pointer items-center justify-center rounded-xl bg-indigo-600 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
         >
           {isUpdating ? <LoaderMini /> : "Save Changes"}
         </button>
