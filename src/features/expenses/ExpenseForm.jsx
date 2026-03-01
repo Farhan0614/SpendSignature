@@ -11,6 +11,7 @@ import { usePredictAnomaly } from "./usePredictAnomaly";
 // UI
 import LoaderMini from "../../ui/LoaderMini";
 import ConfirmAnomaly from "../../ui/ConfirmAnomaly";
+import { format } from "date-fns";
 
 function ExpenseForm({
   categories,
@@ -21,16 +22,15 @@ function ExpenseForm({
   const { id: editId, ...editValues } = expenseToEdit;
   const isEditSession = Boolean(editId);
   // --- STATE ---
-  // We use this to toggle between showing the Form and showing the Warning
   const [showAnomalyWarning, setShowAnomalyWarning] = useState(false);
-  const [pendingData, setPendingData] = useState(null); // Store form data while waiting
+  const [pendingData, setPendingData] = useState(null);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = format(new Date(), "yyyy-MM-dd");
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, submitCount },
   } = useForm({
     defaultValues: isEditSession ? editValues : { date: today },
   });
@@ -50,35 +50,35 @@ function ExpenseForm({
       setShowAnomalyWarning(false);
       resetAnomaly();
     }
-    // We intentionally ignore dependencies to prevent an infinite reset loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showForm]);
 
+  // --- FIX: ADDED MISSING ERROR TOASTS ---
   useEffect(() => {
-    if (errors?.amount?.message) toast.error(errors.amount.message);
-    if (errors?.date?.message) toast.error(errors.date.message);
-  }, [errors]);
+    if (submitCount > 0) {
+      if (errors?.date?.message) toast.error(errors.date.message);
+      if (errors?.title?.message) toast.error(errors.title.message);
+      if (errors?.amount?.message) toast.error(errors.amount.message);
+      if (errors?.category_id?.message) toast.error(errors.category_id.message);
+    }
+  }, [errors, submitCount]);
 
   // --- 1. THE USER CLICKS "SAVE" ---
   function onSubmit(data) {
     const expenseAmount = parseFloat(data.amount);
     if (expenseAmount <= 0) return toast.error("Expense must be positive");
 
-    // Store data temporarily in case we need to show the warning
     setPendingData(data);
 
-    // Call the AI Hook
     predict({
       amount: expenseAmount,
       categoryId: data.category_id,
-      // Scenario A: AI says it's normal -> Save immediately
       onSuccessNormal: () => finalSave(data),
-      // Scenario B: AI says weird -> Show Warning UI
       onAnomaly: () => setShowAnomalyWarning(true),
     });
   }
 
-  // --- 2. THE FINAL SAVE (Called either immediately or after confirming warning) ---
+  // --- 2. THE FINAL SAVE ---
   function finalSave(data) {
     const payload = isEditSession
       ? { ...data, id: editId }
@@ -89,21 +89,20 @@ function ExpenseForm({
     action(payload, {
       onSuccess: () => {
         reset();
-        setShowAnomalyWarning(false); // Close warning if open
+        setShowAnomalyWarning(false);
         handleShowForm();
       },
     });
   }
 
   // --- RENDER: ANOMALY WARNING MODE ---
-  // If AI flagged it, we hide the form and show the warning
   if (showAnomalyWarning && anomalyResult) {
     return (
       <ConfirmAnomaly
         message={anomalyResult.message}
         amount={pendingData?.amount}
-        onConfirm={() => finalSave(pendingData)} // User says "Save Anyway"
-        onCancel={() => setShowAnomalyWarning(false)} // User says "Let me fix it"
+        onConfirm={() => finalSave(pendingData)}
+        onCancel={() => setShowAnomalyWarning(false)}
         isSaving={isCreating || isEditing}
       />
     );
@@ -111,9 +110,11 @@ function ExpenseForm({
 
   const inputClass =
     "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none";
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
+      noValidate
       className="grid grid-cols-1 items-end gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-6"
     >
       {/* Date Input */}
@@ -143,7 +144,9 @@ function ExpenseForm({
           type="text"
           required
           placeholder="Expense Title"
-          {...register("title")}
+          {...register("title", {
+            required: "Title is required", // <-- FIX: Added missing message
+          })}
           className={inputClass}
         />
       </div>
@@ -159,7 +162,7 @@ function ExpenseForm({
           step="0.01"
           min="0"
           {...register("amount", {
-            required: "This field is required",
+            required: "Amount is required", // <-- FIX: Updated message
             min: {
               value: 0.01,
               message: "Amount must be positive",
@@ -177,7 +180,9 @@ function ExpenseForm({
         <select
           required
           defaultValue=""
-          {...register("category_id")}
+          {...register("category_id", {
+            required: "Please select a category", // <-- FIX: Added missing message
+          })}
           className={inputClass}
         >
           <option value="" disabled>

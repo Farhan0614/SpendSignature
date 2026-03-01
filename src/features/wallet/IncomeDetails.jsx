@@ -6,7 +6,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 import { formatCurrency } from "../../utils/helpers";
 import { useDeleteIncome } from "./useDeleteIncome";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import IncomeEditForm from "./IncomeEditForm";
+import IncomeForm from "./IncomeForm";
 
 function IncomeDetails({ incomeItem, onCloseModal }) {
   const { currency } = useCurrency();
@@ -30,13 +30,9 @@ function IncomeDetails({ incomeItem, onCloseModal }) {
 
   if (isEditing) {
     return (
-      <IncomeEditForm
-        incomeItem={incomeItem}
-        onClose={() => setIsEditing(false)}
-        onSuccess={() => {
-          setIsEditing(false);
-          onCloseModal();
-        }}
+      <IncomeForm
+        incomeToEdit={incomeItem}
+        onCloseModal={() => setIsEditing(false)}
       />
     );
   }
