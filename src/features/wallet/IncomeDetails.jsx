@@ -93,7 +93,7 @@ function IncomeDetails({ incomeItem, onCloseModal }) {
       {/* Audit Trail / Entry Date */}
       <div className="mt-1 text-center">
         <p className="text-[11px] font-medium text-slate-400">
-          Recorded on{" "}
+          Entry added on{" "}
           {format(new Date(created_at), "MMM dd, yyyy 'at' hh:mm a")}
         </p>
       </div>

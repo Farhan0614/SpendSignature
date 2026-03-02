@@ -3,7 +3,7 @@ import ExpenseList from "./ExpenseList";
 
 function CategoryTable({ categoryExpenses, count }) {
   return (
-    <div className="mt-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="mt-8 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/40">
       {/* HEADER */}
       <div className="grid grid-cols-3 border-b border-slate-100 bg-slate-50/50 px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
         <div className="flex items-center gap-2">

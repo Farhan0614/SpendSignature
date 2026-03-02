@@ -6,6 +6,7 @@ import { formatCurrency } from "../utils/helpers";
 import { useCurrency } from "../context/CurrencyContext";
 import { useBalanceData } from "../features/wallet/useBalanceData";
 import { useProfile } from "../features/settings/useProfile";
+import Button from "./Button";
 
 function UserMenu() {
   const { user } = useUser();
@@ -73,19 +74,22 @@ function UserMenu() {
           </button>
         </>
       ) : (
-        <div className="flex gap-2">
-          <button
+        <div className="flex items-center gap-2">
+          {/* Using 'quiet' or 'secondary' based on your preference. 'quiet' looks cleaner in a nav bar */}
+          <Button
+            variant="quiet"
             onClick={() => navigate("/login")}
-            className="cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+            className="px-4 py-2"
           >
             Login
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             onClick={() => navigate("/signup")}
-            className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+            className="px-4 py-2"
           >
             Sign Up
-          </button>
+          </Button>
         </div>
       )}
     </div>

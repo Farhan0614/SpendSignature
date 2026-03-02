@@ -3,9 +3,10 @@ import ExpenseRow from "./ExpenseRow";
 import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 import { formatCurrency } from "../../utils/helpers";
 import { useCurrency } from "../../context/CurrencyContext";
+import IncomeRow from "./IncomeRow";
 function GroupExpense({ groupExpenses }) {
   const [showExpense, setShowExpense] = useState(true);
-  const { period, expenses, total } = groupExpenses;
+  const { period, transactions, total } = groupExpenses;
   const { currency } = useCurrency();
 
   function handleClick() {
@@ -32,7 +33,7 @@ function GroupExpense({ groupExpenses }) {
           </span>
         </div>
 
-        {/* Total Badge: Inverted to white with Indigo text so it pops out */}
+        {/* Standard Expense Total Badge */}
         <span className="rounded-lg border border-slate-100 bg-white px-3 py-1 text-xs font-black text-indigo-600 shadow-sm">
           {formatCurrency(total, currency)}
         </span>
@@ -44,9 +45,14 @@ function GroupExpense({ groupExpenses }) {
           showExpense ? "block" : "hidden"
         }`}
       >
-        {expenses.map((expense, key) => (
-          <ExpenseRow expense={expense} key={key} />
-        ))}
+        {/* Render correct row based on transaction type */}
+        {transactions.map((trx) =>
+          trx.type === "expense" ? (
+            <ExpenseRow expense={trx} key={`exp-${trx.id}`} />
+          ) : (
+            <IncomeRow incomeItem={trx} key={`inc-${trx.id}`} />
+          ),
+        )}
       </div>
     </div>
   );

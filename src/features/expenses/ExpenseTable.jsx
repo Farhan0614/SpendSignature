@@ -3,26 +3,48 @@ import { useSearchParams } from "react-router-dom";
 import EmptyExpense from "../../ui/EmptyExpense";
 import Loader from "../../ui/Loader";
 import { useExpense } from "./useExpense";
+import { useGetIncome } from "../wallet/useGetIncome";
 import GroupExpenses from "./GroupExpenses";
 import ExpenseRow from "./ExpenseRow";
 
 function ExpenseTable() {
-  const { expenses, isLoading, view } = useExpense();
+  const { expenses, isLoading: loadingExp, view } = useExpense();
+  const { incomes, isLoading: loadingInc } = useGetIncome();
   const [searchParams] = useSearchParams();
 
   const sortBy = searchParams.get("sortBy") || "date-desc";
   const [field, direction] = sortBy.split("-");
-
-  // 1. Determine Modifier (1 for Ascending, -1 for Descending)
   const modifier = direction === "asc" ? 1 : -1;
 
-  if (isLoading) return <Loader />;
-  if (!expenses || expenses.length === 0) return <EmptyExpense />;
+  if (loadingExp || loadingInc) return <Loader />;
 
-  // --- SCENARIO 1: SORT BY AMOUNT (FLAT VIEW) ---
+  // --- NORMALIZE DATA ---
+  const normalizedExpenses = (expenses || []).map((e) => ({
+    ...e,
+    type: "expense",
+    sortAmount: e.amount,
+  }));
+
+  const normalizedIncomes = (incomes || []).map((i) => ({
+    ...i,
+    type: "income",
+    sortAmount: i.income,
+  }));
+
+  const allTransactions = [...normalizedExpenses, ...normalizedIncomes];
+
+  // Global Empty Check
+  if (allTransactions.length === 0) return <EmptyExpense />;
+
+  // --- SCENARIO 1: SORT BY AMOUNT (EXPENSES ONLY) ---
   if (field === "amount") {
-    const sortedExpenses = expenses.slice().sort((a, b) => {
-      return (a.amount - b.amount) * modifier;
+    // 💡 Filter out incomes when sorting by amount
+    const onlyExpenses = allTransactions.filter(
+      (trx) => trx.type === "expense",
+    );
+
+    const sortedExpenses = onlyExpenses.sort((a, b) => {
+      return (a.sortAmount - b.sortAmount) * modifier;
     });
 
     return (
@@ -32,54 +54,44 @@ function ExpenseTable() {
         </h3>
         <div className="flex flex-col gap-1">
           {sortedExpenses.map((expense) => (
-            <ExpenseRow expense={expense} key={expense.id} />
+            <ExpenseRow expense={expense} key={`exp-${expense.id}`} />
           ))}
         </div>
       </div>
     );
   }
 
-  // --- SCENARIO 2: SORT BY DATE (GROUPED VIEW) ---
+  // --- SCENARIO 2: SORT BY DATE (TIMELINE - BOTH INCOMES & EXPENSES) ---
   let groupedData = {};
 
-  if (view === "monthly") {
-    groupedData = expenses.reduce((acc, exp) => {
-      const dayKey = exp.date;
-      if (!acc[dayKey]) acc[dayKey] = [];
-      acc[dayKey].push(exp);
-      return acc;
-    }, {});
-  } else {
-    groupedData = expenses.reduce((acc, exp) => {
-      const monthKey = exp.date.slice(0, 7);
-      if (!acc[monthKey]) acc[monthKey] = [];
-      acc[monthKey].push(exp);
-      return acc;
-    }, {});
-  }
+  // Group by exact date (monthly view) or by month (yearly view)
+  allTransactions.forEach((trx) => {
+    const key = view === "monthly" ? trx.date : trx.date.slice(0, 7);
+    if (!groupedData[key]) groupedData[key] = [];
+    groupedData[key].push(trx);
+  });
 
   const groupedExpenses = Object.entries(groupedData)
-    // 2. Sort the Groups (e.g., January vs February)
-    .sort((a, b) => {
-      return a[0].localeCompare(b[0]) * modifier;
-    })
+    .sort((a, b) => a[0].localeCompare(b[0]) * modifier)
     .map(([periodKey, items]) => {
-      // 3. FIX: Sort the Items INSIDE the group (e.g., Jan 1st vs Jan 5th)
+      // Sort items INSIDE the group by exact date
       const sortedItems = items.sort((a, b) => {
         return (new Date(a.date) - new Date(b.date)) * modifier;
       });
 
-      let prettyPeriod;
-      if (view === "monthly") {
-        prettyPeriod = format(parseISO(periodKey), "MMM dd, yyyy");
-      } else {
-        prettyPeriod = format(parseISO(`${periodKey}-01`), "MMMM");
-      }
+      let prettyPeriod =
+        view === "monthly"
+          ? format(parseISO(periodKey), "MMM dd, yyyy")
+          : format(parseISO(`${periodKey}-01`), "MMMM yyyy");
+
+      const total = items.reduce((sum, trx) => {
+        return sum + (trx.type === "expense" ? trx.sortAmount : 0);
+      }, 0);
 
       return {
         period: prettyPeriod,
-        expenses: sortedItems, // Use the sorted list
-        total: items.reduce((sum, exp) => sum + exp.amount, 0),
+        transactions: sortedItems,
+        total, // Pass the mathematically correct total
       };
     });
 

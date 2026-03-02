@@ -49,7 +49,6 @@ export async function deleteIncome(id) {
 }
 
 export async function editIncome({ id, ...obj }) {
-  // MUCH CLEANER! No manual month/year extraction.
   const updates = {
     income: parseFloat(obj.income),
     date: obj.date,
@@ -66,7 +65,6 @@ export async function editIncome({ id, ...obj }) {
   return data;
 }
 
-// 3. GET ALL INCOME AMOUNTS (CRITICAL: Keeps your Total Balance working)
 export async function getIncomeAmounts(user_id) {
   const { data, error } = await supabase
     .from("wallet")
@@ -77,7 +75,6 @@ export async function getIncomeAmounts(user_id) {
   return data;
 }
 
-// 4. GET ALL EXPENSE AMOUNTS (CRITICAL: Keeps your Total Balance working)
 export async function getExpenseAmounts(user_id) {
   const { data, error } = await supabase
     .from("expenses")
