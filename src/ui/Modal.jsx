@@ -32,7 +32,7 @@ function Window({ children, name }) {
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm transition-all">
       <div
         ref={ref}
-        className="relative max-h-[90vh] w-auto max-w-fit overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl transition-all md:p-8"
+        className="relative max-h-[90vh] w-auto max-w-fit overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] transition-all md:p-8"
       >
         <button
           onClick={close}

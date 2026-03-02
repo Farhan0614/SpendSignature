@@ -13,6 +13,7 @@ import { useBalanceData } from "../wallet/useBalanceData";
 import { useProfile } from "../settings/useProfile";
 import { useUser } from "../authentication/useUser";
 import { HiPlus } from "react-icons/hi2";
+import Button from "../../ui/Button";
 
 function DashboardBody() {
   const navigate = useNavigate();
@@ -97,23 +98,21 @@ function DashboardBody() {
           <DateNavigator />
 
           <div className="flex items-center gap-2">
-            {/* Compact Secondary Button -> Income */}
-            <button
+            <Button
+              variant="secondary"
               onClick={() => navigate("/wallet")}
-              className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none active:translate-y-0 active:scale-95"
+              className="px-4 py-2"
             >
-              <HiPlus className="h-4 w-4 text-emerald-500" />
-              Income
-            </button>
+              <HiPlus className="h-4 w-4 text-emerald-500" /> Income
+            </Button>
 
-            {/* Compact Primary Button -> Expense */}
-            <button
+            <Button
+              variant="primary"
               onClick={() => navigate("/expense")}
-              className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-200 transition-all hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0 active:scale-95"
+              className="px-4 py-2"
             >
-              <HiPlus className="h-4 w-4" />
-              Expense
-            </button>
+              <HiPlus className="h-4 w-4" /> Expense
+            </Button>
           </div>
         </div>
       </section>

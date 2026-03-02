@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form"; // <-- IMPORT THIS
 import CountrySelector from "./CountrySelector";
 import LoaderMini from "../../ui/LoaderMini";
 import { HiCamera } from "react-icons/hi2";
 import countryToCurrency from "country-to-currency";
+import toast from "react-hot-toast";
 
 import { useUser } from "../authentication/useUser";
 import { useUpdateUser } from "../authentication/useUpdateUser";
@@ -10,65 +12,67 @@ import { useProfile } from "./useProfile";
 import { useCurrency } from "../../context/CurrencyContext";
 import { useUpdateProfile } from "./useUpdateProfile";
 import Logout from "./Logout";
-import toast from "react-hot-toast";
+import FormInput from "../../ui/FormInput";
+import Button from "../../ui/Button";
 
 function UpdateOptions() {
   const { user } = useUser();
   const { profile } = useProfile();
-
-  // GLOBAL STATE: We read this ONLY to set the initial value
   const { country: globalCountry, currency: globalCurrency } = useCurrency();
 
-  // Mutations
   const { updateUser, isUpdating: isUpdatingAuth } = useUpdateUser();
   const { updateProfile, isUpdating: isUpdatingProfile } = useUpdateProfile();
 
-  // --- LOCAL STATE ---
-  const [fullName, setFullName] = useState("");
+  // --- PROFILE STATE ---
+  const [fullName, setFullName] = useState(profile?.full_name || "");
   const [avatar, setAvatar] = useState(null);
-
-  // New: Local state for the dropdown. This is isolated from the rest of the app until saved.
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const [selectedCurrency, setSelectedCurrency] = useState("USD");
-
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(globalCountry || null);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    globalCurrency || "USD",
+  );
 
   const fileInputRef = useRef(null);
   const isWorking = isUpdatingAuth || isUpdatingProfile;
 
-  // 1. SYNC STATE: Load initial data from Profile & Global Context
-  useEffect(() => {
-    if (profile?.full_name) {
-      setFullName(profile.full_name);
-    }
+  // --- PASSWORD FORM SETUP ---
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues, // Used to check if passwords match
+    formState: { errors, submitCount },
+  } = useForm();
 
+  // 1. SYNC PROFILE STATE
+  useEffect(() => {
+    if (profile?.full_name) setFullName(profile.full_name);
     if (globalCountry) setSelectedCountry(globalCountry);
     if (globalCurrency) setSelectedCurrency(globalCurrency);
   }, [profile, globalCountry, globalCurrency]);
 
-  // 2. DETECT CHANGES
+  // 2. PASSWORD ERROR TOASTS
+  useEffect(() => {
+    if (submitCount > 0) {
+      if (errors?.password?.message) {
+        toast.error(errors.password.message, { id: "pass" });
+      } else if (errors?.confirmPassword?.message) {
+        toast.error(errors.confirmPassword.message, { id: "conf-pass" });
+      }
+    }
+  }, [errors, submitCount]);
+
+  // 3. DETECT PROFILE CHANGES
   const isNameChanged = (fullName || "") !== (profile?.full_name || "");
-  // Compare LOCAL currency selection vs DATABASE currency
   const isCurrencyChanged = selectedCurrency !== (profile?.currency || "USD");
   const isAvatarChanged = avatar !== null;
-
   const isModified = isNameChanged || isCurrencyChanged || isAvatarChanged;
 
+  const isFullNameValid = fullName.trim().length > 0;
+
   // --- HANDLERS ---
-
   function handleCountryChange(val) {
-    // 1. Update the dropdown UI
     setSelectedCountry(val);
-
-    // 2. Calculate the new currency code
-    const newCurrencyCode = countryToCurrency[val.value] || "USD";
-
-    // 3. Update the Preview Text (Local State)
-    setSelectedCurrency(newCurrencyCode);
-
-    // NOTE: We do NOT call setCurrency() from context here.
-    // That ensures the rest of the app stays the same until we save.
+    setSelectedCurrency(countryToCurrency[val.value] || "USD");
   }
 
   function handleAvatarClick() {
@@ -83,41 +87,26 @@ function UpdateOptions() {
 
   function handleProfileUpdate() {
     if (!isModified) return;
-
     updateProfile(
       {
         id: user.id,
         full_name: fullName,
-        currency: selectedCurrency, // Send the NEW local currency
+        currency: selectedCurrency,
         avatarFile: avatar,
         old_avatar_url: profile?.avatar_url,
       },
-      {
-        onSuccess: () => setAvatar(null),
-      },
+      { onSuccess: () => setAvatar(null) },
     );
   }
 
-  function handlePasswordUpdate(e) {
-    e.preventDefault();
-    if (!password) return;
-    if (password !== confirmPassword) {
-      toast.error("Passwords needs to match");
-      return;
-    }
-
+  // Hook Form handles the submit natively now!
+  function onPasswordSubmit(data) {
     updateUser(
-      { password },
-      {
-        onSuccess: () => {
-          setPassword("");
-          setConfirmPassword("");
-        },
-      },
+      { password: data.password },
+      { onSuccess: () => reset() }, // Clears inputs automatically on success
     );
   }
 
-  // Helper for Avatar Preview
   const avatarPreview = avatar
     ? URL.createObjectURL(avatar)
     : profile?.avatar_url || "/default-user.jpg";
@@ -127,7 +116,7 @@ function UpdateOptions() {
       {/* ==============================
           1. IDENTITY SECTION
       =============================== */}
-      <div className="rounded-2xl bg-white p-6 shadow-sm transition-all hover:shadow-md">
+      <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40">
         <h2 className="mb-6 text-lg font-bold text-slate-800">
           Profile Details
         </h2>
@@ -140,7 +129,6 @@ function UpdateOptions() {
               alt="Avatar"
               className="h-24 w-24 rounded-full border-4 border-slate-50 object-cover shadow-sm transition-transform duration-300 group-hover:scale-105"
             />
-
             <button
               onClick={handleAvatarClick}
               disabled={isWorking}
@@ -149,7 +137,6 @@ function UpdateOptions() {
             >
               <HiCamera className="h-4 w-4" />
             </button>
-
             <input
               type="file"
               accept="image/*"
@@ -161,16 +148,15 @@ function UpdateOptions() {
 
           {/* NAME INPUT */}
           <div className="flex-1">
-            <label className="mb-1.5 block text-sm font-semibold text-slate-600">
-              Full Name
-            </label>
-            <input
+            <FormInput
+              id="fullName"
+              label="Full Name"
               type="text"
               value={fullName}
               placeholder={user?.email?.split("@")[0]}
               onChange={(e) => setFullName(e.target.value)}
               disabled={isWorking}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none"
+              error={!isFullNameValid ? "Full Name cannot be empty" : ""}
             />
           </div>
         </div>
@@ -179,7 +165,7 @@ function UpdateOptions() {
       {/* ==============================
           2. REGION SECTION
       =============================== */}
-      <div className="rounded-2xl bg-white p-6 shadow-sm transition-all hover:shadow-md">
+      <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40">
         <h2 className="mb-4 text-lg font-bold text-slate-800">
           Currency & Region
         </h2>
@@ -197,70 +183,67 @@ function UpdateOptions() {
       </div>
 
       {/* Save Button */}
-      <button
+      <Button
+        variant="primary"
         onClick={handleProfileUpdate}
-        disabled={!isModified || isWorking}
-        className={`flex w-full cursor-pointer items-center justify-center rounded-xl py-3.5 text-sm font-bold tracking-wide transition-all duration-300 ${
-          !isModified || isWorking
-            ? "bg-slate-200 text-slate-400"
-            : "cursor-pointer bg-indigo-600 text-white shadow-lg hover:bg-indigo-700"
-        }`}
+        // UPDATE THE DISABLED PROP:
+        disabled={!isModified || isWorking || !isFullNameValid}
+        className="w-full py-3.5"
       >
         {isWorking ? <LoaderMini /> : "Save Profile Changes"}
-      </button>
+      </Button>
 
       {/* ==============================
-          3. PASSWORD SECTION
+          3. PASSWORD SECTION (Now uses react-hook-form)
       =============================== */}
       <form
-        onSubmit={handlePasswordUpdate}
-        className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+        onSubmit={handleSubmit(onPasswordSubmit)}
+        noValidate
+        className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40"
       >
         <h2 className="mb-6 text-lg font-bold text-slate-800">Security</h2>
 
         <div className="space-y-4">
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-600">
-              New Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-600">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none"
-              required
-            />
-          </div>
+          <FormInput
+            id="password"
+            label="New Password"
+            type="password"
+            disabled={isWorking}
+            register={register("password", {
+              required: "Please enter a new password",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+          />
+          <FormInput
+            id="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            disabled={isWorking}
+            register={register("confirmPassword", {
+              required: "Please confirm your password",
+              validate: (value) => {
+                const newPassword = getValues("password");
+                // 1. Ensure the new password actually meets the length requirement first
+                if (!newPassword || newPassword.length < 6) {
+                  return "Please enter a valid New Password first";
+                }
+                // 2. Then check if they match
+                return value === newPassword || "Passwords do not match";
+              },
+            })}
+          />
         </div>
 
         <div className="mt-6 flex justify-end">
-          <button
-            type="submit"
-            disabled={!password || isWorking}
-            className={`cursor-pointer rounded-lg px-6 py-2.5 text-sm font-bold transition-all ${
-              !password
-                ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                : "bg-slate-900 text-white shadow-lg hover:bg-slate-800 hover:shadow-xl active:scale-95"
-            }`}
-          >
-            Update Password
-          </button>
+          <Button type="submit" variant="primary" disabled={isWorking}>
+            {isWorking ? <LoaderMini /> : "Update Password"}
+          </Button>
         </div>
       </form>
-      {/*Logout*/}
+
       <Logout />
     </div>
   );

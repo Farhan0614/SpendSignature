@@ -17,7 +17,7 @@ function GroupExpense({ groupExpenses }) {
       <div className="flex items-center gap-2 py-3">
         <button
           onClick={handleClick}
-          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-xs transition-all duration-300 hover:bg-slate-200 hover:text-slate-500"
+          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-all duration-300 hover:bg-slate-200 hover:text-slate-500"
         >
           {showExpense ? <FaCaretDown /> : <FaCaretRight />}
         </button>

@@ -1,5 +1,6 @@
 import { FaTrash } from "react-icons/fa";
 import LoaderMini from "./LoaderMini";
+import Button from "./Button";
 
 function ConfirmDelete({
   resourceName,
@@ -22,19 +23,21 @@ function ConfirmDelete({
       </div>
 
       <div className="flex w-full gap-3">
-        <button
+        <Button
+          variant="secondary"
           onClick={onCancel}
-          className="flex-1 cursor-pointer rounded-lg border border-slate-200 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+          className="flex-1 py-2.5"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="danger"
           onClick={onConfirm}
           disabled={disabled}
-          className="flex flex-1 cursor-pointer items-center justify-center rounded-lg bg-red-600 py-2.5 text-sm font-bold text-white hover:bg-red-700"
+          className="flex-1 py-2.5"
         >
           {disabled ? <LoaderMini /> : "Delete"}
-        </button>
+        </Button>
       </div>
     </div>
   );

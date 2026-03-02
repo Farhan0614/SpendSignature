@@ -53,7 +53,7 @@ function CategoryDetails() {
         <div className="rounded-2xl bg-indigo-50 p-4 text-indigo-600">
           {Icon ? <Icon className="h-8 w-8 md:h-12 md:w-12" /> : null}
         </div>
-        <h1 className="font-sans text-3xl font-black text-slate-900 capitalize md:text-5xl">
+        <h1 className="font-sans text-3xl font-black text-slate-900 capitalize">
           {categoryName}
         </h1>
       </div>

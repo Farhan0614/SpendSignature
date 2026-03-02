@@ -1,6 +1,7 @@
 import { FaExclamationTriangle } from "react-icons/fa";
 import { formatCurrency } from "../utils/helpers";
 import { useCurrency } from "../context/CurrencyContext";
+import Button from "./Button";
 
 function ConfirmAnomaly({ message, amount, onConfirm, onCancel, isSaving }) {
   const { currency } = useCurrency();
@@ -31,20 +32,22 @@ function ConfirmAnomaly({ message, amount, onConfirm, onCancel, isSaving }) {
 
       {/* Buttons */}
       <div className="mt-4 flex w-full max-w-xs gap-3">
-        <button
+        <Button
+          variant="secondary"
           onClick={onCancel}
           disabled={isSaving}
-          className="flex-1 cursor-pointer rounded-lg border border-slate-300 bg-white py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
+          className="flex-1 py-3"
         >
           Let me fix it
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="primary"
           onClick={onConfirm}
           disabled={isSaving}
-          className="flex-1 cursor-pointer rounded-lg bg-indigo-600 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-indigo-700 hover:shadow-lg"
+          className="flex-1 py-3"
         >
           {isSaving ? "Saving..." : "I'm sure"}
-        </button>
+        </Button>
       </div>
     </div>
   );

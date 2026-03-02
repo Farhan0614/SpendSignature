@@ -1,4 +1,5 @@
 import { useCurrency } from "../../context/CurrencyContext";
+import Button from "../../ui/Button";
 import LoaderMini from "../../ui/LoaderMini";
 import { useLogout } from "../authentication/useLogout";
 
@@ -15,12 +16,9 @@ function Logout() {
   return (
     <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-slate-900">Logout Options</h2>
-      <button
-        onClick={handleLogout}
-        className="flex w-full cursor-pointer items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:bg-red-700 focus:ring focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
-      >
+      <Button variant="danger" onClick={handleLogout} className="w-full">
         {isLoading ? <LoaderMini /> : "Logout"}
-      </button>
+      </Button>
     </div>
   );
 }

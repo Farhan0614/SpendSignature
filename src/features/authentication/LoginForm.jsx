@@ -1,101 +1,143 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
 import LoginFormHeader from "./LoginFormHeader";
 import { useSignup } from "./useSignup";
 import LoaderMini from "../../ui/LoaderMini";
 import { useLogin } from "./useLogin";
+import FormInput from "../../ui/FormInput";
+import Button from "../../ui/Button";
 
 function LoginForm({ mode }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const { signup, isLoading: isLoading1 } = useSignup();
   const { login, isLoading: isLoading2 } = useLogin();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email || !password) return;
-    if (mode === "signup")
+  const isWorking = isLoading1 || isLoading2;
+
+  // 1. Setup React Hook Form
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, submitCount },
+  } = useForm();
+
+  // 2. Toast Notifications for Errors (with IDs to prevent stacking)
+  useEffect(() => {
+    if (submitCount > 0) {
+      if (errors?.email?.message)
+        toast.error(errors.email.message, { id: "email-err" });
+      if (errors?.password?.message)
+        toast.error(errors.password.message, { id: "pass-err" });
+    }
+  }, [errors, submitCount]);
+
+  // 3. Form Submit Handler
+  function onSubmit(data) {
+    if (mode === "signup") {
       signup(
-        { email, password },
+        { email: data.email, password: data.password },
         {
           onSuccess: () => {
+            reset();
             navigate("/dashboard");
           },
         },
       );
-    if (mode === "login") {
-      login({ email, password });
     }
-    // if (!mode === "login") signup({ email, password });
-    setEmail("");
-    setPassword("");
+    if (mode === "login") {
+      login(
+        { email: data.email, password: data.password },
+        { onSuccess: () => reset() },
+      );
+    }
+  }
+
+  // Toggle handler to clear errors when switching modes
+  function toggleMode(newMode) {
+    reset(); // Clears inputs and errors
+    navigate(`/${newMode}`);
   }
 
   return (
-    <div className="flex w-sm flex-col items-center gap-6">
+    <div className="flex w-full flex-col gap-6">
       <LoginFormHeader mode={mode} />
 
+      {/* Added noValidate to block default browser popups */}
       <form
-        onSubmit={handleSubmit}
-        className="flex w-full flex-col gap-6 font-sans"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="flex w-full flex-col gap-5"
       >
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="focus:ring-opacity-50 rounded-lg border border-slate-300 bg-white px-4 py-3 font-sans text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
+        <FormInput
+          label="Email Address"
           type="email"
-          placeholder="example@gmail.com"
-          required
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="focus:ring-opacity-50 rounded-lg border border-slate-300 bg-white px-4 py-3 font-sans text-lg focus:ring focus:ring-indigo-500 focus:outline-none"
-          type="password"
-          placeholder="Password"
-          required
+          placeholder="you@example.com"
+          disabled={isWorking}
+          autoComplete="email"
+          register={register("email", {
+            required: "Email address is required",
+            pattern: {
+              value: /\S+@\S+\.\S+/,
+              message: "Please provide a valid email address",
+            },
+          })}
         />
 
-        <div className="mt-2 flex flex-col gap-3">
-          <button className="flex cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 font-sans font-bold text-white transition-all duration-300 hover:bg-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-offset-1 focus:outline-none">
-            {isLoading1 || isLoading2 ? (
+        <FormInput
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          disabled={isWorking}
+          autoComplete={mode === "login" ? "current-password" : "new-password"}
+          register={register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
+          })}
+        />
+
+        <div className="mt-4 flex flex-col gap-4">
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isWorking}
+            className="w-full py-3 text-base"
+          >
+            {isWorking ? (
               <LoaderMini />
             ) : mode === "login" ? (
               "Sign In"
             ) : (
-              "Sign Up"
+              "Create Account"
             )}
-          </button>
+          </Button>
 
-          <div className="text-center text-sm text-slate-600">
+          <div className="text-center text-sm font-medium text-slate-500">
             {mode === "login" ? (
               <p>
-                Need an account?
+                Need an account?{" "}
                 <button
                   type="button"
-                  onClick={() => {
-                    navigate("/signup");
-                    setEmail("");
-                    setPassword("");
-                  }}
-                  className="cursor-pointer font-bold text-indigo-600 hover:underline"
+                  onClick={() => toggleMode("signup")}
+                  className="cursor-pointer font-bold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline focus:outline-none"
                 >
                   Sign Up
                 </button>
               </p>
             ) : (
               <p>
-                Already have an account?
+                Already have an account?{" "}
                 <button
                   type="button"
-                  onClick={() => {
-                    navigate("/login");
-                    setEmail("");
-                    setPassword("");
-                  }}
-                  className="cursor-pointer font-bold text-indigo-600 hover:underline"
+                  onClick={() => toggleMode("login")}
+                  className="cursor-pointer font-bold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline focus:outline-none"
                 >
                   Sign In
                 </button>

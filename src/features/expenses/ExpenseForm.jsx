@@ -12,6 +12,8 @@ import { usePredictAnomaly } from "./usePredictAnomaly";
 import LoaderMini from "../../ui/LoaderMini";
 import ConfirmAnomaly from "../../ui/ConfirmAnomaly";
 import { format } from "date-fns";
+import FormInput from "../../ui/FormInput";
+import Button from "../../ui/Button";
 
 function ExpenseForm({
   categories,
@@ -56,10 +58,14 @@ function ExpenseForm({
   // --- FIX: ADDED MISSING ERROR TOASTS ---
   useEffect(() => {
     if (submitCount > 0) {
-      if (errors?.date?.message) toast.error(errors.date.message);
-      if (errors?.title?.message) toast.error(errors.title.message);
-      if (errors?.amount?.message) toast.error(errors.amount.message);
-      if (errors?.category_id?.message) toast.error(errors.category_id.message);
+      if (errors?.date?.message)
+        toast.error(errors.date.message, { id: "exp-date" });
+      if (errors?.title?.message)
+        toast.error(errors.title.message, { id: "exp-title" });
+      if (errors?.amount?.message)
+        toast.error(errors.amount.message, { id: "exp-amount" });
+      if (errors?.category_id?.message)
+        toast.error(errors.category_id.message, { id: "exp-cat" });
     }
   }, [errors, submitCount]);
 
@@ -108,9 +114,6 @@ function ExpenseForm({
     );
   }
 
-  const inputClass =
-    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none";
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -118,113 +121,91 @@ function ExpenseForm({
       className="grid grid-cols-1 items-end gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-6"
     >
       {/* Date Input */}
-      <div className="lg:col-span-1">
-        <label className="mb-1 block text-xs font-semibold text-slate-500">
-          Date
-        </label>
-        <input
-          type="date"
-          required
-          max={today}
-          {...register("date", {
-            required: "Date is required",
-            validate: (value) =>
-              value <= today || "You cannot add future expenses",
-          })}
-          className={inputClass}
-        />
-      </div>
+      <FormInput
+        id="date"
+        type="date"
+        label="Date"
+        max={today}
+        className="lg:col-span-1"
+        register={register("date", {
+          required: "Date is required",
+          validate: (value) => value <= today || "No future dates",
+        })}
+      />
 
       {/* Title */}
-      <div className="lg:col-span-2">
-        <label className="mb-1 block text-xs font-semibold text-slate-500">
-          Title
-        </label>
-        <input
-          type="text"
-          required
-          placeholder="Expense Title"
-          {...register("title", {
-            required: "Title is required", // <-- FIX: Added missing message
-          })}
-          className={inputClass}
-        />
-      </div>
+      <FormInput
+        id="title"
+        type="text"
+        label="Title"
+        placeholder="Expense Title"
+        className="lg:col-span-2"
+        register={register("title", { required: "Title is required" })}
+      />
 
       {/* Amount */}
-      <div className="lg:col-span-1">
-        <label className="mb-1 block text-xs font-semibold text-slate-500">
-          Amount
-        </label>
-        <input
-          type="number"
-          placeholder="0.00"
-          step="0.01"
-          min="0"
-          {...register("amount", {
-            required: "Amount is required", // <-- FIX: Updated message
-            min: {
-              value: 0.01,
-              message: "Amount must be positive",
-            },
-          })}
-          className={inputClass}
-        />
-      </div>
+      <FormInput
+        id="amount"
+        type="number"
+        label="Amount"
+        placeholder="0.00"
+        step="0.01"
+        min="0"
+        className="lg:col-span-1"
+        register={register("amount", {
+          required: "Amount is required",
+          min: { value: 0.01, message: "Amount must be positive" },
+        })}
+      />
 
       {/* Category */}
-      <div className="lg:col-span-1">
-        <label className="mb-1 block text-xs font-semibold text-slate-500">
-          Category
-        </label>
-        <select
-          required
-          defaultValue=""
-          {...register("category_id", {
-            required: "Please select a category", // <-- FIX: Added missing message
-          })}
-          className={inputClass}
-        >
-          <option value="" disabled>
-            Select
+      <FormInput
+        id="category_id"
+        type="select"
+        label="Category"
+        defaultValue=""
+        className="lg:col-span-1"
+        register={register("category_id", {
+          required: "Please select a category",
+        })}
+      >
+        <option value="" disabled>
+          Select
+        </option>
+        {categories.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.name}
           </option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        ))}
+      </FormInput>
 
       {/* Notes */}
-      <div className="sm:col-span-2 lg:col-span-1">
-        <label className="mb-1 block text-xs font-semibold text-slate-500">
-          Notes
-        </label>
-        <input
-          type="text"
-          placeholder="Optional"
-          {...register("notes")}
-          className={inputClass}
-        />
-      </div>
+      <FormInput
+        id="notes"
+        type="text"
+        label="Notes"
+        placeholder="Optional"
+        className="sm:col-span-2 lg:col-span-1"
+        register={register("notes")}
+      />
 
       {/* BUTTONS ROW */}
       <div className="mt-2 flex items-center justify-end gap-2 sm:col-span-2 lg:col-span-6">
         {isEditSession && (
-          <button
+          <Button
             type="button"
+            variant="secondary"
             onClick={handleShowForm}
             disabled={isWorking}
-            className="cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50"
           >
             Cancel
-          </button>
+          </Button>
         )}
-
-        <button
+        <Button
+          type="submit"
+          variant="primary"
           disabled={isWorking}
-          className="flex w-full cursor-pointer items-center justify-center rounded-lg bg-indigo-600 px-6 py-2.5 font-bold text-white transition-all hover:bg-indigo-700 hover:shadow-md disabled:bg-indigo-300 sm:w-auto"
+          className="w-full sm:w-auto"
         >
           {isWorking ? (
             <LoaderMini />
@@ -233,7 +214,7 @@ function ExpenseForm({
           ) : (
             "Add Transaction"
           )}
-        </button>
+        </Button>
       </div>
     </form>
   );

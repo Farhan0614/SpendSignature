@@ -7,6 +7,7 @@ import { formatCurrency } from "../../utils/helpers";
 import { useDeleteIncome } from "./useDeleteIncome";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import IncomeForm from "./IncomeForm";
+import Button from "../../ui/Button";
 
 function IncomeDetails({ incomeItem, onCloseModal }) {
   const { currency } = useCurrency();
@@ -73,18 +74,20 @@ function IncomeDetails({ incomeItem, onCloseModal }) {
 
       {/* ACTION BUTTONS */}
       <div className="mt-2 flex gap-3">
-        <button
+        <Button
+          variant="soft-primary"
           onClick={() => setIsEditing(true)}
-          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 font-bold text-slate-700 transition-colors hover:bg-slate-200 focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:outline-none"
+          className="flex-1 py-3"
         >
           <FaPencilAlt size={14} /> Edit
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="soft-danger"
           onClick={() => setIsConfirmingDelete(true)}
-          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-rose-50 py-3 font-bold text-rose-600 transition-colors hover:bg-rose-100 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
+          className="flex-1 py-3"
         >
           <FaTrash size={14} /> Delete
-        </button>
+        </Button>
       </div>
 
       {/* Audit Trail / Entry Date */}
