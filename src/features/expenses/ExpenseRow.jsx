@@ -35,25 +35,35 @@ function ExpenseRow({ expense }) {
       <Modal.Open opens={`expense-${id}`}>
         <div
           title="View Expense Details"
-          className="mb-1 flex cursor-pointer items-center justify-between transition-all duration-200 hover:bg-slate-100"
+          className="group mb-1 flex cursor-pointer items-center justify-between rounded-xl border border-transparent p-3 transition-all hover:border-slate-100 hover:bg-slate-50 hover:shadow-sm"
         >
-          <span className="flex items-center gap-1 font-sans font-semibold">
-            <HiArrowDownCircle className="h-5 w-5" />
-            <span>{formattedTitle(title)}</span>
-          </span>
-          <div className="flex items-center gap-5 text-sm font-semibold">
+          {/* LEFT: Icon & Title */}
+          <div className="flex items-center gap-3">
+            <HiArrowDownCircle className="h-6 w-6 text-slate-400 transition-colors group-hover:text-indigo-500" />
+            <span className="font-sans font-bold text-slate-700 transition-colors group-hover:text-indigo-700">
+              {formattedTitle(title)}
+            </span>
+          </div>
+
+          {/* RIGHT: Category, Amount, Date */}
+          <div className="flex items-center gap-4 text-sm md:gap-6">
             <button
               onClick={handleCategoryClick}
-              className="z-10 flex cursor-pointer items-center justify-center gap-1 rounded-md px-2 py-1 transition-colors hover:text-indigo-700"
+              className="z-10 hidden cursor-pointer items-center justify-center gap-1 rounded-md px-2 py-1 font-semibold text-slate-500 transition-colors hover:bg-indigo-50 hover:text-indigo-700 sm:flex"
               title="View Category Details"
             >
               {Icon && <Icon className="h-4 w-4" />}
               <span>{category_name}</span>
             </button>
-            <span className="font-sans">
-              {formatCurrency(amount, currency)}
-            </span>
-            <span className="font-sans">{formattedFullDate(date)}</span>
+
+            <div className="flex flex-col items-end sm:flex-row sm:items-center sm:gap-6">
+              <span className="font-sans font-bold text-slate-900">
+                {formatCurrency(amount, currency)}
+              </span>
+              <span className="font-sans text-xs font-medium text-slate-400 sm:text-sm">
+                {formattedFullDate(date)}
+              </span>
+            </div>
           </div>
         </div>
       </Modal.Open>

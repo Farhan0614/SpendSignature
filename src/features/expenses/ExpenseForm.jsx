@@ -118,7 +118,7 @@ function ExpenseForm({
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="grid grid-cols-1 items-end gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-6"
+      className="grid grid-cols-1 items-end gap-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:grid-cols-2 lg:grid-cols-6"
     >
       {/* Date Input */}
       <FormInput
