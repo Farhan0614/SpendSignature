@@ -15,6 +15,7 @@ function DateNavigator() {
     const prev = subMonths(selectedDate, 1);
     // Always set param when going back
     searchParams.set("month", format(prev, "yyyy-MM"));
+    searchParams.delete("page");
     setSearchParams(searchParams);
   }
 
@@ -29,6 +30,7 @@ function DateNavigator() {
     } else {
       searchParams.set("month", format(next, "yyyy-MM"));
     }
+    searchParams.delete("page");
     setSearchParams(searchParams);
   }
 

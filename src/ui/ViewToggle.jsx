@@ -5,6 +5,8 @@ function ViewToggle() {
   const view = searchParams.get("view") || "monthly";
 
   function setView(newView) {
+    searchParams.delete("page");
+
     if (newView === "monthly") {
       // Clean URL for default view
       searchParams.delete("view");

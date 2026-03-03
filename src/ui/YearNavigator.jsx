@@ -12,12 +12,14 @@ function YearNavigator() {
 
   function prevYear() {
     searchParams.set("year", currentYear - 1);
+    searchParams.delete("page");
     setSearchParams(searchParams);
   }
 
   function nextYear() {
     if (currentYear >= realCurrentYear) return;
     searchParams.set("year", currentYear + 1);
+    searchParams.delete("page");
     setSearchParams(searchParams);
   }
 
