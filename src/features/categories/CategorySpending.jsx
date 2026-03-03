@@ -9,25 +9,25 @@ function CategorySpending({ viewTotal = 0, globalTotal = 0, view }) {
   const viewLabel = view === "monthly" ? "Spent This Month" : "Spent This Year";
 
   return (
-    <div className="mb-10 flex items-center gap-6 border-b border-slate-50 pb-4">
+    <div className="mb-10 flex items-center gap-6 border-b border-slate-50 pb-4 dark:border-slate-800">
       {/* 1. VIEW TOTAL (Context Aware) */}
       <div>
-        <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
+        <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500 dark:text-slate-400">
           <FaHashtag className="text-slate-400" />
           <span>{viewLabel}</span>
         </div>
-        <span className="font-sans text-sm font-bold text-slate-700">
+        <span className="font-sans text-sm font-bold text-slate-700 dark:text-slate-200">
           {formatCurrency(viewTotal, currency)}
         </span>
       </div>
 
       {/* 2. GLOBAL TOTAL (All Time) */}
       <div>
-        <div className="flex items-center gap-1 font-sans text-sm font-semibold text-slate-500">
+        <div className="items dark:text-slate-400-center flex gap-1 font-sans text-sm font-semibold text-slate-500">
           <FaHashtag className="text-slate-400" />
           <span>Total Spent (All Time)</span>
         </div>
-        <span className="font-sans text-sm font-bold text-slate-700">
+        <span className="font- text-sm font-bold text-slate-700 dark:text-slate-200">
           {formatCurrency(globalTotal, currency)}
         </span>
       </div>

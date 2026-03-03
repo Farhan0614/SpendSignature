@@ -11,7 +11,7 @@ function Logo() {
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-xl font-bold text-white">
           S
         </div>
-        <p className="font-sans text-lg font-bold tracking-tight text-slate-900">
+        <p className="font-sans text-lg font-bold tracking-tight text-slate-900 dark:text-white">
           SpendSignature
         </p>
       </div>

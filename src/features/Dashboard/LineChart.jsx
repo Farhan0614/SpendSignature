@@ -17,8 +17,8 @@ function IncomeVsExpenseChart() {
 
   if (isLoading)
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="mb-6 w-full text-left font-sans text-lg font-bold text-slate-700 opacity-50">
+      <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
+        <h2 className="mb-6 w-full text-left font-sans text-lg font-bold text-slate-700 opacity-50 dark:text-slate-400">
           Income vs Expense
         </h2>
         <div className="flex h-[300px] w-full items-center justify-center">
@@ -56,8 +56,8 @@ function IncomeVsExpenseChart() {
   });
 
   return (
-    <div className="w-full rounded-2xl bg-white shadow-sm">
-      <h2 className="mb-6 font-sans text-lg font-bold text-slate-700">
+    <div className="w-full rounded-2xl bg-white shadow-sm dark:bg-slate-900">
+      <h2 className="mb-6 font-sans text-lg font-bold text-slate-700 dark:text-slate-200">
         Income vs Expense (Last 6 Months)
       </h2>
 

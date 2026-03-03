@@ -6,16 +6,24 @@ function FormInput({
   error,
   disabled,
   className = "",
-  children, // Used for <select> options
-  ...rest // Captures value, onChange, placeholder, etc.
+  children,
+  ...rest
 }) {
-  // Centralized Premium SaaS Styling
   const baseInputClass =
-    "w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold text-slate-700 transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none disabled:bg-slate-100 disabled:text-slate-400";
-  const labelClass =
-    "mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase";
+    // 1. Layout & Animation
+    "w-full rounded-xl border p-3 text-sm font-bold transition-all outline-none " +
+    // 2. Light Mode (Normal & Focus)
+    "border-slate-200 bg-slate-50 text-slate-700 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 " +
+    // 3. Light Mode (Disabled) -> This was overriding Dark Mode!
+    "disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed " +
+    // 4. Dark Mode (Normal & Focus)
+    "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:focus:bg-slate-800 " +
+    // 5. Dark Mode (Disabled) -> THIS IS THE FIX ✅
+    "dark:disabled:bg-slate-800 dark:disabled:text-slate-500 dark:disabled:border-slate-800";
 
-  // Make number inputs slightly larger
+  const labelClass =
+    "mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400";
+
   const typeSpecificClass =
     type === "number"
       ? "text-lg placeholder:font-medium placeholder:text-slate-400"
@@ -29,7 +37,6 @@ function FormInput({
         </label>
       )}
 
-      {/* If type is select, render a dropdown. Otherwise, render an input. */}
       {type === "select" ? (
         <select
           id={id}

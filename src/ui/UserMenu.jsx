@@ -21,7 +21,9 @@ function UserMenu() {
 
   // Color logic: Red if 0 or negative
   const balanceColor =
-    currentBalance <= 0 ? "text-red-500" : "text-emerald-600";
+    currentBalance <= 0
+      ? "text-red-500 dark:text-red-400"
+      : "dark:text-emerald-400 text-emerald-600";
 
   // Logic: Use Profile Name -> Fallback to Email Prefix -> Fallback to "User"
   const displayName =
@@ -37,25 +39,25 @@ function UserMenu() {
       {user ? (
         <>
           <div
-            className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-all hover:bg-slate-100"
+            className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-all hover:bg-slate-100 dark:hover:bg-slate-800"
             onClick={() => navigate("/settings")}
           >
             {/* Avatar Image */}
             <img
               src={avatarSrc}
               alt="Avatar"
-              className="h-10 w-10 rounded-full border border-slate-200 object-cover"
+              className="h-10 w-10 rounded-full border border-slate-200 object-cover dark:border-slate-700"
             />
 
             <div className="hidden flex-col items-start lg:flex">
-              <span className="text-sm font-bold text-slate-700">
+              <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
                 {displayName}
               </span>
 
               {/* BALANCE LOGIC: Show Skeleton if loading, else show Value */}
               {isBalLoading ? (
                 // The Skeleton Loader (Pulsing Gray Bar)
-                <div className="mt-1 h-3 w-16 animate-pulse rounded bg-slate-200" />
+                <div className="mt-1 h-3 w-16 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
               ) : (
                 <span className={`text-xs font-bold ${balanceColor}`}>
                   {formatCurrency(currentBalance, currency)}
@@ -67,7 +69,7 @@ function UserMenu() {
           <button
             onClick={handleLogout}
             disabled={isLoading}
-            className="group flex cursor-pointer items-center justify-center rounded-full bg-slate-100 p-2 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"
+            className="group flex cursor-pointer items-center justify-center rounded-full bg-slate-100 p-2 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-400"
             title="Logout"
           >
             <HiOutlineLogout className="h-5 w-5" />

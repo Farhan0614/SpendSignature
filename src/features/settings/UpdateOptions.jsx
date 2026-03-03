@@ -116,8 +116,8 @@ function UpdateOptions() {
       {/* ==============================
           1. IDENTITY SECTION
       =============================== */}
-      <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40">
-        <h2 className="mb-6 text-lg font-bold text-slate-800">
+      <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
+        <h2 className="mb-6 text-lg font-bold text-slate-800 dark:text-white">
           Profile Details
         </h2>
 
@@ -127,7 +127,7 @@ function UpdateOptions() {
             <img
               src={avatarPreview}
               alt="Avatar"
-              className="h-24 w-24 rounded-full border-4 border-slate-50 object-cover shadow-sm transition-transform duration-300 group-hover:scale-105"
+              className="h-24 w-24 rounded-full border-4 border-slate-50 object-cover shadow-sm transition-transform duration-300 group-hover:scale-105 dark:border-slate-800"
             />
             <button
               onClick={handleAvatarClick}
@@ -165,8 +165,8 @@ function UpdateOptions() {
       {/* ==============================
           2. REGION SECTION
       =============================== */}
-      <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40">
-        <h2 className="mb-4 text-lg font-bold text-slate-800">
+      <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
+        <h2 className="mb-4 text-lg font-bold text-slate-800 dark:text-white">
           Currency & Region
         </h2>
         <div className="max-w-xs">
@@ -175,10 +175,12 @@ function UpdateOptions() {
             onChange={handleCountryChange}
           />
         </div>
-        <p className="mt-2 text-xs text-slate-400">
+        <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
           Selected Currency:{" "}
-          <span className="font-bold text-slate-600">{selectedCurrency}</span>.
-          Click save to apply changes.
+          <span className="font-bold text-slate-600 dark:text-slate-300">
+            {selectedCurrency}
+          </span>
+          . Click save to apply changes.
         </p>
       </div>
 
@@ -199,9 +201,11 @@ function UpdateOptions() {
       <form
         onSubmit={handleSubmit(onPasswordSubmit)}
         noValidate
-        className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40"
+        className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50"
       >
-        <h2 className="mb-6 text-lg font-bold text-slate-800">Security</h2>
+        <h2 className="mb-6 text-lg font-bold text-slate-800 dark:text-white">
+          Security
+        </h2>
 
         <div className="space-y-4">
           <FormInput

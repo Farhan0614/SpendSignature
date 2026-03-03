@@ -11,14 +11,14 @@ function LoginPage({ mode }) {
 
   return (
     // 1. The Full Page Background
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-slate-50 p-4 sm:p-8">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-slate-50 p-4 sm:p-8 dark:bg-slate-950">
       {/* 2. The Logo above the card */}
       <div className="mb-8 scale-110">
         <Logo />
       </div>
 
       {/* 3. The Premium Card Wrapper */}
-      <div className="w-full max-w-md rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 sm:p-10">
+      <div className="w-full max-w-md rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 sm:p-10 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
         <LoginForm mode={mode} onBack={handleBack} />
       </div>
     </div>

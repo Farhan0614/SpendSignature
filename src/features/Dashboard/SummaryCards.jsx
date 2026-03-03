@@ -14,7 +14,7 @@ function SummaryCards({
   return (
     <section className="flex flex-wrap justify-center gap-6">
       {/* === CARD 1: NET WORTH (Teal/Emerald - Wealth) === */}
-      <div className="max-w-sm min-w-[300px] flex-1 rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 transition-transform">
+      <div className="max-w-sm min-w-[300px] flex-1 rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 transition-transform dark:bg-slate-900 dark:ring-slate-800">
         {/* HEADER: Gradient matching your old 'Income' style */}
         <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-teal-500 to-emerald-500 px-6 py-5 text-white">
           <div>
@@ -33,11 +33,11 @@ function SummaryCards({
         {/* BODY: Context about this month's income */}
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
               <HiArrowTrendingUp className="h-4 w-4" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-bold text-slate-400">
+              <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
                 Income ({displayMonth})
               </span>
               <span className="font-bold text-emerald-600">
@@ -49,7 +49,7 @@ function SummaryCards({
       </div>
 
       {/* === CARD 2: MONTHLY EXPENSE (Rose/Red - Spending) === */}
-      <div className="max-w-sm min-w-[300px] flex-1 rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 transition-transform">
+      <div className="max-w-sm min-w-[300px] flex-1 rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 transition-transform dark:bg-slate-900 dark:ring-slate-800">
         {/* HEADER: Gradient matching your old 'Expense' style */}
         <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-rose-500 to-red-500 px-6 py-5 text-white">
           <div>
@@ -67,7 +67,7 @@ function SummaryCards({
 
         {/* BODY: Footer Text */}
         <div className="px-6 py-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             You have spent{" "}
             <span className="font-bold text-rose-600">
               {formatCurrency(monthlyExpense, currency)}

@@ -14,8 +14,10 @@ function Logout() {
   }
 
   return (
-    <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-900">Logout Options</h2>
+    <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900">
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+        Logout Options
+      </h2>
       <Button variant="danger" onClick={handleLogout} className="w-full">
         {isLoading ? <LoaderMini /> : "Logout"}
       </Button>

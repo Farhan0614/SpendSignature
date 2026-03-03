@@ -11,11 +11,11 @@ function Settings() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
-      <header className="flex items-center gap-2 border-b border-slate-200 pb-6 text-slate-900">
-        <HiCog6Tooth className="h-8 w-8 text-indigo-600" />
+      <header className="flex items-center gap-2 border-b border-slate-200 pb-6 text-slate-900 dark:border-slate-800 dark:text-white">
+        <HiCog6Tooth className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
         <div>
           <Heading>Settings</Heading>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Manage your profile, password, and preferences.
           </p>
         </div>

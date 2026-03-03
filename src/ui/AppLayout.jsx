@@ -24,7 +24,7 @@ function AppLayout() {
   if (isLoading || isLoadingProfile) return <Loader />;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900">
+    <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">
       {/* 1. Sticky Header */}
       <Header />
 

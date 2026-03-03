@@ -80,16 +80,19 @@ function DashboardBody() {
       <section className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         {/* Left: Text */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
             Welcome back,{" "}
             {profile.full_name
               ? profile.full_name
               : user.email.split("@").at(0)}
             !
           </h1>
-          <p className="mt-1 text-slate-500">
+          <p className="mt-1 text-slate-500 dark:text-slate-400">
             Here is your financial overview for{" "}
-            <span className="font-bold text-slate-700">{sentenceDate}</span>.
+            <span className="font-bold text-slate-700 dark:text-slate-200">
+              {sentenceDate}
+            </span>
+            .
           </p>
         </div>
 
@@ -120,18 +123,16 @@ function DashboardBody() {
       {/* SECTION 2: METRICS */}
       <section>
         <SummaryCards
-          displayMonth={cardDate} // Pass the Card specific text
+          displayMonth={cardDate}
           totalBalance={currentBalance}
           monthlyBalance={monthlyBalance}
           monthlyExpense={totalMonthlyExpense}
         />
       </section>
 
-      {/* ... rest of the code remains the same ... */}
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* ... */}
         <div className="flex flex-col gap-8 lg:col-span-2">
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
             <LineChart />
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -147,14 +148,14 @@ function DashboardBody() {
         </div>
 
         <div className="flex flex-col gap-8">
-          <div className="rounded-2xl bg-white shadow-sm transition-transform hover:scale-[1.02]">
+          <div className="rounded-2xl bg-white shadow-sm transition-transform hover:scale-[1.02] dark:border dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
             <ExpenseBarChart
               income={monthlyBalance}
               expense={totalMonthlyExpense}
             />
           </div>
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-700">
+          <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
+            <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200">
               Expense Breakdown
             </h2>
             <div className="w-full">

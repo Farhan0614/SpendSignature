@@ -14,9 +14,9 @@ function Categories() {
     <div className="space-y-6">
       {/* FIX: Added 'items-start' to prevent stretching in column mode
        */}
-      <header className="flex flex-col items-start gap-4 border-b border-slate-200 pb-4 xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex items-center gap-2 text-slate-900">
-          <FaTag className="h-8 w-8 text-indigo-600" />
+      <header className="flex flex-col items-start gap-4 border-b border-slate-200 pb-4 xl:flex-row xl:items-center xl:justify-between dark:border-slate-800">
+        <div className="flex items-center gap-2 text-slate-900 dark:text-white">
+          <FaTag className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
           <Heading>Category</Heading>
         </div>
 

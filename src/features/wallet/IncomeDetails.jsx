@@ -42,22 +42,22 @@ function IncomeDetails({ incomeItem, onCloseModal }) {
     <div className="flex w-[85vw] max-w-md flex-col gap-6 pt-2">
       {/* Header & Icon (Green Theme) */}
       <div className="flex flex-col items-center text-center">
-        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600 shadow-inner">
+        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600 shadow-inner dark:from-emerald-900 dark:to-emerald-800 dark:text-emerald-200">
           <HiArrowDownLeft size={36} strokeWidth={2} />
         </div>
-        <h2 className="text-3xl font-black tracking-tight text-slate-900">
+        <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
           {source || "Income"}
         </h2>
       </div>
 
       {/* Soft Stats Grid (Matches Expense Grid but 2 columns) */}
-      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-50 p-4">
-        <div className="flex flex-col items-center justify-center gap-1 border-r border-slate-200/60 text-center">
+      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/50">
+        <div className="flex flex-col items-center justify-center gap-1 border-r border-slate-200/60 text-center dark:border-slate-700">
           <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
             <FaHashtag className="mr-1 inline" />
             Amount
           </span>
-          <span className="font-sans font-black text-emerald-600">
+          <span className="font-sans font-black text-emerald-600 dark:text-emerald-400">
             +{formatCurrency(income, currency)}
           </span>
         </div>
@@ -66,7 +66,7 @@ function IncomeDetails({ incomeItem, onCloseModal }) {
             <FaCalendar className="mr-1 inline" />
             Date
           </span>
-          <span className="text-sm font-bold text-slate-700">
+          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
             {format(new Date(date), "MMM dd, yyyy")}
           </span>
         </div>
@@ -92,7 +92,7 @@ function IncomeDetails({ incomeItem, onCloseModal }) {
 
       {/* Audit Trail / Entry Date */}
       <div className="mt-1 text-center">
-        <p className="text-[11px] font-medium text-slate-400">
+        <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
           Entry added on{" "}
           {format(new Date(created_at), "MMM dd, yyyy 'at' hh:mm a")}
         </p>

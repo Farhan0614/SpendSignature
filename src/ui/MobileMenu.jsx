@@ -5,10 +5,12 @@ function MobileMenu({ isOpen, setIsOpen, user, logout, isLoading }) {
   return (
     <div
       className={`overflow-hidden transition-all duration-300 md:hidden ${
-        isOpen ? "max-h-96 border-b border-slate-200" : "max-h-0"
+        isOpen
+          ? "max-h-96 border-b border-slate-200 dark:border-slate-800"
+          : "max-h-0"
       }`}
     >
-      <div className="space-y-1 bg-white px-4 pt-2 pb-4 shadow-inner">
+      <div className="space-y-1 bg-white px-4 pt-2 pb-4 shadow-inner dark:bg-slate-900">
         <MobileNavItem to="/dashboard" onClick={() => setIsOpen(false)}>
           Dashboard
         </MobileNavItem>
@@ -26,11 +28,11 @@ function MobileMenu({ isOpen, setIsOpen, user, logout, isLoading }) {
         </MobileNavItem>
 
         {user && (
-          <div className="mt-4 border-t border-slate-100 pt-4">
+          <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
             <button
               onClick={logout}
               disabled={isLoading}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
             >
               <HiOutlineLogout /> Logout
             </button>

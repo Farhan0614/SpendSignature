@@ -22,9 +22,11 @@ function ExpenseProgressBar({ income = 0, expense = 0 }) {
 
   return (
     <div className="flex h-full w-full flex-col justify-center p-6">
-      <h3 className="mb-3 text-lg font-bold text-slate-700">Budget Health</h3>
+      <h3 className="mb-3 text-lg font-bold text-slate-700 dark:text-slate-200">
+        Budget Health
+      </h3>
 
-      <div className="mb-2 flex justify-between text-sm font-medium text-slate-500">
+      <div className="mb-2 flex justify-between text-sm font-medium text-slate-500 dark:text-slate-400">
         <span>Used</span>
         {/* If over budget, show specific warning text instead of percentage */}
         <span
@@ -35,7 +37,7 @@ function ExpenseProgressBar({ income = 0, expense = 0 }) {
       </div>
 
       {/* Progress Bar Track */}
-      <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
+      <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${colorClass}`}
           style={{ width: `${percentage}%` }}
@@ -43,16 +45,16 @@ function ExpenseProgressBar({ income = 0, expense = 0 }) {
       </div>
 
       {/* Context Text */}
-      <p className="mt-3 text-xs text-slate-400">
+      <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
         {income > 0 ? (
           <>
             <span
-              className={`font-semibold ${isOverBudget ? "text-red-600" : "text-slate-600"}`}
+              className={`font-semibold ${isOverBudget ? "text-red-600" : "text-slate-600 dark:text-slate-300"}`}
             >
               {formatCurrency(expense, currency)}
             </span>{" "}
             spent of{" "}
-            <span className="font-semibold text-slate-600">
+            <span className="font-semibold text-slate-600 dark:text-slate-300">
               {formatCurrency(income, currency)}
             </span>{" "}
             limit

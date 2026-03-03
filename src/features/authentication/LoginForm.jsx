@@ -119,14 +119,14 @@ function LoginForm({ mode }) {
             )}
           </Button>
 
-          <div className="text-center text-sm font-medium text-slate-500">
+          <div className="text-center text-sm font-medium text-slate-500 dark:text-slate-400">
             {mode === "login" ? (
               <p>
                 Need an account?{" "}
                 <button
                   type="button"
                   onClick={() => toggleMode("signup")}
-                  className="cursor-pointer font-bold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline focus:outline-none"
+                  className="cursor-pointer font-bold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline focus:outline-none dark:text-indigo-400 dark:hover:text-indigo-300"
                 >
                   Sign Up
                 </button>
@@ -137,7 +137,7 @@ function LoginForm({ mode }) {
                 <button
                   type="button"
                   onClick={() => toggleMode("login")}
-                  className="cursor-pointer font-bold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline focus:outline-none"
+                  className="cursor-pointer font-bold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline focus:outline-none dark:text-indigo-400 dark:hover:text-indigo-300"
                 >
                   Sign In
                 </button>

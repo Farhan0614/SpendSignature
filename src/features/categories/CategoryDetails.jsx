@@ -37,7 +37,7 @@ function CategoryDetails() {
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <button
           onClick={() => navigate("/category")}
-          className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-400 hover:text-slate-700"
+          className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200"
         >
           <HiArrowLeft /> Back
         </button>
@@ -50,10 +50,10 @@ function CategoryDetails() {
 
       {/* TITLE Header (Keep as is) */}
       <div className="mb-8 flex items-center gap-4">
-        <div className="rounded-2xl bg-indigo-50 p-4 text-indigo-600">
+        <div className="rounded-2xl bg-indigo-50 p-4 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
           {Icon ? <Icon className="h-8 w-8 md:h-12 md:w-12" /> : null}
         </div>
-        <h1 className="font-sans text-3xl font-black text-slate-900 capitalize">
+        <h1 className="font-sans text-3xl font-black text-slate-900 capitalize dark:text-white">
           {categoryName}
         </h1>
       </div>
@@ -81,7 +81,7 @@ function CategoryDetails() {
       {/* TABLE + PAGINATION */}
       {isLoadingList ? (
         // 1. LOADER STATE: Keeps height to prevent layout jump
-        <div className="flex h-96 items-center justify-center rounded-2xl border border-slate-200 bg-white">
+        <div className="flex h-96 items-center justify-center rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <Loader />
         </div>
       ) : (

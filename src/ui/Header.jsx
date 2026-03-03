@@ -6,6 +6,7 @@ import { useUser } from "../features/authentication/useUser";
 import NavBar from "./NavBar";
 import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
+import DarkModeToggle from "./DarkModeToggle";
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,14 +19,17 @@ function Header() {
 
   return (
     // Sticky header with glassmorphism effect
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md transition-all dark:border-slate-800 dark:bg-slate-900/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* --- LEFT: LOGO --- */}
         <Logo />
         {/* --- MIDDLE: DESKTOP NAVIGATION --- */}
         <NavBar />
-        {/* --- RIGHT: USER & LOGOUT --- */}
-        <UserMenu />
+        {/* RIGHT SIDE GROUP */}
+        <div className="flex items-center gap-2 md:gap-4">
+          <DarkModeToggle /> {/* <-- ADD TOGGLE HERE */}
+          <UserMenu />
+        </div>
 
         {/* --- MOBILE MENU BUTTON --- */}
         <div className="flex md:hidden">

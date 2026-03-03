@@ -41,7 +41,7 @@ function PieCharts({ monthlyExpense = [] }) {
 
   if (data.length === 0) {
     return (
-      <div className="flex h-48 w-full flex-col items-center justify-center text-slate-400">
+      <div className="flex h-48 w-full flex-col items-center justify-center text-slate-400 dark:text-slate-500">
         <p className="text-sm font-medium">No data yet</p>
       </div>
     );
@@ -117,7 +117,9 @@ function PieCharts({ monthlyExpense = [] }) {
                 <span className="truncate" style={{ color: color }}>
                   {item.name}
                 </span>
-                <span className="shrink-0 text-slate-400">({percent}%)</span>
+                <span className="shrink-0 text-slate-400 dark:text-slate-500">
+                  ({percent}%)
+                </span>
               </div>
             </div>
           );

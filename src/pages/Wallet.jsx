@@ -12,10 +12,10 @@ function Wallet() {
   return (
     <div className="space-y-8">
       {/* HEADER SECTION - Matches Expenses.js exactly */}
-      <header className="flex flex-col gap-4 border-b border-slate-200 pb-6 xl:flex-row xl:items-center xl:justify-between">
+      <header className="flex flex-col gap-4 border-b border-slate-200 pb-6 xl:flex-row xl:items-center xl:justify-between dark:border-slate-800">
         {/* Left: Title */}
-        <div className="flex items-center gap-2 text-slate-900">
-          <HiBanknotes className="h-8 w-8 text-indigo-600" />
+        <div className="flex items-center gap-2 text-slate-900 dark:text-white">
+          <HiBanknotes className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
           <Heading>My Wallet</Heading>
         </div>
 

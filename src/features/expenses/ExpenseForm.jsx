@@ -118,7 +118,7 @@ function ExpenseForm({
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="grid grid-cols-1 items-end gap-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:grid-cols-2 lg:grid-cols-6"
+      className="grid grid-cols-1 items-end gap-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:grid-cols-2 lg:grid-cols-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50"
     >
       {/* Date Input */}
       <FormInput
@@ -184,6 +184,7 @@ function ExpenseForm({
         id="notes"
         type="text"
         label="Notes"
+        autoComplete="off"
         placeholder="Optional"
         className="sm:col-span-2 lg:col-span-1"
         register={register("notes")}

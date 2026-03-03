@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useAddIncome } from "./useAddIncome";
-import { useEditIncome } from "./useEditIncome"; // <-- Import edit hook
+import { useEditIncome } from "./useEditIncome";
 import { useUser } from "../authentication/useUser";
 import LoaderMini from "../../ui/LoaderMini";
 import { useEffect } from "react";
@@ -85,6 +85,7 @@ function IncomeForm({ incomeToEdit = {}, onCloseModal }) {
         id="source"
         type="text"
         label="Source"
+        autoComplete="off"
         placeholder="e.g., Salary, Freelance, Gift"
         disabled={isWorking}
         register={register("source", {
@@ -150,7 +151,9 @@ function IncomeForm({ incomeToEdit = {}, onCloseModal }) {
         noValidate
         className="flex w-[85vw] max-w-sm flex-col gap-5"
       >
-        <h3 className="text-2xl font-black text-slate-900">Edit Income</h3>
+        <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+          Edit Income
+        </h3>
         {formFields}
       </form>
     );
@@ -158,10 +161,12 @@ function IncomeForm({ incomeToEdit = {}, onCloseModal }) {
 
   // If in the Dashboard/Wallet page (Add Session), return the styled Card wrapper
   return (
-    <div className="flex h-full flex-col justify-between gap-6 rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40">
+    <div className="flex h-full flex-col justify-between gap-6 rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
       <div>
-        <h2 className="mb-1 text-xl font-bold text-slate-900">Add Income</h2>
-        <p className="text-sm font-medium text-slate-500">
+        <h2 className="mb-1 text-xl font-bold text-slate-900 dark:text-white">
+          Add Income
+        </h2>
+        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
           Track your monthly earnings to keep your budget accurate.
         </p>
       </div>

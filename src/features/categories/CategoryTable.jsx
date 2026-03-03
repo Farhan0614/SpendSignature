@@ -3,9 +3,9 @@ import ExpenseList from "./ExpenseList";
 
 function CategoryTable({ categoryExpenses, count }) {
   return (
-    <div className="mt-8 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/40">
+    <div className="mt-8 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
       {/* HEADER */}
-      <div className="grid grid-cols-3 border-b border-slate-100 bg-slate-50/50 px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+      <div className="grid grid-cols-3 border-b border-slate-100 bg-slate-50/50 px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
         <div className="flex items-center gap-2">
           <FaCalendar /> Date
         </div>
@@ -19,7 +19,7 @@ function CategoryTable({ categoryExpenses, count }) {
 
       {/* BODY */}
       {count > 0 ? (
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-slate-100 dark:divide-slate-800">
           {categoryExpenses.map((expense) => (
             <ExpenseList key={expense.id} expense={expense} />
           ))}
@@ -31,7 +31,7 @@ function CategoryTable({ categoryExpenses, count }) {
       )}
 
       {/* FOOTER */}
-      <div className="bg-slate-50 px-6 py-3 text-center text-xs font-medium text-slate-400">
+      <div className="bg-slate-50 px-6 py-3 text-center text-xs font-medium text-slate-400 dark:bg-slate-800/50 dark:text-slate-500">
         Total Records: {count}
       </div>
     </div>

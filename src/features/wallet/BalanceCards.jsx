@@ -45,8 +45,10 @@ function BalanceCards({
   return (
     <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {/* Total Balance Card */}
-      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-700">Total Balance</h2>
+      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+          Total Balance
+        </h2>
 
         {isLoading ? (
           <div className="flex h-28 items-center justify-center">
@@ -60,8 +62,10 @@ function BalanceCards({
       </div>
 
       {/* Dynamic Context Card (Month/Year) */}
-      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-700">{label}</h2>
+      <div className="flex flex-col rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+          {label}
+        </h2>
 
         {isLoading ? (
           <div className="flex h-28 items-center justify-center">
@@ -73,7 +77,7 @@ function BalanceCards({
               {formatCurrency(monthlyBalance, currency)}
             </p>
             {/* The Dynamic Message */}
-            <span className="mt-1 text-sm font-medium text-slate-500">
+            <span className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
               {contextMessage}
             </span>
           </>

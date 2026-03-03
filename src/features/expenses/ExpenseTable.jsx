@@ -48,8 +48,8 @@ function ExpenseTable() {
     });
 
     return (
-      <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8">
-        <h3 className="mb-4 text-sm font-bold tracking-wider text-slate-500 uppercase">
+      <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
+        <h3 className="mb-4 text-sm font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400">
           Ranked by Amount
         </h3>
         <div className="flex flex-col gap-1">
@@ -96,7 +96,7 @@ function ExpenseTable() {
     });
 
   return (
-    <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8">
+    <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
       <div className="flex flex-col gap-2">
         {groupedExpenses.map((group, index) => (
           <GroupExpenses groupExpenses={group} key={index} />

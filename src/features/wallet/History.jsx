@@ -55,7 +55,7 @@ function History({ incomes, isLoading, view }) {
     content = (
       <>
         {field === "amount" && (
-          <h3 className="mb-2 text-sm font-bold tracking-wider text-slate-500 uppercase">
+          <h3 className="mb-2 text-sm font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400">
             Ranked by Amount
           </h3>
         )}
@@ -92,11 +92,11 @@ function History({ incomes, isLoading, view }) {
 
             return (
               <div key={periodKey} className="mb-4 last:mb-0">
-                <div className="sticky top-0 mb-2 flex items-center justify-between bg-white/95 py-1 backdrop-blur-sm">
-                  <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase">
+                <div className="sticky top-0 mb-2 flex items-center justify-between bg-white/95 py-1 backdrop-blur-sm dark:bg-slate-900/95">
+                  <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase dark:text-slate-500">
                     {prettyMonth}
                   </h3>
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700">
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                     {formatCurrency(groupTotal, currency)}
                   </span>
                 </div>
@@ -113,9 +113,11 @@ function History({ incomes, isLoading, view }) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col rounded-2xl bg-white p-6 shadow-sm">
+    <div className="flex h-full w-full flex-col rounded-2xl bg-white p-6 shadow-sm dark:border dark:border-slate-800 dark:bg-slate-900">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-700">{historyTitle}</h2>
+        <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200">
+          {historyTitle}
+        </h2>
       </div>
 
       {isLoading ? (
@@ -123,7 +125,7 @@ function History({ incomes, isLoading, view }) {
           <Loader />
         </div>
       ) : !sortedIncomes || sortedIncomes.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-100 py-10">
+        <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-100 py-10 dark:border-slate-800">
           <p className="font-medium text-slate-400">No records found</p>
         </div>
       ) : (

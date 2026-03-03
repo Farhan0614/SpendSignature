@@ -11,15 +11,15 @@ function ConfirmDelete({
 }) {
   return (
     <div className="flex w-[85vw] max-w-sm flex-col items-center gap-6 py-4 text-center">
-      <div className="rounded-full bg-red-100 p-4 text-red-600">
+      <div className="rounded-full bg-red-100 p-4 text-red-600 dark:bg-red-500/10 dark:text-red-500">
         <FaTrash size={24} />
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-lg font-bold text-slate-800">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-white">
           Delete {resourceName}?
         </h3>
-        <p className="text-sm text-slate-500">{message}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">{message}</p>
       </div>
 
       <div className="flex w-full gap-3">
