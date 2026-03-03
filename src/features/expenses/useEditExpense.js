@@ -14,7 +14,7 @@ export function useEditExpense() {
       queryClient.invalidateQueries({ queryKey: ["monthExpenses"] });
       queryClient.invalidateQueries({ queryKey: ["chartExpenses"] });
       queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });
-      queryClient.invalidateQueries({ queryKey: ["CategoryExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["categoryExpenses"] });
     },
     onError: (err) => toast.error(err.message),
   });

@@ -22,7 +22,7 @@ export function useCreateExpense() {
       // 4. Refresh Category Details (If user is on that page)
       // exact: false means it invalidates ["CategoryExpenses", "Food"] and ["CategoryExpenses", "Travel"] etc.
       queryClient.invalidateQueries({
-        queryKey: ["CategoryExpenses"],
+        queryKey: ["categoryExpenses"],
         exact: false,
       });
     },
