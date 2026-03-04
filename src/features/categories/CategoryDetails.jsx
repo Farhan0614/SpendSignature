@@ -79,18 +79,15 @@ function CategoryDetails() {
       </div>
 
       {/* TABLE + PAGINATION */}
-      {isLoadingList ? (
-        // 1. LOADER STATE: Keeps height to prevent layout jump
-        <div className="flex h-96 items-center justify-center rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <Loader />
-        </div>
-      ) : (
-        // 2. DATA STATE
-        <div>
-          <CategoryTable categoryExpenses={expenses} count={count} />
-          <Pagination count={count} />
-        </div>
-      )}
+
+      <div>
+        <CategoryTable
+          categoryExpenses={expenses}
+          isLoadingList={isLoadingList}
+          count={count}
+        />
+        <Pagination count={count} />
+      </div>
     </div>
   );
 }

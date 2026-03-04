@@ -1,7 +1,7 @@
 import { FaAd, FaCalendar, FaHashtag } from "react-icons/fa";
 import ExpenseList from "./ExpenseList";
 
-function CategoryTable({ categoryExpenses, count }) {
+function CategoryTable({ categoryExpenses, count, isLoadingList }) {
   return (
     <div className="mt-8 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
       {/* HEADER */}
@@ -18,17 +18,21 @@ function CategoryTable({ categoryExpenses, count }) {
       </div>
 
       {/* BODY */}
-      {count > 0 ? (
-        <div className="divide-y divide-slate-100 dark:divide-slate-800">
-          {categoryExpenses.map((expense) => (
+      <div className="h-[320px] divide-y divide-slate-100 dark:divide-slate-800">
+        {isLoadingList ? (
+          <div className="flex h-full items-center justify-center">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent dark:border-indigo-400"></div>
+          </div>
+        ) : count > 0 ? (
+          categoryExpenses.map((expense) => (
             <ExpenseList key={expense.id} expense={expense} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex h-32 items-center justify-center font-medium text-slate-400">
-          No transactions found
-        </div>
-      )}
+          ))
+        ) : (
+          <div className="flex h-full items-center justify-center font-medium text-slate-400">
+            No transactions found
+          </div>
+        )}
+      </div>
 
       {/* FOOTER */}
       <div className="bg-slate-50 px-6 py-3 text-center text-xs font-medium text-slate-400 dark:bg-slate-800/50 dark:text-slate-500">

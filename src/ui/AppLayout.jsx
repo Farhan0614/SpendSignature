@@ -21,7 +21,7 @@ function AppLayout() {
     }
   }, [profile, setCountry, setCurrency]);
 
-  if (isLoading || isLoadingProfile) return <Loader />;
+  if (isLoading || isLoadingProfile) return <Loader className="h-screen" />;
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">

@@ -1,19 +1,36 @@
 import {
-  LineChart,
-  Line,
+  AreaChart, // Changed from LineChart
+  Area, // Changed from Line
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { format, subMonths, parseISO } from "date-fns";
 import LoaderMini from "../../ui/LoaderMini";
 import { useChartData } from "./useChartData";
+import { useDarkMode } from "../../context/DarkModeContext";
 
 function IncomeVsExpenseChart() {
   const { expenses, incomes, isLoading, anchorDate } = useChartData();
+  const { isDarkMode } = useDarkMode(); // <--- 1. Get Mode
+
+  const chartColors = isDarkMode
+    ? {
+        grid: "#334155", // slate-700
+        text: "#94a3b8", // slate-400
+        tooltipBg: "#1e293b", // slate-800
+        tooltipBorder: "#334155", // slate-700
+        tooltipText: "#f8fafc", // slate-50
+      }
+    : {
+        grid: "#e2e8f0", // slate-200
+        text: "#64748b", // slate-500
+        tooltipBg: "#ffffff",
+        tooltipBorder: "#f1f5f9",
+        tooltipText: "#1e293b",
+      };
 
   if (isLoading)
     return (
@@ -63,51 +80,74 @@ function IncomeVsExpenseChart() {
 
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart
+          <AreaChart
             data={chartData}
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            {/* 1. DEFINE GRADIENTS FOR GLASS EFFECT */}
+            <defs>
+              <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+
             <XAxis
               dataKey="name"
-              tick={{ fill: "#64748b", fontSize: 12 }}
+              tick={{ fill: chartColors.text, fontSize: 12 }}
               axisLine={false}
               tickLine={false}
             />
+
             <YAxis
-              tick={{ fill: "#64748b", fontSize: 12 }}
+              tick={{ fill: chartColors.text, fontSize: 12 }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(value) => `${value}`}
             />
+
             <Tooltip
               contentStyle={{
-                backgroundColor: "#fff",
-                borderRadius: "8px",
-                border: "none",
+                backgroundColor: chartColors.tooltipBg,
+                borderColor: chartColors.tooltipBorder,
+                color: chartColors.tooltipText,
+                borderRadius: "12px", // Increased radius for glassy feel
                 boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
               }}
+              itemStyle={{ color: chartColors.tooltipText }}
             />
-            <Legend wrapperStyle={{ paddingTop: "20px" }} />
-            <Line
-              type="monotone"
+
+            {/* 2. AREAS INSTEAD OF LINES */}
+            <Area
+              type="monotone" // Use "monotone" or "natural" for fluid curves
               dataKey="income"
               name="Income"
               stroke="#10b981"
               strokeWidth={3}
-              dot={{ r: 4, fill: "#10b981" }}
-              activeDot={{ r: 6 }}
+              fillOpacity={1}
+              fill="url(#colorIncome)" // References the gradient above
+              dot={false} // Removes the dots for a fluid look
+              activeDot={{ r: 6, strokeWidth: 0, fill: "#10b981" }} // Glow effect on hover
             />
-            <Line
+
+            <Area
               type="monotone"
               dataKey="expense"
               name="Expense"
               stroke="#ef4444"
               strokeWidth={3}
-              dot={{ r: 4, fill: "#ef4444" }}
-              activeDot={{ r: 6 }}
+              fillOpacity={1}
+              fill="url(#colorExpense)" // References the gradient above
+              dot={false}
+              activeDot={{ r: 6, strokeWidth: 0, fill: "#ef4444" }}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>
