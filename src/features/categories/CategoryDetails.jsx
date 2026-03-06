@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { HiArrowLeft } from "react-icons/hi2";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { HiArrowLeft, HiOutlineDocumentArrowDown } from "react-icons/hi2";
 import { useUser } from "../authentication/useUser";
 import { useCategoryExpenses } from "./useCategoryExpenses";
 import { useCategories } from "./useCategories";
@@ -11,13 +11,20 @@ import Pagination from "../../ui/Pagination";
 import ViewToggle from "../../ui/ViewToggle";
 import DateNavigator from "../../ui/DateNavigator";
 import YearNavigator from "../../ui/YearNavigator";
-import SortBy from "../../ui/SortBy"; // <--- 1. IMPORT THIS
+import SortBy from "../../ui/SortBy";
+import { useCurrency } from "../../context/CurrencyContext";
+import { useDownloadPdf } from "./useDownloadPdf";
+import Button from "../../ui/Button";
 
 function CategoryDetails() {
   const { categoryName } = useParams();
   const { user } = useUser();
   const navigate = useNavigate();
   const { categories } = useCategories();
+  const { currency } = useCurrency();
+  const [searchParams] = useSearchParams();
+
+  const { downloadPdf, isDownloading } = useDownloadPdf();
 
   // 1. Fetch Optimized Data
   const { expenses, count, stats, isLoadingList, isLoadingStats, view } =
@@ -30,6 +37,21 @@ function CategoryDetails() {
   const Icon = useIcon(categoryIcon);
 
   if (isLoadingStats) return <Loader />;
+
+  // Handle Download Click
+  function handleDownload() {
+    downloadPdf({
+      user_id: user?.id,
+      categoryName,
+      view,
+      month: searchParams.get("month") || new Date().toISOString().slice(0, 7),
+      year: searchParams.get("year") || new Date().getFullYear().toString(),
+      sortBy: searchParams.get("sortBy") || "date-desc",
+      currency,
+      viewTotal: stats?.viewTotal || 0,
+      globalTotal: stats?.globalTotal || 0,
+    });
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
@@ -67,7 +89,24 @@ function CategoryDetails() {
 
       {/* --- 2. ADD SORTING HERE --- */}
       {/* Placed between stats and table for clear "List Control" context */}
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+        {/* Left: Download Button */}
+        <Button
+          variant="secondary"
+          onClick={handleDownload}
+          disabled={isDownloading || count === 0}
+          className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+        >
+          {isDownloading ? (
+            "Generating PDF..."
+          ) : (
+            <>
+              <HiOutlineDocumentArrowDown className="h-5 w-5" /> Download PDF
+            </>
+          )}
+        </Button>
+
+        {/* Right: SortBy */}
         <SortBy
           options={[
             { value: "date-desc", label: "Newest First" },

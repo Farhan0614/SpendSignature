@@ -244,3 +244,42 @@ export async function getExpensesInRange(user_id, startDate, endDate) {
   if (error) throw new Error("Error loading chart data");
   return data;
 }
+
+export async function getAllCategoryExpensesForExport({
+  user_id,
+  categoryName,
+  view,
+  month,
+  year,
+  sortBy = "date-desc",
+}) {
+  let query = supabase
+    .from("expenses")
+    .select("*, categories!inner(name)", { count: "exact" })
+    .eq("user_id", user_id)
+    .eq("categories.name", categoryName);
+
+  const [field, direction] = sortBy.split("-");
+  query = query.order(field, { ascending: direction === "asc" });
+
+  if (view === "monthly" && month) {
+    const startDate = `${month}-01`;
+    const daysInMonth = new Date(
+      month.split("-")[0],
+      month.split("-")[1],
+      0,
+    ).getDate();
+    const endDate = `${month}-${daysInMonth}`;
+    query = query.gte("date", startDate).lte("date", endDate);
+  } else if (view === "yearly" && year) {
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+    query = query.gte("date", startDate).lte("date", endDate);
+  }
+
+  // NOTE: No .range() here. We want ALL records for the PDF.
+  const { data, error } = await query;
+
+  if (error) throw new Error("Error loading data for export");
+  return data;
+}

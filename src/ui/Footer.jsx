@@ -5,7 +5,7 @@ function Footer() {
 
   return (
     <footer className="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
         {/* Left: Branding */}
         <div className="flex justify-center md:justify-start">
           {/* If Logo has text, you might want a simpler version here, or just text */}
