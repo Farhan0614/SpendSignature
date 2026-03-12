@@ -15,7 +15,6 @@ export async function checkAnomaly(amount, categoryId, userId) {
 
     // Extract just the numbers: [500, 1200, 400...]
     const historyValues = historyData ? historyData.map((h) => h.amount) : [];
-    console.log(historyData);
 
     // 2. Determine URL (Smart Switching between Localhost and Vercel)
     const isLocal =
@@ -41,7 +40,6 @@ export async function checkAnomaly(amount, categoryId, userId) {
     if (!response.ok) throw new Error("AI Server Error");
 
     const result = await response.json();
-    console.log(result, response);
     return result; // Returns { alert: true, message: "..." }
   } catch (error) {
     console.error("AI Check Failed:", error);

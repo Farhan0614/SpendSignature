@@ -23,6 +23,9 @@ function MobileMenu({ isOpen, setIsOpen, user, logout, isLoading }) {
         <MobileNavItem to="/expense" onClick={() => setIsOpen(false)}>
           Expenses
         </MobileNavItem>
+        <MobileNavItem to="/forecast" onClick={() => setIsOpen(false)}>
+          Insights
+        </MobileNavItem>
         <MobileNavItem to="/settings" onClick={() => setIsOpen(false)}>
           Settings
         </MobileNavItem>

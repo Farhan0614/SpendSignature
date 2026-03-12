@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CurrencyProvider } from "./context/CurrencyContext";
@@ -14,6 +14,7 @@ import CategoryDetails from "./features/categories/CategoryDetails";
 import Wallet from "./pages/Wallet";
 import Landing from "./pages/Landing";
 import { DarkModeProvider } from "./context/DarkModeContext";
+import Forecast from "./pages/Forecast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +46,7 @@ function App() {
 
                 <Route path="/expense" element={<Expenses />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/forecast" element={<Forecast />} />
               </Route>
 
               <Route path="/login" element={<LoginPage mode="login" />} />

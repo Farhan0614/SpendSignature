@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sklearn.ensemble import IsolationForest
 import numpy as np
+from report_generator import generate_future_report
 
 app = Flask(__name__)
 
@@ -115,6 +116,29 @@ def predict():
         # FAIL SAFE: If anything crashes, print error and allow the save
         print(f"CRITICAL ERROR: {e}")
         return jsonify({"alert": False, "error": str(e)})
+
+@app.route('/api/forecast', methods=['POST'])
+def forecast():
+    try:
+        data = request.json
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({"success": False, "error": "User ID is required"}), 400
+            
+        print(f"--- GENERATING FORECAST FOR: {user_id} ---")
+        
+        # Call our heavy processor
+        result = generate_future_report(user_id)
+        
+        if "error" in result:
+            return jsonify({"success": False, "error": result["error"]})
+            
+        return jsonify(result)
+
+    except Exception as e:
+        print(f"FORECAST ERROR: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == '__main__':
     # Run on port 5328 to avoid conflict with React (5173)

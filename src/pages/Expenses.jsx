@@ -16,7 +16,7 @@ function Expenses() {
       {/* HEADER SECTION */}
       <header className="flex flex-col gap-4 border-b border-slate-200 pb-4 xl:flex-row xl:items-center xl:justify-between dark:border-slate-800">
         {/* Left: Title */}
-        <div className="gap-2dark:text-white flex items-center text-slate-900">
+        <div className="flex items-center gap-2 text-slate-900 dark:text-white">
           <IoIosWallet className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
           <Heading>Expenses</Heading>
         </div>
