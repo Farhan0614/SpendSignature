@@ -93,18 +93,42 @@ function ForecastChart({ chartData, metrics, currency }) {
         </ResponsiveContainer>
       </div>
 
+      {/* DYNAMIC VELOCITY CHIPS */}
       <div className="mt-6 flex flex-wrap gap-4 border-t border-slate-100 pt-4 dark:border-slate-800">
-        <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
-          <HiArrowTrendingUp />
+        {/* INCOME CHIP (Green if going up, Red if going down) */}
+        <div
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
+            metrics.incomeVelocity >= 0
+              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
+              : "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400"
+          }`}
+        >
+          {metrics.incomeVelocity >= 0 ? (
+            <HiArrowTrendingUp />
+          ) : (
+            <HiArrowTrendingDown />
+          )}
           <span>
-            Income Growth: {metrics.incomeVelocity > 0 ? "+" : ""}
+            Income Trend: {metrics.incomeVelocity > 0 ? "+" : ""}
             {formatCurrency(metrics.incomeVelocity, currency)} /mo
           </span>
         </div>
-        <div className="flex items-center gap-2 rounded-lg bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 dark:bg-rose-500/10 dark:text-rose-400">
-          <HiArrowTrendingDown />
+
+        {/* EXPENSE CHIP (Red if going up, Green if going down) */}
+        <div
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
+            metrics.expenseVelocity <= 0
+              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
+              : "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400"
+          }`}
+        >
+          {metrics.expenseVelocity > 0 ? (
+            <HiArrowTrendingUp />
+          ) : (
+            <HiArrowTrendingDown />
+          )}
           <span>
-            Expense Growth: {metrics.expenseVelocity > 0 ? "+" : ""}
+            Expense Trend: {metrics.expenseVelocity > 0 ? "+" : ""}
             {formatCurrency(metrics.expenseVelocity, currency)} /mo
           </span>
         </div>
