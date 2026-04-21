@@ -1,4 +1,5 @@
-# backend/report_generator.py
+import os
+from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
 from google import genai
@@ -7,9 +8,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from sklearn.linear_model import LinearRegression
 
-SUPABASE_URL = "https://xfbmcnrjqxwkxshxpxoc.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmYm1jbnJqcXh3a3hzaHhweG9jIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzMxMjA5NCwiZXhwIjoyMDcyODg4MDk0fQ.NfhauLTwQ2oSety6N1EAt2J-krsaHLyL1X1fRt9Pe6U"
-GEMINI_API_KEY = "AIzaSyAOswlQwpJSC1IWhjKADYQFGyETlrFStU4"
+# Load the hidden keys from the .env file
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 client = genai.Client(api_key=GEMINI_API_KEY) 

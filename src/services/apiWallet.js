@@ -97,3 +97,14 @@ export async function getIncomesInRange(user_id, startDate, endDate) {
   if (error) throw new Error("Error loading chart income");
   return data;
 }
+
+export async function getBalanceView(user_id) {
+  const { data, error } = await supabase
+    .from("user_balances")
+    .select("total_income, total_expense, current_balance")
+    .eq("user_id", user_id)
+    .single();
+
+  if (error) throw new Error("Could not load balance from server");
+  return data;
+}

@@ -16,6 +16,8 @@ export function useCreateExpense() {
       queryClient.invalidateQueries({ queryKey: ["monthExpenses"] });
       queryClient.invalidateQueries({ queryKey: ["chartExpenses"] }); // Added this for chart
 
+      queryClient.invalidateQueries({ queryKey: ["balanceSummary"] });
+
       // 3. Refresh Global Balance
       queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });
 

@@ -5,3 +5,5 @@ numpy
 pandas
 google-generativeai
 supabase
+python-dotenv
+python-dateutil

@@ -2,14 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sklearn.ensemble import IsolationForest
 import numpy as np
-from report_generator import generate_future_report
+from report_generator import generate_future_report, supabase
 
 app = Flask(__name__)
 
 # --- CORS CONFIGURATION ---
 # This line is critical. It allows your React app (running on localhost:5173) 
 # to send data to this Python server (running on localhost:5328).
-CORS(app, resources={r"/*": {"origins": "*"}})
+
+# --- SECURE CORS CONFIGURATION ---
+# Only allow your local React app and your future Vercel domain to talk to this API
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://your-production-domain.com"]}})
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
@@ -114,22 +117,27 @@ def predict():
 
     except Exception as e:
         # FAIL SAFE: If anything crashes, print error and allow the save
-        print(f"CRITICAL ERROR: {e}")
-        return jsonify({"alert": False, "error": str(e)})
+        print(f"CRITICAL AI ERROR: {e}") 
+        return jsonify({"alert": False, "error": str(e)}), 500
 
 @app.route('/api/forecast', methods=['POST'])
 def forecast():
     try:
-        data = request.json
-        user_id = data.get('user_id')
-        
-        if not user_id:
-            return jsonify({"success": False, "error": "User ID is required"}), 400
+        # --- 1. SECURE TOKEN VERIFICATION ---
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"success": False, "error": "Missing or invalid security token"}), 401
             
-        print(f"--- GENERATING FORECAST FOR: {user_id} ---")
+        token = auth_header.split(' ')[1]
         
-        # Call our heavy processor
-        result = generate_future_report(user_id)
+        # Ask Supabase to verify if this token is real and hasn't expired
+        user_response = supabase.auth.get_user(token)
+        verified_user_id = user_response.user.id
+        
+        print(f"--- GENERATING FORECAST FOR VERIFIED USER: {verified_user_id} ---")
+        
+        # --- 2. GENERATE REPORT (Using the verified ID, not the requested one) ---
+        result = generate_future_report(verified_user_id)
         
         if "error" in result:
             return jsonify({"success": False, "error": result["error"]})
@@ -137,8 +145,8 @@ def forecast():
         return jsonify(result)
 
     except Exception as e:
-        print(f"FORECAST ERROR: {e}")
-        return jsonify({"success": False, "error": str(e)}), 500
+        print(f"FORECAST SECURITY/SERVER ERROR: {e}")
+        return jsonify({"success": False, "error": "Unauthorized or Server Error"}), 401
 
 if __name__ == '__main__':
     # Run on port 5328 to avoid conflict with React (5173)

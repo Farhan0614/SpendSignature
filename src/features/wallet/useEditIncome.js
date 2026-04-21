@@ -12,6 +12,7 @@ export function useEditIncome() {
       queryClient.invalidateQueries({ queryKey: ["incomes"] });
       queryClient.invalidateQueries({ queryKey: ["incomeAmounts"] });
       queryClient.invalidateQueries({ queryKey: ["recentIncomes"] });
+      queryClient.invalidateQueries({ queryKey: ["balanceSummary"] });
       queryClient.invalidateQueries({ queryKey: ["monthIncome"] });
       queryClient.invalidateQueries({ queryKey: ["chartIncomes"] });
     },

@@ -12,6 +12,7 @@ export function useDeleteIncome() {
       // Refresh EVERYTHING related to income
       queryClient.invalidateQueries({ queryKey: ["incomes"] });
       queryClient.invalidateQueries({ queryKey: ["incomeAmounts"] });
+      queryClient.invalidateQueries({ queryKey: ["balanceSummary"] });
       queryClient.invalidateQueries({ queryKey: ["recentIncomes"] });
       queryClient.invalidateQueries({ queryKey: ["monthIncome"] });
       queryClient.invalidateQueries({ queryKey: ["chartIncomes"] });

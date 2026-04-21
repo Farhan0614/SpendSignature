@@ -16,6 +16,7 @@ export function useAddIncome() {
       // Also invalidate expenseAmounts just in case balance calculation relies on both syncing
       queryClient.invalidateQueries({ queryKey: ["incomeAmounts"] });
       queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });
+      queryClient.invalidateQueries({ queryKey: ["balanceSummary"] });
 
       //  Refresh Dashboard Widgets (Recent Activity)
       queryClient.invalidateQueries({ queryKey: ["recentIncomes"] });

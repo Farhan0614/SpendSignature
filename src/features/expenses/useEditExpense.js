@@ -11,6 +11,9 @@ export function useEditExpense() {
       toast.success("Expense updated successfully");
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["recentExpenses"] });
+
+      queryClient.invalidateQueries({ queryKey: ["balanceSummary"] });
+
       queryClient.invalidateQueries({ queryKey: ["monthExpenses"] });
       queryClient.invalidateQueries({ queryKey: ["chartExpenses"] });
       queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });

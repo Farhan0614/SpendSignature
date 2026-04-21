@@ -15,12 +15,20 @@ import Wallet from "./pages/Wallet";
 import Landing from "./pages/Landing";
 import { DarkModeProvider } from "./context/DarkModeContext";
 import Forecast from "./pages/Forecast";
+import ProtectedRoute from "./ui/ProtectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // staleTime: 60 * 1000,
-      staleTime: 0,
+      // Data stays "fresh" for 1 minute.
+      // No background refetches will happen during this time.
+      staleTime: 60 * 1000,
+
+      // Keep inactive data in memory for 5 minutes before garbage collecting
+      gcTime: 5 * 60 * 1000,
+
+      // Prevents refetching when you just click back onto the browser tab
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -34,7 +42,13 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route element={<AppLayout />}>
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
                 {/* <Route index element={<Navigate replace to="/dashboard" />} /> */}
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/wallet" element={<Wallet />}></Route>

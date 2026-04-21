@@ -1,4 +1,4 @@
-import Logo from "./Logo";
+import { Link } from "react-router-dom";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,18 +23,18 @@ function Footer() {
 
         {/* Center/Right: Links */}
         <div className="mt-4 flex justify-center space-x-6 md:order-2 md:mt-0 md:ml-4">
-          <a
-            href="#"
+          <Link
+            to="/"
             className="text-sm text-slate-400 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400"
           >
             Privacy Policy
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/"
             className="text-sm text-slate-400 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400"
           >
             Terms of Service
-          </a>
+          </Link>
         </div>
       </div>
     </footer>
