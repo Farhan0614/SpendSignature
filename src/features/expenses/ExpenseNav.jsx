@@ -3,6 +3,7 @@ import DateNavigator from "../../ui/DateNavigator";
 import YearNavigator from "../../ui/YearNavigator";
 import ViewToggle from "../../ui/ViewToggle";
 import SortBy from "../../ui/SortBy";
+import ExpenseSearch from "./ExpenseSearch";
 
 function ExpenseNav() {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,7 @@ function ExpenseNav() {
   return (
     <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
       <ViewToggle />
+      <ExpenseSearch />
       {view === "monthly" ? <DateNavigator /> : <YearNavigator />}
 
       <SortBy

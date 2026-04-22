@@ -16,6 +16,8 @@ import Landing from "./pages/Landing";
 import { DarkModeProvider } from "./context/DarkModeContext";
 import Forecast from "./pages/Forecast";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +44,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
               <Route
                 element={
                   <ProtectedRoute>

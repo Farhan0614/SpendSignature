@@ -80,9 +80,20 @@ function UpdateOptions() {
   }
 
   function handleFileChange(e) {
-    if (e.target.files && e.target.files[0]) {
-      setAvatar(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload a valid image file");
+      return;
     }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Avatar must be 2 MB or smaller");
+      return;
+    }
+
+    setAvatar(file);
   }
 
   function handleProfileUpdate() {

@@ -1,10 +1,18 @@
 import { useCurrency } from "../../context/CurrencyContext";
-import { formatCurrency, formattedFullDate } from "../../utils/helpers";
+import {
+  formatCurrency,
+  formattedFullDate,
+  formattedTitle,
+} from "../../utils/helpers";
 import { HiArrowUpCircle } from "react-icons/hi2";
 import Modal from "../../ui/Modal";
 import IncomeDetails from "../wallet/IncomeDetails"; // Reuse your existing modal!
+import { useSearchParams } from "react-router-dom";
+import Highlighter from "../../ui/HighLighter";
 
 function IncomeRow({ incomeItem }) {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("search");
   const { currency } = useCurrency();
   const { id, income, date, source } = incomeItem;
 
@@ -20,7 +28,7 @@ function IncomeRow({ incomeItem }) {
           <div className="flex items-center gap-3">
             <HiArrowUpCircle className="h-6 w-6 text-emerald-500 transition-transform duration-300 group-hover:scale-110 dark:text-emerald-400" />
             <span className="font-sans font-bold text-slate-700 transition-colors group-hover:text-emerald-800 dark:text-slate-200">
-              {source}
+              <Highlighter text={formattedTitle(source)} query={query} />
             </span>
           </div>
 

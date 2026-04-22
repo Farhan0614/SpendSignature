@@ -3,20 +3,16 @@ import { useSearchParams } from "react-router-dom";
 import { getIncomes } from "../../services/apiWallet";
 import { useUser } from "../authentication/useUser";
 
-export function useGetIncome() {
+export function useGetIncome({ enabled = true } = {}) {
   const { user } = useUser();
   const [searchParams] = useSearchParams();
 
-  // 1. Determine View Mode
   const view = searchParams.get("view") || "monthly";
-
-  // 2. Determine Time Variables
   const currentMonthStr =
     searchParams.get("month") || new Date().toISOString().slice(0, 7);
   const currentYearStr =
     searchParams.get("year") || new Date().getFullYear().toString();
 
-  // 3. Prepare Arguments based on View
   const queryArgs = { user_id: user?.id };
   let cacheKey = [];
 
@@ -28,10 +24,10 @@ export function useGetIncome() {
     cacheKey = ["incomes", user?.id, "yearly", currentYearStr];
   }
 
-  const { data: incomes, isLoading } = useQuery({
+  const { data: incomes = [], isLoading } = useQuery({
     queryKey: cacheKey,
     queryFn: () => getIncomes(queryArgs),
-    enabled: !!user,
+    enabled: !!user && enabled,
   });
 
   return { incomes, isLoading, view, currentMonthStr, currentYearStr };

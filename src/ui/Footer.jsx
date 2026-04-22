@@ -24,13 +24,14 @@ function Footer() {
         {/* Center/Right: Links */}
         <div className="mt-4 flex justify-center space-x-6 md:order-2 md:mt-0 md:ml-4">
           <Link
-            to="/"
+            to="/privacy"
             className="text-sm text-slate-400 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400"
           >
             Privacy Policy
           </Link>
+
           <Link
-            to="/"
+            to="/terms"
             className="text-sm text-slate-400 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400"
           >
             Terms of Service

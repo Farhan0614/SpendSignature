@@ -7,32 +7,37 @@ export function useExpense() {
   const { user } = useUser();
   const [searchParams] = useSearchParams();
 
-  // 1. Determine View Mode (Default: Monthly)
   const view = searchParams.get("view") || "monthly";
+  const rawSearchTerm = searchParams.get("search") || "";
+  const searchTerm = rawSearchTerm.trim();
 
-  // 2. Determine Time Variables
   const currentMonthStr =
     searchParams.get("month") || new Date().toISOString().slice(0, 7);
   const currentYearStr =
     searchParams.get("year") || new Date().getFullYear().toString();
 
-  // 3. Prepare Arguments based on View
-  const queryArgs = { user_id: user?.id };
-  let cacheKey = [];
+  const queryArgs = {
+    user_id: user?.id,
+    searchTerm,
+  };
 
-  if (view === "monthly") {
-    queryArgs.month = currentMonthStr;
-    cacheKey = ["expenses", user?.id, "monthly", currentMonthStr];
-  } else {
-    queryArgs.year = parseInt(currentYearStr);
-    cacheKey = ["expenses", user?.id, "yearly", currentYearStr];
+  if (!searchTerm) {
+    if (view === "monthly") queryArgs.month = currentMonthStr;
+    else queryArgs.year = Number(currentYearStr);
   }
 
-  const { data: expenses, isLoading } = useQuery({
-    queryKey: cacheKey,
+  const { data: expenses = [], isLoading } = useQuery({
+    queryKey: [
+      "expenses",
+      user?.id,
+      view,
+      currentMonthStr,
+      currentYearStr,
+      searchTerm,
+    ],
     queryFn: () => getExpenses(queryArgs),
     enabled: !!user,
   });
 
-  return { expenses, isLoading, view };
+  return { expenses, isLoading, view, searchTerm, isSearching: !!searchTerm };
 }
