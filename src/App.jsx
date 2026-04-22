@@ -38,7 +38,7 @@ function App() {
     <DarkModeProvider>
       <QueryClientProvider client={queryClient}>
         <CurrencyProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
