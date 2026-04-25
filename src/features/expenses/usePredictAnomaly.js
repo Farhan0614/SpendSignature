@@ -17,7 +17,7 @@ export function usePredictAnomaly() {
     setAnomalyResult(null);
 
     try {
-      const result = await checkAnomaly(amount, categoryId, user.id);
+      const result = await checkAnomaly(amount, categoryId);
 
       if (result.alert) {
         // 1. ANOMALY DETECTED: Save result and trigger UI warning

@@ -24,7 +24,7 @@ const LOADING_MESSAGES = [
 ];
 
 function Forecast() {
-  const { user, isAuthenticated } = useUser();
+  const { isAuthenticated } = useUser();
   const { currency } = useCurrency();
   const navigate = useNavigate();
 
@@ -98,7 +98,7 @@ function Forecast() {
           </p>
           {/* Note: We pass the user.id directly to the hook's function here */}
           <Button
-            onClick={() => generateForecast(user.id)}
+            onClick={() => generateForecast()}
             className="px-8 py-4 text-lg"
           >
             Generate Future Report
@@ -131,10 +131,7 @@ function Forecast() {
           />
 
           <div className="flex justify-end">
-            <Button
-              variant="secondary"
-              onClick={() => generateForecast(user.id)}
-            >
+            <Button variant="secondary" onClick={() => generateForecast()}>
               Recalculate Forecast
             </Button>
           </div>

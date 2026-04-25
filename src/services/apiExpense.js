@@ -1,6 +1,12 @@
 import supabase from "./supabase";
 import { PAGE_SIZE } from "../utils/constants";
-// services/apiExpense.js
+
+function normalizeSearchTerm(value = "") {
+  return value
+    .replace(/[,%()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export async function createExpense(expense) {
   const { data, error } = await supabase
@@ -8,16 +14,12 @@ export async function createExpense(expense) {
     .insert([expense])
     .select();
 
-  if (error) {
-    console.log(error);
-    throw new Error("There was an error creating expense.");
-  }
-
+  if (error) throw new Error("There was an error creating expense.");
   return data;
 }
 
 export async function getExpenses({ user_id, month, year, limit, searchTerm }) {
-  const normalizedSearch = searchTerm?.trim();
+  const normalizedSearch = normalizeSearchTerm(searchTerm);
 
   let query = supabase
     .from("expenses")

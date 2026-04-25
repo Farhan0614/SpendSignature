@@ -1,4 +1,9 @@
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
 import { HiArrowLeft, HiOutlineDocumentArrowDown } from "react-icons/hi2";
 import { useUser } from "../authentication/useUser";
 import { useCategoryExpenses } from "./useCategoryExpenses";
@@ -23,8 +28,10 @@ function CategoryDetails() {
   const { categories } = useCategories();
   const { currency } = useCurrency();
   const [searchParams] = useSearchParams();
-
+  const location = useLocation();
   const { downloadPdf, isDownloading } = useDownloadPdf();
+
+  const fromSearch = location.state?.fromSearch || "";
 
   // 1. Fetch Optimized Data
   const { expenses, count, stats, isLoadingList, isLoadingStats, view } =
@@ -58,7 +65,12 @@ function CategoryDetails() {
       {/* HEADER NAV (Keep as is) */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <button
-          onClick={() => navigate("/category")}
+          onClick={() =>
+            navigate({
+              pathname: "/category",
+              search: fromSearch,
+            })
+          }
           className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200"
         >
           <HiArrowLeft /> Back

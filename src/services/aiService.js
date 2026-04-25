@@ -1,49 +1,39 @@
-// src/services/aiService.js
 import supabase from "./supabase";
 
-export async function checkAnomaly(amount, categoryId, userId) {
+const ANOMALY_API_URL = import.meta.env.DEV
+  ? "http://127.0.0.1:5328/api/predict"
+  : "/api/predict";
+
+export async function checkAnomaly(amount, categoryId) {
   try {
-    // 1. Fetch History from Supabase (Last 50 items for this category & user)
-    // We need this data to teach the AI what is "normal" for this specific context
-    const { data: historyData } = await supabase
-      .from("expenses")
-      .select("amount")
-      .eq("user_id", userId)
-      .eq("category_id", categoryId)
-      .order("date", { ascending: false })
-      .limit(50);
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-    // Extract just the numbers: [500, 1200, 400...]
-    const historyValues = historyData ? historyData.map((h) => h.amount) : [];
+    const token = session?.access_token;
+    if (!token) return { alert: false };
 
-    // 2. Determine URL (Smart Switching between Localhost and Vercel)
-    const isLocal =
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1";
-
-    // IF LOCAL: Use the full Python URL (Port 5328)
-    // IF VERCEL: Use the relative path (Vercel rewrites handle it)
-    const API_URL = isLocal
-      ? "http://127.0.0.1:5328/api/predict"
-      : "/api/predict";
-
-    // 3. Call the Python AI
-    const response = await fetch(API_URL, {
+    const response = await fetch(ANOMALY_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         amount: Number(amount),
-        history: historyValues,
+        category_id: Number(categoryId),
       }),
     });
 
-    if (!response.ok) throw new Error("AI Server Error");
+    const result = await response.json().catch(() => ({ alert: false }));
 
-    const result = await response.json();
-    return result; // Returns { alert: true, message: "..." }
+    if (!response.ok) {
+      throw new Error(result?.error || "AI Server Error");
+    }
+
+    return result;
   } catch (error) {
     console.error("AI Check Failed:", error);
-    // FAIL SAFE: If AI is offline, return false so user can still save
     return { alert: false };
   }
 }

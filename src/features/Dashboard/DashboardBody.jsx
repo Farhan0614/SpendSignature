@@ -43,6 +43,9 @@ function DashboardBody() {
     0,
   );
 
+  const displayName =
+    profile?.full_name || user?.email?.split("@").at(0) || "there";
+
   // 3. PREPARE LISTS
   const formattedExpenses = recentExpenses.map((exp) => ({
     id: exp.id,
@@ -81,11 +84,7 @@ function DashboardBody() {
         {/* Left: Text */}
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-            Welcome back,{" "}
-            {profile.full_name
-              ? profile.full_name
-              : user.email.split("@").at(0)}
-            !
+            Welcome back, {displayName}!
           </h1>
           <p className="mt-1 text-slate-500 dark:text-slate-400">
             Here is your financial overview for{" "}

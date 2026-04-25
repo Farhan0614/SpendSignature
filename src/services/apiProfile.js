@@ -33,10 +33,9 @@ export async function updateProfile({
     imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`;
   }
 
-  const updates = {
-    created_at: new Date(),
-  };
-  if (full_name) updates.full_name = full_name;
+  const updates = {};
+
+  if (full_name !== undefined) updates.full_name = full_name;
   if (currency) updates.currency = currency;
   if (imagePath) updates.avatar_url = imagePath;
 

@@ -7,11 +7,14 @@ import { useProfile } from "../features/settings/useProfile";
 import { useEffect } from "react";
 import { findCountryByCurrency } from "../utils/helpers";
 import { useCurrency } from "../context/CurrencyContext";
+import { useSyncSubscriptions } from "../features/subscriptions/useSyncSubscriptions";
 
 function AppLayout() {
   const { user, isLoading, isAuthenticated } = useUser();
   const { profile, isLoading: isLoadingProfile } = useProfile();
   const { setCountry, setCurrency } = useCurrency();
+
+  useSyncSubscriptions();
 
   useEffect(() => {
     if (profile?.currency) {
@@ -25,19 +28,12 @@ function AppLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">
-      {/* 1. Sticky Header */}
       <Header />
-
-      {/* 2. Main Content Area */}
-      {/* flex-1 ensures it pushes the footer down if content is short */}
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
-        {/* We use an animation wrapper here for page transitions if you want later */}
         <div className="animate-fade-in">
           <Outlet />
         </div>
       </main>
-
-      {/* 3. Footer */}
       <Footer />
     </div>
   );

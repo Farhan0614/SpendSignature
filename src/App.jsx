@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CurrencyProvider } from "./context/CurrencyContext";
@@ -18,6 +18,7 @@ import Forecast from "./pages/Forecast";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import Subscriptions from "./pages/Subscriptions";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,12 +58,22 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/wallet" element={<Wallet />}></Route>
                 <Route path="/category" element={<Categories />}></Route>
+
                 <Route
                   path="/category/:categoryName"
                   element={<CategoryDetails />}
                 ></Route>
 
                 <Route path="/expense" element={<Expenses />} />
+                <Route
+                  path="/expense/subscriptions"
+                  element={<Subscriptions />}
+                />
+
+                <Route
+                  path="/subscriptions"
+                  element={<Navigate replace to="/expense/subscriptions" />}
+                />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/forecast" element={<Forecast />} />
               </Route>

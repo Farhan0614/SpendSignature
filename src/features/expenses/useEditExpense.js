@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editExpense as editExpenseAPI } from "../../services/apiExpense";
 import toast from "react-hot-toast";
+import { invalidateExpenseDerivedQueries } from "../../utils/invalidateQueries";
 
 export function useEditExpense() {
   const queryClient = useQueryClient();
@@ -9,17 +10,10 @@ export function useEditExpense() {
     mutationFn: editExpenseAPI,
     onSuccess: () => {
       toast.success("Expense updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] });
-
-      queryClient.invalidateQueries({ queryKey: ["balanceSummary"] });
-
-      queryClient.invalidateQueries({ queryKey: ["monthExpenses"] });
-      queryClient.invalidateQueries({ queryKey: ["chartExpenses"] });
-      queryClient.invalidateQueries({ queryKey: ["expenseAmounts"] });
-      queryClient.invalidateQueries({ queryKey: ["categoryExpenses"] });
+      invalidateExpenseDerivedQueries(queryClient);
     },
     onError: (err) => toast.error(err.message),
   });
+
   return { editExpense, isEditing };
 }
