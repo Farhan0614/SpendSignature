@@ -53,8 +53,8 @@ function Landing() {
       <div className="relative z-10">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600 text-lg font-black text-white shadow-lg shadow-indigo-500/30">
-              S
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg shadow-indigo-500/30">
+              <img src="/favicon.svg" alt="logo of spendsignature" />
             </div>
             <div>
               <p className="text-lg font-black tracking-tight">

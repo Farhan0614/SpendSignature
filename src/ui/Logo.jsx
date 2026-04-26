@@ -7,9 +7,9 @@ function Logo() {
       className="flex cursor-pointer items-center gap-2"
       onClick={() => navigate("/")}
     >
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-xl font-bold text-white">
-          S
+      <div className="flex items-center gap-1">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg">
+          <img src="/favicon.svg" alt="spendSignature Logo" />
         </div>
         <p className="font-sans text-lg font-bold tracking-tight text-slate-900 dark:text-white">
           SpendSignature
