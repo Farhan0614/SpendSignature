@@ -79,7 +79,7 @@ def predict():
             return jsonify({"alert": False})
 
         else:
-            clf = IsolationForest(contamination=0.1, random_state=42)
+            clf = IsolationForest(contamination=0.05, random_state=42)
             X = np.array(history).reshape(-1, 1)
             clf.fit(X)
             prediction = clf.predict([[amount]])

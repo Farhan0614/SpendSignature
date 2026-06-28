@@ -140,6 +140,7 @@ function ExpenseTable() {
 
       return {
         period: prettyPeriod,
+        rawDate: periodKey,
         transactions: items,
         total,
       };
@@ -149,7 +150,7 @@ function ExpenseTable() {
     <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50">
       <div className="flex flex-col gap-2">
         {groupedList.map((group, index) => (
-          <GroupExpenses groupExpenses={group} key={index} />
+          <GroupExpenses groupExpenses={group} view={view} key={index} />
         ))}
       </div>
     </div>

@@ -20,6 +20,8 @@ function ExpenseForm({
   handleShowForm,
   showForm,
   expenseToEdit = {},
+  defaultDate,
+  onCloseModal,
 }) {
   const { id: editId, ...editValues } = expenseToEdit;
   const isEditSession = Boolean(editId);
@@ -34,7 +36,7 @@ function ExpenseForm({
     reset,
     formState: { errors, submitCount },
   } = useForm({
-    defaultValues: isEditSession ? editValues : { date: today },
+    defaultValues: isEditSession ? editValues : { date: defaultDate || today },
   });
 
   const { createExpense, isCreating } = useCreateExpense();
@@ -96,7 +98,8 @@ function ExpenseForm({
       onSuccess: () => {
         reset();
         setShowAnomalyWarning(false);
-        handleShowForm();
+        if (handleShowForm) handleShowForm();
+        if (onCloseModal) onCloseModal();
       },
     });
   }
