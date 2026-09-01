@@ -65,7 +65,6 @@ def generate_future_report(user_id: str):
         top_cat_amount = current_totals.max()
         total_spent_current = current_totals.sum()
         
-        # --- THE BETTER ALTERNATIVE ---
         # Calculate exactly what percentage of this month's pie this category is eating
         top_cat_pct = (top_cat_amount / total_spent_current) * 100
         momentum_text = f"{top_cat_pct:.0f}% of this month's spending"
@@ -120,7 +119,6 @@ def generate_future_report(user_id: str):
             "isPrediction": False
         })
 
-    # --- REAL-TIME ADJUSTMENT VARS ---
     current_month_exp_actual = df_exp[df_exp['month'] == current_month_str]['amount'].sum() if not df_exp.empty else 0
     current_month_inc_actual = df_inc[df_inc['month'] == current_month_str]['income'].sum() if not df_inc.empty else 0
 
@@ -137,7 +135,7 @@ def generate_future_report(user_id: str):
             pred_exp = float(avg_monthly_exp)
             pred_inc = float(avg_monthly_inc)
 
-        # CORRECT 3-MONTH PROJECTION REAL-TIME OVERRIDE
+        # 3-MONTH PROJECTION REAL-TIME OVERRIDE
         if i == 1: 
             pred_exp = max(pred_exp, float(current_month_exp_actual))
             pred_inc = max(pred_inc, float(current_month_inc_actual))
@@ -178,8 +176,8 @@ def generate_future_report(user_id: str):
     try:
         response = client.models.generate_content(
             # model='gemma-3-27b-it',
-            model='gemini-2.5-flash',
-            # model='gemma-4-31b-it',
+            # model='gemini-2.5-flash',
+             model='gemma-4-31b-it',
             # model='gemma-4-26b-a4b-it',
             contents=prompt
         )

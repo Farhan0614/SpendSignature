@@ -7,7 +7,6 @@ export async function addIncome(income) {
     .select();
 
   if (error) {
-    console.log(error);
     throw new Error("There was an error creating expense.");
   }
 

@@ -46,8 +46,11 @@ def predict():
             .execute()
         )
 
+
         history = [float(item["amount"]) for item in (history_res.data or [])]
 
+        print(history)
+        
         if not history:
             if amount > 100000:
                 return jsonify({
