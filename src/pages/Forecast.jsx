@@ -114,7 +114,10 @@ function Forecast() {
             {LOADING_MESSAGES[loadingStep]}
           </h3>
           <p className="mt-2 text-sm text-slate-400">
-            This may take 5-10 seconds...
+            This may take 20-30 seconds...
+          </p>
+          <p className="mt-2 text-sm text-slate-400">
+            Please do not change the tab while data is processing!
           </p>
         </div>
       )}
