@@ -95,7 +95,7 @@ class IsolationForest:
         self._n = 0
 
     def fit(self, X):
-        X = [float(x) for x in X]
+        X = np.asarray(X, dtype=float).reshape(-1).tolist()
         self._n = len(X)
         rng = random.Random(self.random_state)
         height_limit = math.ceil(math.log2(max(2, self._n)))
@@ -117,7 +117,7 @@ class IsolationForest:
         return avg_path  # lower path length = more anomalous
 
     def predict(self, X):
-        X = [float(x) for x in X]
+        X = np.asarray(X, dtype=float).reshape(-1).tolist()
         return [self._flag(x) for x in X]
 
     def _flag(self, x):
