@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from sklearn.ensemble import IsolationForest
+from isolation_forest import IsolationForest
 import numpy as np
 from report_generator import generate_future_report, supabase
 
@@ -11,7 +11,7 @@ allowed_origins = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ORIGINS",
-        "http://localhost:5173,https://your-production-domain.com"
+        "http://localhost:5173,https://spendsignature.vercel.app"
     ).split(",")
     if origin.strip()
 ]

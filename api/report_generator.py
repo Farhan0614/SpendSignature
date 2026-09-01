@@ -6,7 +6,27 @@ from google import genai
 from supabase import create_client, Client
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from sklearn.linear_model import LinearRegression
+class LinearRegression:
+    """Minimal single-feature linear regression (numpy only, sklearn-compatible API)."""
+    def __init__(self):
+        self.coef_ = None
+        self.intercept_ = 0.0
+
+    def fit(self, X, y):
+        X = np.asarray(X, dtype=float).reshape(-1)
+        y = np.asarray(y, dtype=float)
+        x_mean = X.mean()
+        y_mean = y.mean()
+        denom = ((X - x_mean) ** 2).sum()
+        slope = ((X - x_mean) * (y - y_mean)).sum() / denom if denom != 0 else 0.0
+        self.coef_ = np.array([slope])
+        self.intercept_ = y_mean - slope * x_mean
+        return self
+
+    def predict(self, X):
+        X = np.asarray(X, dtype=float).reshape(-1)
+        return self.intercept_ + self.coef_[0] * X
+
 
 # Load the hidden keys from the .env file
 load_dotenv()
