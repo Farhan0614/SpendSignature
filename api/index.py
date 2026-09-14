@@ -305,8 +305,8 @@ def generate_future_report(user_id: str):
         response = client.models.generate_content(
             # model='gemma-3-27b-it',
             # model='gemini-2.5-flash',
-             model='gemma-4-31b-it',
-            # model='gemma-4-26b-a4b-it',
+            #  model='gemma-4-31b-it',
+            model='gemma-4-26b-a4b-it',
             contents=prompt
         )
         ai_text = response.text
